@@ -1,5 +1,5 @@
 # Script
-![Logo Script](../res/logo.ico)
+![Logo Script](res/logo.ico)
 
 ## *Script is an object-oriented interpreted programming language.*
 
