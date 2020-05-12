@@ -1,0 +1,50 @@
+name: C++ Test
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: ${{ matrix.os.name }} (${{ matrix.compiler }}, ${{ matrix.library-type }})
+    runs-on: ${{ matrix.os.value }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+        - {
+          name: "Windows",
+          value: windows-latest,
+          install-ninja: choco install ninja
+        }
+        - {
+          name: "Ubuntu",
+          value: ubuntu-latest,
+          install-ninja: sudo apt install -yq --no-install-recommends ninja-build libxt-dev libxpm-dev libxaw7-dev,
+          before-meson-build: LDFLAGS='-ldl'
+        }
+        - {
+          name: "MacOS",
+          value: macos-latest,
+          install-ninja: brew install ninja
+        }
+        compiler: [g++, clang++]
+        library-type: [static, shared]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v1
+      with:
+        python-version: '3.x'
+    - name: Install LLVM
+      if: matrix.os.value == 'windows-latest' && matrix.compiler == 'clang++'
+      run: choco install llvm
+    - name: Install Meson
+      run: pip install meson
+    - name: Install Ninja
+      run: ${{ matrix.os.install-ninja }}
+    - name: Run Meson
+      env:
+        CXX: ${{ matrix.compiler }}
+      run: ${{ matrix.os.before-meson-build }} meson build -Ddefault_library=${{ matrix.library-type }}
+    - name: Run Ninja
+      run: ninja -C build
+    - name: Run Tests
+      run: ninja -C build test
