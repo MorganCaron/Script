@@ -33,7 +33,7 @@ namespace Script
 				m_ast.interpret();
 				CppUtils::Logger::log(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, ">Functions: "s + std::to_string(m_ast.getFunctions().size()));
 				for (const auto& function : m_ast.getFunctions())
-					CppUtils::Logger::log(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, "- "s + function.first);
+					CppUtils::Logger::log(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, "- "s + function.first + "()");
 			}
 			catch (const std::exception& error)
 			{
@@ -43,25 +43,13 @@ namespace Script
 
 		void execute()
 		{
+			CppUtils::Logger::log(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, "#- EXECUTION_/");
 			try
 			{
-				if (m_ast.functionExists("init"))
-				{
-					CppUtils::Logger::log(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, ">init()");
-					m_ast.getFunction("init")({});
-				}
-
-				if (m_ast.functionExists("update"))
-				{
-					CppUtils::Logger::log(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, ">update()");
-					m_ast.getFunction("update")({});
-				}
-				
-				if (m_ast.functionExists("destroy"))
-				{
-					CppUtils::Logger::log(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, ">destroy()");
-					m_ast.getFunction("destroy")({});
-				}
+				if (!m_ast.functionExists("main"))
+					throw std::runtime_error{"Fonction main() requise."};
+				CppUtils::Logger::log(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, ">main()");
+				m_ast.getFunction("main")({});
 			}
 			catch (const std::exception& error)
 			{
