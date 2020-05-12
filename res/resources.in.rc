@@ -1,0 +1,42 @@
+#include <windows.h>
+
+#ifndef DEBUG
+# define VER_DEBUG 0
+#else
+# define VER_DEBUG VS_FF_DEBUG
+#endif
+
+ICON_ID ICON DISCARDABLE "@ICON@"
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION @VERSION_MAJOR@,@VERSION_MINOR@,@VERSION_PATCH@,0
+PRODUCTVERSION @VERSION_MAJOR@,@VERSION_MINOR@,@VERSION_PATCH@,0
+#ifdef DEBUG
+FILEFLAGSMASK VS_FF_DEBUG | VS_FF_PRERELEASE
+#else
+FILEFLAGSMASK 0
+#endif
+FILEOS VOS__WINDOWS32
+FILETYPE VFT_APP
+FILESUBTYPE VFT2_UNKNOWN
+BEGIN
+	BLOCK "StringFileInfo"
+	BEGIN
+		BLOCK "040904B0"
+		BEGIN
+			VALUE "FileDescription", "@DESCRIPTION@"
+			VALUE "FileVersion", "@VERSION@.0"
+			VALUE "InternalName", "@NAME@-@VERSION@"
+			VALUE "LegalCopyright", "@LICENSE@"
+			VALUE "OriginalFilename", "@NAME@.exe"
+			VALUE "ProductName", "@NAME@"
+			VALUE "ProductVersion", "@VERSION@.0"
+			VALUE "CompanyName", "@COMPANY_NAME@"
+			VALUE "Comments", "@COMMENT@"
+		END
+	END
+	BLOCK "VarFileInfo"
+	BEGIN
+		VALUE "Translation", 0x409, 1200
+	END
+END

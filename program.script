@@ -1,0 +1,163 @@
+import "Terminal.dll";
+import "Array.dll";
+
+function init()
+{
+	a = 1;
+	b = 1;
+	c = a + b;
+	print(c);
+
+	a = "foo";
+	b = "bar";
+	c = a + b;
+	print(c);
+	
+	array = Array();
+	array.add("first");
+	array.add("second");
+	array.add("third");
+	i = 0;
+	size = array.size();
+	while (i < size)
+	{
+		word = array.get(i);
+		print(word);
+		i += 1;
+	}
+}
+
+/*
+function init()
+{
+	window = window("Script C++", 1280, 720);
+	window.set_color(255, 255, 0, 0.5);
+	i = 0;
+	
+	shape0 = window.rectangle(50, 50, 150, 150);
+
+	tex_grass = texture("grass.png");
+	tex = texture("tex.png");
+
+	sprite0 = window.sprite(tex_grass, 200, 200, 500, 300);
+	sprite1 = window.sprite(tex, 500, 200, 800, 300);
+	
+	object	scene
+	{
+		function init()
+		{
+			objects = array();
+		}
+
+		function add(object)
+		{
+			objects.add(object);
+		}
+
+		function update()
+		{
+			var size = objects.size();
+			var i = 0;
+			while (i < size)
+			{
+				temp = objects.get(i);
+				temp.update();
+				i += 1;
+			}
+		}
+	}
+	// test2
+	object	cube
+	{
+		function init(context)
+		{
+			_context = context;
+			_context.set_color(255, 0, 0, 1);
+			r = _context.rectangle(-0.5, -0.5, 0.5, 0.5);
+
+			_context.set_color(0, 255, 0, 1);
+			g = _context.rectangle(-0.5, -0.5, 0.5, 0.5);
+
+			_context.set_color(0, 0, 255, 1);
+			b = _context.rectangle(-0.5, -0.5, 0.5, 0.5);
+		}
+
+		function draw()
+		{
+			_context.origin_save();
+			_context.rotate(0, 90, 0);
+			_context.translate(0, 0, -0.5);
+			r.draw();
+			_context.translate(0, 0, 1);
+			r.draw();
+			_context.origin_load();
+
+			_context.origin_save();
+			_context.rotate(90, 0, 0);
+			_context.translate(0, 0, -0.5);
+			g.draw();
+			_context.translate(0, 0, 1);
+			g.draw();
+			_context.origin_load();
+
+			_context.origin_save();
+			_context.translate(0, 0, -0.5);
+			b.draw();
+			_context.translate(0, 0, 1);
+			b.draw();
+			_context.origin_load();
+		}
+	}
+	
+	scene = scene();
+	scene.add(window);
+
+	cube0 = window.cube();
+	cube1 = cube(window);
+}
+
+function update()
+{
+	window.set_caption("Script C++ - " + fps);
+	
+	window.set_mode(0);
+	shape0.draw();
+	sprite0.draw();
+
+	i += 1;
+	if (i > 360)
+		i = 0;
+	var x = sin(degtorad(i)) * 5;
+	var y = 3 + cos(degtorad(i)) * 5;
+	var z = 1 + cos(degtorad(i)) * 2;
+	window.set_mode(1);
+	window.camera(
+	x, y, z,
+	0, 0, 0,
+	0, 0, 1);
+	cube1.draw();
+	
+	var j = 0;
+	while (j < 5)
+	{
+		var k = j;
+		var j = 0;
+		while (j < 5)
+		{
+			window.origin_save();
+			window.translate(j * 2 - 4, k * 2 - 4, -1);
+			cube0.draw();
+			window.translate(0, 0, 2);
+			cube1.draw();
+			window.origin_load();
+			j += 1;
+		}
+		j += 1;
+	}
+	
+	scene.update();
+	
+	window.set_mode(0);
+	sprite1.draw();
+}
+*/
