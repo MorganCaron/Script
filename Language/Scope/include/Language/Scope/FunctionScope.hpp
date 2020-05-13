@@ -6,8 +6,6 @@
 
 namespace Language
 {
-	using Function = Scope::Type::Function<std::unique_ptr<Scope::Type::Value>(const Scope::Type::Args&)>;
-
 	namespace Scope
 	{
 		using FunctionType = Type::ITFunction<std::unique_ptr<Type::Value>(const Type::Args&)>;

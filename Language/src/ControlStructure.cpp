@@ -34,7 +34,7 @@ namespace Language
 		while (loop)
 		{
 			value = m_instructions[0]->interpret();
-			if (value->getType() == Scope::Type::NumberType)
+			if (value->getType() == Scope::Type::Number::type)
 				condition = (*value != Scope::Type::Number{});
 			else
 				condition = false;

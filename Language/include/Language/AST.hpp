@@ -2,6 +2,7 @@
 
 #include <Language/Scope/FileScope.hpp>
 #include <Language/Scope/Type/Number.hpp>
+#include <Language/Scope/Type/String.hpp>
 
 #include "InstructionContainer.hpp"
 

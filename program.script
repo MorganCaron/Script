@@ -6,12 +6,12 @@ function main()
 	a = 1;
 	b = 1;
 	c = a + b;
-	Terminal.print(c);
+	print(c);
 
 	a = "foo";
 	b = "bar";
 	c = a + b;
-	Terminal.print(c);
+	print(c);
 	
 	array = Array();
 	array.add("first");

@@ -7,12 +7,12 @@
 
 namespace Language::Scope::Type
 {
-	constexpr static const auto NumberType = ValueType{"Number"};
-
 	class Number: public Value
 	{
 	public:
-		Number(const double& value = 0): Value{NumberType}, m_value{value}
+		constexpr static const auto type = "Number"sv;
+
+		Number(const double& value = 0): Value{type.data()}, m_value{value}
 		{}
 		virtual ~Number() = default;
 

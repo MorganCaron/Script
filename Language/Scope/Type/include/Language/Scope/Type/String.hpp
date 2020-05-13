@@ -4,12 +4,12 @@
 
 namespace Language::Scope::Type
 {
-	constexpr static const auto StringType = ValueType{"String"};
-
 	class String: public Value
 	{
 	public:
-		String(std::string value = ""): Value{StringType}, m_value{std::move(value)}
+		constexpr static const auto type = "String"sv;
+
+		String(std::string value = ""): Value{type.data()}, m_value{std::move(value)}
 		{}
 		virtual ~String() = default;
 

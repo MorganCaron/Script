@@ -11,12 +11,10 @@ using namespace std::literals::string_view_literals;
 
 namespace Language::Scope::Type
 {
-	using ValueType = std::string_view;
-
 	class Value
 	{
 	public:
-		explicit Value(ValueType valueType): m_type{valueType}
+		explicit Value(std::string type): m_type{std::move(type)}
 		{}
 		virtual ~Value() = default;
 
@@ -26,7 +24,7 @@ namespace Language::Scope::Type
 			return std::make_unique<Value>(*this);
 		}
 
-		inline ValueType getType() const noexcept
+		inline std::string_view getType() const noexcept
 		{
 			return m_type;
 		}
@@ -47,6 +45,12 @@ namespace Language::Scope::Type
 		virtual bool operator>=(const Value& rhs) const;
 		virtual bool operator<(const Value& rhs) const;
 		virtual bool operator>(const Value& rhs) const;
+		
+		template <typename To>
+		static std::unique_ptr<To> ensureType(const std::unique_ptr<Value>& value)
+		{
+			return std::make_unique<To>(*static_cast<To*>(value.get()));
+		}
 
 	private:
 		std::string m_type;
@@ -58,10 +62,4 @@ namespace Language::Scope::Type
 	}
 
 	using Args = std::vector<std::unique_ptr<Value>>;
-
-	template <typename To>
-	std::unique_ptr<To> ensureType(const std::unique_ptr<Value>& value)
-	{
-		return std::make_unique<To>(*static_cast<To*>(value.get()));
-	};
 }

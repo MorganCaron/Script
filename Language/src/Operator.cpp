@@ -51,7 +51,7 @@ namespace Language
 			dynamic_cast<Variable*>(operand0.get())->setValue(std::make_unique<Scope::Type::Number>());
 		if (getName() == ".")
 		{
-			if (value0->getType() != Scope::Type::ObjectType)
+			if (value0->getType() != Scope::Type::Object::type)
 				throw std::runtime_error{"L element avant le point doit etre un objet."};
 			auto object = dynamic_cast<Scope::Type::Object*>(value0.get());
 			if (object == nullptr)

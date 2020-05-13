@@ -6,8 +6,6 @@
 
 namespace Language::Scope::Type
 {
-	constexpr static const auto ObjectType = ValueType{"Object"};
-
 	using ConstructorType = ITFunction<void(Args&)>;
 
 	class Object:
@@ -16,8 +14,10 @@ namespace Language::Scope::Type
 		public FunctionScope
 	{
 	public:
+		constexpr static const auto type = "Object"sv;
+
 		Object(std::string name, BaseScope* scope = nullptr):
-			Value{ObjectType},
+			Value{type.data()},
 			CppUtils::Type::Named{std::move(name)},
 			FunctionScope{scope},
 			m_constructor{nullptr}

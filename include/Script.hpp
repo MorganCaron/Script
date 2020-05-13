@@ -4,12 +4,19 @@
 
 namespace Script
 {
+	using Value = Language::Scope::Type::Value;
+	using Args = Language::Scope::Type::Args;
+	using Number = Language::Scope::Type::Number;
+	using String = Language::Scope::Type::String;
+	using Function = Language::Scope::FunctionType;
+	using ExternalFunction = Language::Scope::Type::Function<std::unique_ptr<Value>(const Args&)>;
+
 	class Script final
 	{
 	public:
 		Script() = default;
 
-		inline void addFunction(std::string name, std::unique_ptr<Language::Scope::FunctionType>&& function)
+		inline void addFunction(std::string name, std::unique_ptr<Function>&& function)
 		{
 			m_ast.addFunction(std::move(name), std::move(function));	
 		}
@@ -41,7 +48,7 @@ namespace Script
 			}
 		}
 
-		std::unique_ptr<Language::Scope::Type::Value> execute()
+		std::unique_ptr<Value> execute()
 		{
 			CppUtils::Logger::logInformation("#- EXECUTION_/");
 			try
@@ -55,17 +62,17 @@ namespace Script
 			{
 				CppUtils::Logger::logError("!Runtime error: "s + error.what());
 			}
-			return std::make_unique<Language::Scope::Type::Number>(0);
+			return std::make_unique<Number>(0);
 		}
 
-		std::unique_ptr<Language::Scope::Type::Value> executeCode(std::string code)
+		std::unique_ptr<Value> executeCode(std::string code)
 		{
 			parse(std::move(code));
 			interpret();
 			return execute();
 		}
 		
-		std::unique_ptr<Language::Scope::Type::Value> executeFile(const std::filesystem::path& filePath)
+		std::unique_ptr<Value> executeFile(const std::filesystem::path& filePath)
 		{
 			CppUtils::Logger::logInformation("Execute file: " + filePath.string());
 			return executeCode(CppUtils::FileSystem::readString(filePath));
