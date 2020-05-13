@@ -16,7 +16,7 @@ namespace Language
 	public:
 		Variable(std::string name, Scope::BaseScope* scope, bool local = false):
 			CppUtils::Type::Named{std::move(name)},
-			Instruction{eInstructionType::VARIABLE},
+			Instruction{InstructionType::VARIABLE},
 			NormalScope{scope},
 			m_local(local)
 		{}

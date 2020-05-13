@@ -18,7 +18,7 @@ namespace Language
 	public:
 		FunctionCall(std::string name, Scope::BaseScope* scope):
 			CppUtils::Type::Named{std::move(name)},
-			Instruction{eInstructionType::FUNCTIONCALL},
+			Instruction{InstructionType::FUNCTIONCALL},
 			NormalScope{scope}
 		{}
 		virtual ~FunctionCall() = default;

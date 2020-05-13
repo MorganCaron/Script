@@ -16,7 +16,7 @@ namespace Language
 	{
 	public:
 		explicit Bracket(BaseScope* scope = nullptr):
-			Instruction{eInstructionType::BRACKET},
+			Instruction{InstructionType::BRACKET},
 			VariableScope{scope}
 		{}
 		virtual ~Bracket() = default;

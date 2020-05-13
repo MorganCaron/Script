@@ -19,7 +19,8 @@ sources = files([
 	'src/Object.cpp',
 	'src/Operator.cpp',
 	'src/Value.cpp',
-	'src/Variable.cpp'
+	'src/Variable.cpp',
+	'src/Return.cpp'
 ])
 
 headers = files([
@@ -35,7 +36,8 @@ headers = files([
 	'include/Language/Operator.hpp',
 	'include/Language/Parser.hpp',
 	'include/Language/Value.hpp',
-	'include/Language/Variable.hpp'
+	'include/Language/Variable.hpp',
+	'include/Language/Return.hpp'
 ])
 
 language_lib = library(

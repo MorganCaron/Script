@@ -9,7 +9,7 @@ namespace Language
 {
 	Operator::Operator(std::string name, Scope::BaseScope* scope):
 		CppUtils::Type::Named{std::move(name)},
-		Instruction{eInstructionType::OPERATOR},
+		Instruction{InstructionType::OPERATOR},
 		NormalScope{scope}
 	{
 		static const auto operators = std::unordered_map<std::string_view, eOperatorPriority>{
@@ -47,7 +47,7 @@ namespace Language
 		auto& operand1 = m_instructions[1];
 		auto value0 = operand0->interpret();
 
-		if (getName() == "=" && operand0->getInstructionType() == eInstructionType::VARIABLE && !dynamic_cast<const Scope::VariableScope&>(getScope().findScope(Scope::VariableScopeType)).variableExists(dynamic_cast<Variable*>(operand0.get())->getName()))
+		if (getName() == "=" && operand0->getInstructionType() == InstructionType::VARIABLE && !dynamic_cast<const Scope::VariableScope&>(getScope().findScope(Scope::VariableScopeType)).variableExists(dynamic_cast<Variable*>(operand0.get())->getName()))
 			dynamic_cast<Variable*>(operand0.get())->setValue(std::make_unique<Scope::Type::Number>());
 		if (getName() == ".")
 		{
@@ -56,7 +56,7 @@ namespace Language
 			auto object = dynamic_cast<Scope::Type::Object*>(value0.get());
 			if (object == nullptr)
 				throw std::runtime_error{"Cet objet ne peut pas etre utilise ici car il a ete supprime."};
-			if (operand1->getInstructionType() != eInstructionType::FUNCTIONCALL)
+			if (operand1->getInstructionType() != InstructionType::FUNCTIONCALL)
 				throw std::runtime_error{"L element apres le point d un objet doit etre une fonction membre."};
 			result = dynamic_cast<FunctionCall*>(operand1.get())->execute(object);
 		}

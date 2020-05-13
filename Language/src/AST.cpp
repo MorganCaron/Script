@@ -6,6 +6,7 @@
 #include "Language/Object.hpp"
 #include "Language/Operator.hpp"
 #include "Language/Value.hpp"
+#include "Language/Return.hpp"
 
 namespace Language
 {
@@ -54,13 +55,13 @@ namespace Language
 		else if (std::string(AlphaChar).find(parsingInformations.currentChar()) != std::string::npos)
 		{
 			auto word = parsingInformations.nextWord();
-			if (word == Keyword::FunctionDeclaration)
+			if (word == Keyword::FunctionStatement)
 			{
 				pos += word.length();
 				parseSpace(parsingInformations);
 				FunctionStatement::parse(container, scope, parsingInformations);
 			}
-			else if (word == Keyword::ImportDeclaration)
+			else if (word == Keyword::ImportStatement)
 			{
 				pos += word.length();
 				parseSpace(parsingInformations);
@@ -74,11 +75,16 @@ namespace Language
 				controlStructure->parse(parsingInformations);
 				container.addInstruction(std::move(controlStructure));
 			}
-			else if (word == Keyword::ObjectDeclaration)
+			else if (word == Keyword::ObjectStatement)
 			{
 				pos += word.length();
 				parseSpace(parsingInformations);
 				Object::parse(container, scope, parsingInformations);
+			}
+			else if (word == Keyword::ReturnStatement)
+			{
+				pos += word.length();
+				parseReturn(container, scope, parsingInformations);
 			}
 			else
 				container.addInstruction(Operator::parseOperation(container, scope, parsingInformations));
@@ -134,7 +140,7 @@ namespace Language
 
 	void AST::parseImport(InstructionContainer& container, Scope::BaseScope& scope, ParsingInformations& parsingInformations)
 	{
-		CppUtils::Logger::logInformation("Import ", false);
+		CppUtils::Logger::logInformation(std::string{Keyword::ImportStatement} + " ", false);
 		auto filename = Value::parseString(container, parsingInformations)->getValue();
 		auto dotPosition = filename.find_last_of('.');
 		auto filenameWithoutExt = filename.substr(0, dotPosition);
@@ -143,5 +149,14 @@ namespace Language
 			dynamic_cast<Scope::FileScope&>(scope.findScope(Scope::FileScopeType)).importDll(filenameWithoutExt);
 		else
 			throw std::runtime_error{"Importation du fichier " + filename + ext + " impossible. Extension " + ext + " inconnue."};
+	}
+
+	void AST::parseReturn(InstructionContainer& container, Scope::BaseScope& scope, ParsingInformations& parsingInformations)
+	{
+		CppUtils::Logger::logInformation(std::string{Keyword::ReturnStatement} + " ", false);
+		parseSpace(parsingInformations);
+		auto returnStatement = std::make_unique<Return>();
+		returnStatement->addInstruction(Operator::parseOperation(container, scope, parsingInformations));
+		container.addInstruction(std::move(returnStatement));
 	}
 }

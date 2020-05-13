@@ -16,7 +16,7 @@ namespace Language
 	public:
 		Object(std::string name, Scope::BaseScope* scope = nullptr):
 			Scope::Type::Object{std::move(name), scope},
-			Instruction{eInstructionType::OBJECT}
+			Instruction{InstructionType::OBJECT}
 		{}
 		Object(const Object& src);
 		Object(Object&&) = default;

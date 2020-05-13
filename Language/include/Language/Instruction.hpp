@@ -7,7 +7,7 @@
 
 namespace Language
 {
-	enum class eInstructionType
+	enum class InstructionType
 	{
 		UNKNOWN,
 		NUMBER,
@@ -21,7 +21,8 @@ namespace Language
 		OPERATOR,
 		VARIABLE,
 		SIGN,
-		VALUE
+		VALUE,
+		RETURN
 	};
 
 	class Instruction:
@@ -30,12 +31,12 @@ namespace Language
 	{
 	public:
 		Instruction() = delete;
-		explicit Instruction(eInstructionType instructionType):
+		explicit Instruction(InstructionType instructionType):
 			m_instructionType{instructionType}
 		{}
 		virtual ~Instruction() = default;
 
-		inline eInstructionType getInstructionType() const noexcept
+		inline InstructionType getInstructionType() const noexcept
 		{
 			return m_instructionType;
 		}
@@ -43,6 +44,6 @@ namespace Language
 		virtual std::unique_ptr<Instruction> cloneInstruction() const = 0;
 
 	protected:
-		eInstructionType m_instructionType;
+		InstructionType m_instructionType;
 	};
 }

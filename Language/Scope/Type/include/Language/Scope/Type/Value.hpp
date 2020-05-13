@@ -58,4 +58,10 @@ namespace Language::Scope::Type
 	}
 
 	using Args = std::vector<std::unique_ptr<Value>>;
+
+	template <typename To>
+	std::unique_ptr<To> ensureType(const std::unique_ptr<Value>& value)
+	{
+		return std::make_unique<To>(*static_cast<To*>(value.get()));
+	};
 }

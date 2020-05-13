@@ -8,7 +8,7 @@ namespace Language
 {
 	ControlStructure::ControlStructure(std::string name, Scope::BaseScope* scope):
 		CppUtils::Type::Named{std::move(name)},
-		Instruction{eInstructionType::CONTROLSTRUCTURE},
+		Instruction{InstructionType::CONTROLSTRUCTURE},
 		NormalScope{scope}
 	{
 		if (getName() == "if")

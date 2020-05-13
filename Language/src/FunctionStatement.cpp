@@ -8,7 +8,7 @@ namespace Language
 {
 	FunctionStatement::FunctionStatement(std::string name, Language::Scope::BaseScope* scope):
 		CppUtils::Type::Named{std::move(name)},
-		Instruction{eInstructionType::FUNCTIONSTATEMENT},
+		Instruction{InstructionType::FUNCTIONSTATEMENT},
 		VariableScope{scope}
 	{}
 

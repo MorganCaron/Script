@@ -41,7 +41,7 @@ namespace Script
 			}
 		}
 
-		void execute()
+		std::unique_ptr<Language::Scope::Type::Value> execute()
 		{
 			CppUtils::Logger::logInformation("#- EXECUTION_/");
 			try
@@ -49,25 +49,26 @@ namespace Script
 				if (!m_ast.functionExists("main"))
 					throw std::runtime_error{"Fonction main() requise."};
 				CppUtils::Logger::logInformation(">main()");
-				m_ast.getFunction("main")({});
+				return m_ast.getFunction("main")({});
 			}
 			catch (const std::exception& error)
 			{
 				CppUtils::Logger::logError("!Runtime error: "s + error.what());
 			}
+			return std::make_unique<Language::Scope::Type::Number>(0);
 		}
 
-		void executeCode(std::string code)
+		std::unique_ptr<Language::Scope::Type::Value> executeCode(std::string code)
 		{
 			parse(std::move(code));
 			interpret();
-			execute();
+			return execute();
 		}
 		
-		void executeFile(const std::filesystem::path& filePath)
+		std::unique_ptr<Language::Scope::Type::Value> executeFile(const std::filesystem::path& filePath)
 		{
 			CppUtils::Logger::logInformation("Execute file: " + filePath.string());
-			executeCode(CppUtils::FileSystem::readString(filePath));
+			return executeCode(CppUtils::FileSystem::readString(filePath));
 		}
 
 	private:

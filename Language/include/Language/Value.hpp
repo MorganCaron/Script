@@ -15,7 +15,7 @@ namespace Language
 	{
 	public:
 		Value(std::unique_ptr<Scope::Type::Value>&& value, Scope::BaseScope* scope):
-			Instruction{eInstructionType::VALUE},
+			Instruction{InstructionType::VALUE},
 			NormalScope{scope},
 			m_value{std::move(value)}
 		{}

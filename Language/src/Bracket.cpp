@@ -22,12 +22,14 @@ namespace Language
 
 	std::unique_ptr<Scope::Type::Value> Bracket::interpret()
 	{
-		std::unique_ptr<Scope::Type::Value> result = std::make_unique<Scope::Type::Number>();
-
 		CppUtils::Logger::logInformation("{");
 		for (auto& instruction : m_instructions)
-			result = instruction->interpret();
+		{
+			auto result = instruction->interpret();
+			if (instruction->getInstructionType() == InstructionType::RETURN)
+				return result;
+		}
 		CppUtils::Logger::logInformation("}", false);
-		return result;
+		return std::make_unique<Language::Scope::Type::Number>(0);
 	}
 }
