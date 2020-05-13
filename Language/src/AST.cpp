@@ -20,7 +20,7 @@ namespace Language
 		auto& pos = parsingInformations.pos;
 		const auto length = parsingInformations.code.length();
 
-		CppUtils::Logger::log(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, "#- PARSER_/");
+		CppUtils::Logger::logInformation("#- PARSER_/");
 		while (pos < length)
 		{
 			if (!parseInstruction(*this, *this, parsingInformations))
@@ -31,7 +31,7 @@ namespace Language
 
 	void AST::interpret()
 	{
-		CppUtils::Logger::log(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, "#- INTERPRETER_/");
+		CppUtils::Logger::logInformation("#- INTERPRETER_/");
 		for (auto& instruction : m_instructions)
 			static_cast<void>(instruction->interpret());
 	}
@@ -134,7 +134,7 @@ namespace Language
 
 	void AST::parseImport(InstructionContainer& container, Scope::BaseScope& scope, ParsingInformations& parsingInformations)
 	{
-		CppUtils::Logger::logWithoutNewLine(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, "Import ");
+		CppUtils::Logger::logInformation("Import ", false);
 		auto filename = Value::parseString(container, parsingInformations)->getValue();
 		auto dotPosition = filename.find_last_of('.');
 		auto filenameWithoutExt = filename.substr(0, dotPosition);

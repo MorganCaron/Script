@@ -22,7 +22,7 @@ namespace Script
 			}
 			catch (const std::exception& error)
 			{
-				CppUtils::Logger::log(CppUtils::Logger::OutputType::Cerr, CppUtils::Logger::MessageType::Error, "!Parsing error: "s + error.what());
+				CppUtils::Logger::logError("!Parsing error: "s + error.what());
 			}
 		}
 
@@ -31,29 +31,29 @@ namespace Script
 			try
 			{
 				m_ast.interpret();
-				CppUtils::Logger::log(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, ">Functions: "s + std::to_string(m_ast.getFunctions().size()));
+				CppUtils::Logger::logInformation(">Functions: "s + std::to_string(m_ast.getFunctions().size()));
 				for (const auto& function : m_ast.getFunctions())
-					CppUtils::Logger::log(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, "- "s + function.first + "()");
+					CppUtils::Logger::logInformation("- "s + function.first + "()");
 			}
 			catch (const std::exception& error)
 			{
-				CppUtils::Logger::log(CppUtils::Logger::OutputType::Cerr, CppUtils::Logger::MessageType::Error, "!Interpretation error: "s + error.what());
+				CppUtils::Logger::logError("!Interpretation error: "s + error.what());
 			}
 		}
 
 		void execute()
 		{
-			CppUtils::Logger::log(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, "#- EXECUTION_/");
+			CppUtils::Logger::logInformation("#- EXECUTION_/");
 			try
 			{
 				if (!m_ast.functionExists("main"))
 					throw std::runtime_error{"Fonction main() requise."};
-				CppUtils::Logger::log(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, ">main()");
+				CppUtils::Logger::logInformation(">main()");
 				m_ast.getFunction("main")({});
 			}
 			catch (const std::exception& error)
 			{
-				CppUtils::Logger::log(CppUtils::Logger::OutputType::Cerr, CppUtils::Logger::MessageType::Error, "!Runtime error: "s + error.what());
+				CppUtils::Logger::logError("!Runtime error: "s + error.what());
 			}
 		}
 
@@ -66,7 +66,7 @@ namespace Script
 		
 		void executeFile(const std::filesystem::path& filePath)
 		{
-			CppUtils::Logger::log(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, "Execute file: " + filePath.string());
+			CppUtils::Logger::logInformation("Execute file: " + filePath.string());
 			executeCode(CppUtils::FileSystem::readString(filePath));
 		}
 

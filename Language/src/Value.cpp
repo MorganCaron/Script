@@ -58,7 +58,7 @@ namespace Language
 			buffer += code.at(pos++);
 		if (!buffer.empty())
 		{
-			CppUtils::Logger::logWithoutNewLine(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, buffer);
+			CppUtils::Logger::logInformation(buffer, false);
 			std::stringstream ss(buffer.c_str());
 			ss >> nb;
 			return std::make_unique<Scope::Type::Number>(nb);
@@ -80,7 +80,7 @@ namespace Language
 			if (pos == length)
 				throw std::runtime_error{std::string(quoteChar == '"' ? "Guillemet" : "Apostrophe") + " non fermes."};
 			++pos;
-			CppUtils::Logger::logWithoutNewLine(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, "\""s + buffer + '"');
+			CppUtils::Logger::logInformation("\""s + buffer + '"', false);
 			return std::make_unique<Scope::Type::String>(buffer);
 		}
 		return nullptr;

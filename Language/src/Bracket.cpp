@@ -9,7 +9,7 @@ namespace Language
 	{
 		auto& [code, pos] = parsingInformations;
 
-		CppUtils::Logger::log(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, "{");
+		CppUtils::Logger::logInformation("{");
 		while (code[pos] != '}')
 		{
 			if (!AST::parseInstruction(*this, *this, parsingInformations))
@@ -17,17 +17,17 @@ namespace Language
 			AST::parseSpace(parsingInformations);
 		}
 		++pos;
-		CppUtils::Logger::logWithoutNewLine(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, "}");
+		CppUtils::Logger::logInformation("}", false);
 	}
 
 	std::unique_ptr<Scope::Type::Value> Bracket::interpret()
 	{
 		std::unique_ptr<Scope::Type::Value> result = std::make_unique<Scope::Type::Number>();
 
-		CppUtils::Logger::log(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, "{");
+		CppUtils::Logger::logInformation("{");
 		for (auto& instruction : m_instructions)
 			result = instruction->interpret();
-		CppUtils::Logger::logWithoutNewLine(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, "}");
+		CppUtils::Logger::logInformation("}", false);
 		return result;
 	}
 }

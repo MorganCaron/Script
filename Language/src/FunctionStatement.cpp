@@ -20,14 +20,14 @@ namespace Language
 	void FunctionStatement::parse(ParsingInformations& parsingInformations)
 	{
 		auto& [code, pos] = parsingInformations;
-		auto loop = true;
-		auto word = std::string{};
 
-		CppUtils::Logger::logWithoutNewLine(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, "function "s + getName().data() + '(');
+		CppUtils::Logger::logInformation("function "s + getName().data() + '(', false);
 		AST::parseSpace(parsingInformations);
 		if (parsingInformations.currentChar() != ')')
 		{
-			while (loop)
+			auto word = std::string{};
+			auto loop = true;
+			do
 			{
 				AST::parseSpace(parsingInformations);
 				if ((word = parsingInformations.nextWord()).empty())
@@ -38,11 +38,12 @@ namespace Language
 				if ((loop = (parsingInformations.currentChar() == ',')))
 					++pos;
 			}
+			while (loop);
 			if (parsingInformations.currentChar() != ')')
 				throw std::runtime_error{"Vous avez oublie de fermer les parentheses d une fonction."};
 		}
 		++pos;
-		CppUtils::Logger::logWithoutNewLine(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, ") ");
+		CppUtils::Logger::logInformation(") ", false);
 		if (!AST::parseInstruction(*this, *this, parsingInformations))
 			throw std::runtime_error{"Une instruction est requise dans la declaration de la fonction."};
 	}

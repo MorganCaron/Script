@@ -46,7 +46,6 @@ namespace Language
 		auto& operand0 = m_instructions[0];
 		auto& operand1 = m_instructions[1];
 		auto value0 = operand0->interpret();
-		auto value1 = std::unique_ptr<Scope::Type::Value>();
 
 		if (getName() == "=" && operand0->getInstructionType() == eInstructionType::VARIABLE && !dynamic_cast<const Scope::VariableScope&>(getScope().findScope(Scope::VariableScopeType)).variableExists(dynamic_cast<Variable*>(operand0.get())->getName()))
 			dynamic_cast<Variable*>(operand0.get())->setValue(std::make_unique<Scope::Type::Number>());
@@ -63,8 +62,7 @@ namespace Language
 		}
 		else
 		{
-			value1 = operand1->interpret();
-			result = doOp(value0, getName(), value1);
+			result = doOp(value0, getName(), operand1->interpret());
 		}
 		if (getName() == "=" || getName() == "+=" || getName() == "-=" || getName() == "*=" || getName() == "/=")
 			dynamic_cast<Variable*>(operand0.get())->setValue(result->cloneValue());
@@ -138,7 +136,7 @@ namespace Language
 			expression += code.at(pos++);
 		if (expression.empty())
 			return nullptr;
-		CppUtils::Logger::logWithoutNewLine(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, " "s + expression + ' ');
+		CppUtils::Logger::logInformation(" "s + expression + ' ', false);
 		return std::make_unique<Operator>(expression, &scope);
 	}
 

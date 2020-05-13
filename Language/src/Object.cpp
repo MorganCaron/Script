@@ -28,7 +28,7 @@ namespace Language
 	{
 		auto& [code, pos] = parsingInformations;
 
-		CppUtils::Logger::log(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, "Object "s + getName().data() + ':');
+		CppUtils::Logger::logInformation("Object "s + getName().data() + ':', false);
 		AST::parseSpace(parsingInformations);
 		while (parsingInformations.currentChar() != '}')
 		{
@@ -51,7 +51,7 @@ namespace Language
 
 		if (word.empty())
 			throw std::runtime_error{"Le mot clef object doit etre suivi d un nom d objet."};
-		CppUtils::Logger::log(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, "+Object \""s + word + '"');
+		CppUtils::Logger::logInformation("+Object \""s + word + '"', false);
 		pos += word.length();
 		AST::parseSpace(parsingInformations);
 		if (code.at(pos) != '{')

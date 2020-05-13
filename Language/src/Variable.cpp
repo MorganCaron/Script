@@ -41,7 +41,7 @@ namespace Language
 				throw std::runtime_error("Le mot clef " + word + " doit etre suivi d'un nom de variable.");
 			pos += word.length();
 		}
-		CppUtils::Logger::logWithoutNewLine(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, word);
+		CppUtils::Logger::logInformation(word, false);
 		return std::make_unique<Variable>(std::move(word), &scope, local);
 	}
 

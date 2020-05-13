@@ -9,7 +9,7 @@ namespace Language
 	{
 		auto& [code, pos] = parsingInformations;
 
-		CppUtils::Logger::logWithoutNewLine(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, getName().data() + "("s);
+		CppUtils::Logger::logInformation(getName().data() + "("s, false);
 		AST::parseSpace(parsingInformations);
 		while (parsingInformations.currentChar() != ',' && parsingInformations.currentChar() != ')')
 		{
@@ -20,7 +20,7 @@ namespace Language
 		}
 		if (parsingInformations.currentChar() == ')')
 			++pos;
-		CppUtils::Logger::logWithoutNewLine(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, ")");
+		CppUtils::Logger::logInformation(")", false);
 	}
 
 	std::unique_ptr<Scope::Type::Value> FunctionCall::interpret()

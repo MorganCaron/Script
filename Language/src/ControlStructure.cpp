@@ -19,9 +19,9 @@ namespace Language
 
 	void ControlStructure::parse(ParsingInformations& parsingInformations)
 	{
-		CppUtils::Logger::logWithoutNewLine(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, getName().data() + " ("s);
+		CppUtils::Logger::logInformation(getName().data() + " ("s, false);
 		addInstruction(Operator::parseOperation(*this, getScope(), parsingInformations));
-		CppUtils::Logger::logWithoutNewLine(CppUtils::Logger::OutputType::Cout, CppUtils::Logger::MessageType::Information, ") ");
+		CppUtils::Logger::logInformation(") ", false);
 		if (!AST::parseInstruction(*this, getScope(), parsingInformations))
 			throw std::runtime_error("La condition doit etre suivie d une instruction.");
 	}
