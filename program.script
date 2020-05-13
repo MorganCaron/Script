@@ -1,17 +1,17 @@
-import "Terminal.dll";
-import "Array.dll";
+import "Terminal";
+import "Array";
 
 function main()
 {
 	a = 1;
 	b = 1;
 	c = a + b;
-	print(c);
+	Terminal.print(c);
 
 	a = "foo";
 	b = "bar";
 	c = a + b;
-	print(c);
+	Terminal.print(c);
 	
 	array = Array();
 	array.add("first");
@@ -22,7 +22,7 @@ function main()
 	while (i < size)
 	{
 		word = array.get(i);
-		print(word);
+		Terminal.print(word);
 		i += 1;
 	}
 	return 0;
@@ -31,7 +31,7 @@ function main()
 /*
 function init()
 {
-	window = window("Script C++", 1280, 720);
+	window = Window("Script C++", 1280, 720);
 	window.set_color(255, 255, 0, 0.5);
 	i = 0;
 	
@@ -43,7 +43,7 @@ function init()
 	sprite0 = window.sprite(tex_grass, 200, 200, 500, 300);
 	sprite1 = window.sprite(tex, 500, 200, 800, 300);
 	
-	object	scene
+	class Scene
 	{
 		function init()
 		{
@@ -68,7 +68,7 @@ function init()
 		}
 	}
 	// test2
-	object	cube
+	class Cube
 	{
 		function init(context)
 		{
@@ -110,10 +110,10 @@ function init()
 		}
 	}
 	
-	scene = scene();
+	scene = Scene();
 	scene.add(window);
 
-	cube0 = window.cube();
+	cube0 = Window.cube();
 	cube1 = cube(window);
 }
 

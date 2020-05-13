@@ -142,13 +142,7 @@ namespace Language
 	{
 		CppUtils::Logger::logInformation(std::string{Keyword::ImportStatement} + " ", false);
 		auto filename = Value::parseString(container, parsingInformations)->getValue();
-		auto dotPosition = filename.find_last_of('.');
-		auto filenameWithoutExt = filename.substr(0, dotPosition);
-		auto ext = filename.substr(dotPosition);
-		if (ext == ".dll")
-			dynamic_cast<Scope::FileScope&>(scope.findScope(Scope::FileScopeType)).importDll(filenameWithoutExt);
-		else
-			throw std::runtime_error{"Importation du fichier " + filename + ext + " impossible. Extension " + ext + " inconnue."};
+		dynamic_cast<Scope::FileScope&>(scope.findScope(Scope::FileScopeType)).importDll(filename);
 	}
 
 	void AST::parseReturn(InstructionContainer& container, Scope::BaseScope& scope, ParsingInformations& parsingInformations)
