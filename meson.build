@@ -55,7 +55,8 @@ headers = files([
 	'include/Script.hpp'
 ])
 
-executable('Script',
+script_exe = executable(
+	'Script',
 	sources: ['src/main.cpp'] + sources + headers + resources,
 	include_directories: includeDir,
 	dependencies: public_dependencies + private_dependencies
@@ -69,9 +70,9 @@ unitTests_exe = executable(
 )
 
 configure_file(
+	copy: true,
 	input: 'program.script',
-	output: 'program.script',
-	configuration: configuration_data()
+	output: 'program.script'
 )
 
 test('Unit tests', unitTests_exe)
