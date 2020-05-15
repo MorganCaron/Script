@@ -59,6 +59,13 @@ script_exe = executable(
 	'Script',
 	sources: ['src/main.cpp'] + sources + headers + resources,
 	include_directories: includeDir,
+	dependencies: public_dependencies + private_dependencies,
+	link_args: '-Wl,--out-implib=libScript.dll.a'
+)
+
+script_dep = declare_dependency(
+	link_with: script_exe,
+	include_directories: includeDir,
 	dependencies: public_dependencies + private_dependencies
 )
 
