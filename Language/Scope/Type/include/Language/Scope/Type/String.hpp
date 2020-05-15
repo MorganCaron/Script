@@ -4,7 +4,7 @@
 
 namespace Language::Scope::Type
 {
-	class String: public Value
+	class DLL_PUBLIC String: public Value
 	{
 	public:
 		constexpr static const auto type = "String"sv;

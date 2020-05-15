@@ -5,17 +5,17 @@
 
 namespace Language::Scope::Type
 {
-	class IFunction
+	class DLL_PUBLIC IFunction
 	{
 	public:
 		virtual ~IFunction() = default;
 	};
 
 	template<typename>
-	class ITFunction;
+	class DLL_PUBLIC ITFunction;
 
 	template<typename R, typename... Args>
-	class ITFunction<R(Args...)>: public IFunction
+	class DLL_PUBLIC ITFunction<R(Args...)>: public IFunction
 	{
 	public:
 		virtual ~ITFunction() = default;
@@ -24,10 +24,10 @@ namespace Language::Scope::Type
 	};
 
 	template<typename>
-	class Function;
+	class DLL_PUBLIC Function;
 
 	template<typename R, typename... Args>
-	class Function<R(Args...)> :public ITFunction<R(Args...)>
+	class DLL_PUBLIC Function<R(Args...)> :public ITFunction<R(Args...)>
 	{
 	public:
 		Function() = default;

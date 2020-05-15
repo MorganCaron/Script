@@ -7,11 +7,13 @@
 #include <string>
 #include <string_view>
 
+#include <External/DllExport.hpp>
+
 using namespace std::literals::string_view_literals;
 
 namespace Language::Scope::Type
 {
-	class Value
+	class DLL_PUBLIC Value
 	{
 	public:
 		explicit Value(std::string type): m_type{std::move(type)}

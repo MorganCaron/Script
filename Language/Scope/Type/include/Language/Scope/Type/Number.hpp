@@ -7,7 +7,7 @@
 
 namespace Language::Scope::Type
 {
-	class Number: public Value
+	class DLL_PUBLIC Number: public Value
 	{
 	public:
 		constexpr static const auto type = "Number"sv;
