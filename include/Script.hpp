@@ -21,6 +21,7 @@ namespace Script
 			m_ast.addFunction(std::move(name), std::move(function));	
 		}
 
+	private:
 		void parse(std::string code)
 		{
 			try
@@ -65,6 +66,7 @@ namespace Script
 			return std::make_unique<Number>(0);
 		}
 
+	public:
 		std::unique_ptr<Value> executeCode(std::string code)
 		{
 			parse(std::move(code));
