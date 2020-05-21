@@ -1,5 +1,7 @@
-import "Terminal";
-import "Array";
+/*
+import [ Terminal ] from "Terminal";
+import [ Array ] from "Array";
+*/
 
 function main()
 {
@@ -12,8 +14,17 @@ function main()
 	b = "bar";
 	c = a + b;
 	print(c);
+
+	/*
+	a = [1, 2];
+	b = a + 3;
+	c = b + [4, 5];
+	for d in c:
+		print(d);
+	*/
 	
-	array = Array();
+	/*
+	array = new Array;
 	array.add("first");
 	array.add("second");
 	array.add("third");
@@ -25,6 +36,7 @@ function main()
 		Terminal.print(word);
 		i += 1;
 	}
+	*/
 	return 0;
 }
 

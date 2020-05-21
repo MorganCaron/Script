@@ -1,37 +1,34 @@
 cppUtils_dep = dependency('CppUtils', fallback: ['CppUtils', 'cppUtils_dep'])
 
-subdir('AST')
-subdir('Parser')
-subdir('Instruction')
+subdir('Scope')
 
 public_dependencies = [
 	cppUtils_dep,
-	ast_dep,
-	parser_dep,
-	instruction_dep
+	scope_dep
 ]
 private_dependencies = []
 
 includeDir = include_directories(['include/', '.'])
 
 sources = files([
-	'src/ASTRoot.cpp'
+	
 ])
 
 headers = files([
-	'include/Language/ASTRoot.hpp',
-	'include/Language/Language.hpp'
+	'include/Language/AST/Instruction.hpp',
+	'include/Language/AST/InstructionContainer.hpp',
+	'include/Language/AST/Interpreter.hpp'
 ])
 
-language_lib = library(
-	'Language',
+ast_lib = library(
+	'AST',
 	sources + headers,
 	include_directories: includeDir,
 	dependencies: public_dependencies + private_dependencies
 )
 
-language_dep = declare_dependency(
-	link_with: language_lib,
+ast_dep = declare_dependency(
+	link_with: ast_lib,
 	include_directories: includeDir,
 	dependencies: public_dependencies
 )

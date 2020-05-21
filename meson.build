@@ -39,10 +39,10 @@ subdir('res')
 subdir('Language')
 
 public_dependencies = [
+	cppUtils_dep,
 	language_dep
 ]
 private_dependencies = [
-	cppUtils_dep
 ]
 
 includeDir = include_directories(['include', 'res', '.'])
@@ -66,7 +66,7 @@ script_exe = executable(
 script_dep = declare_dependency(
 	link_with: script_exe,
 	include_directories: includeDir,
-	dependencies: public_dependencies + private_dependencies
+	dependencies: public_dependencies
 )
 
 unitTests_exe = executable(

@@ -1,20 +1,25 @@
 #pragma once
 
-#include <Language/AST.hpp>
+#include <Language/Language.hpp>
+
+#include <config.h>
 
 namespace Script
 {
-	using Value = Language::Scope::Type::Value;
-	using Args = Language::Scope::Type::Args;
-	using Number = Language::Scope::Type::Number;
-	using String = Language::Scope::Type::String;
-	using Function = Language::Scope::FunctionType;
-	using ExternalFunction = Language::Scope::Type::Function<std::unique_ptr<Value>(const Args&)>;
+	using Value = Language::AST::Scope::Type::Value;
+	using Args = Language::AST::Scope::Type::Args;
+	using Number = Language::AST::Scope::Type::Number;
+	using String = Language::AST::Scope::Type::String;
+	using Function = Language::AST::Scope::FunctionType;
+	using ExternalFunction = Language::AST::Scope::Type::Function<std::unique_ptr<Value>(const Args&)>;
 
 	class Script final
 	{
 	public:
-		Script() = default;
+		Script()
+		{
+			CppUtils::Logger::logImportant("#- Script_/\nv: "s + VERSION);
+		};
 
 		inline void addFunction(std::string name, std::unique_ptr<Function>&& function)
 		{
@@ -51,7 +56,7 @@ namespace Script
 
 		std::unique_ptr<Value> execute()
 		{
-			CppUtils::Logger::logInformation("#- EXECUTION_/");
+			CppUtils::Logger::logImportant("#- EXECUTION_/");
 			try
 			{
 				if (!m_ast.functionExists("main"))
@@ -81,6 +86,6 @@ namespace Script
 		}
 
 	private:
-		Language::AST m_ast;
+		Language::ASTRoot m_ast;
 	};
 }
