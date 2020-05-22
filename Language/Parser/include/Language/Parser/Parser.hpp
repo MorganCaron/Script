@@ -39,7 +39,6 @@ namespace Language::Parser
 		bool parseCommentary();
 	public:
 		void skipSpaces();
-		std::unique_ptr<AST::Instruction> parseInstruction();
 
 		AST::InstructionContainer& container;
 		AST::Scope::BaseScope& scope;
@@ -48,4 +47,8 @@ namespace Language::Parser
 	};
 
 	using InstructionParser = std::function<std::unique_ptr<AST::Instruction>(ParsingInformations& parsingInformations)>;
+	using ValueParser = std::function<std::unique_ptr<AST::Instruction>(ParsingInformations& parsingInformations)>;
+
+	std::unique_ptr<AST::Instruction> parseInstruction(ParsingInformations& parsingInformations);
+	std::unique_ptr<AST::Instruction> parseValue(ParsingInformations& parsingInformations);
 }

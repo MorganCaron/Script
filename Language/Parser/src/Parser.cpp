@@ -1,7 +1,7 @@
 #include <Language/Parser/Parser.hpp>
 
 #include <Language/AST/Scope/BaseScope.hpp>
-#include <Language/AST/Scope/InstructionScope.hpp>
+#include <Language/AST/Scope/LanguageScope.hpp>
 
 namespace Language::Parser
 {
@@ -54,23 +54,45 @@ namespace Language::Parser
 		} while (pos < length && parseCommentary());
 	}
 	
-	std::unique_ptr<AST::Instruction> ParsingInformations::parseInstruction()
+	std::unique_ptr<AST::Instruction> parseInstruction(ParsingInformations& parsingInformations)
 	{
-		skipSpaces();
+		auto& [container, scope, src, pos] = parsingInformations;
+
+		parsingInformations.skipSpaces();
 		auto instruction = std::unique_ptr<AST::Instruction>{nullptr};
-		const auto& instructionParsers = dynamic_cast<const AST::Scope::InstructionScope&>(scope.findScope(AST::Scope::InstructionScopeType)).getInstructions();
+		const auto& instructionParsers = dynamic_cast<const AST::Scope::LanguageScope&>(scope.findScope(AST::Scope::LanguageScopeType)).getInstructionParsers();
 		auto instructionParserIterator = instructionParsers.begin();
 		while (instruction == nullptr && instructionParserIterator != instructionParsers.end())
 		{
 			auto startPos = pos;
-			instruction = instructionParserIterator->second(*this);
+			instruction = instructionParserIterator->second(parsingInformations);
 			if (!instruction)
 				pos = startPos;
 			++instructionParserIterator;
 		}
-		if (currentChar() == ';')
+		if (parsingInformations.currentChar() == ';')
 			++pos;
-		std::cout << std::endl;
+		if (instruction)
+			std::cout << std::endl;
+		return instruction;
+	}
+
+	std::unique_ptr<AST::Instruction> parseValue(ParsingInformations& parsingInformations)
+	{
+		auto& [container, scope, src, pos] = parsingInformations;
+
+		parsingInformations.skipSpaces();
+		auto instruction = std::unique_ptr<AST::Instruction>{nullptr};
+		const auto& valueParsers = dynamic_cast<const AST::Scope::LanguageScope&>(scope.findScope(AST::Scope::LanguageScopeType)).getValueParsers();
+		auto valueParserIterator = valueParsers.begin();
+		while (instruction == nullptr && valueParserIterator != valueParsers.end())
+		{
+			auto startPos = pos;
+			instruction = valueParserIterator->second(parsingInformations);
+			if (!instruction)
+				pos = startPos;
+			++valueParserIterator;
+		}
 		return instruction;
 	}
 }

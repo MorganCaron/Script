@@ -17,7 +17,7 @@ namespace Language::Instruction
 		
 		while (!parsingInformations.endOfCode() && parsingInformations.currentChar() != '}')
 		{
-			auto instruction = bracketParsingInformations.parseInstruction();
+			auto instruction = Parser::parseInstruction(bracketParsingInformations);
 			parsingInformations.skipSpaces();
 			if (instruction != nullptr)
 				bracket->addInstruction(std::move(instruction));
@@ -40,7 +40,10 @@ namespace Language::Instruction
 		{
 			auto result = instruction->interpret();
 			if (instruction->getInstructionType() == AST::InstructionType::RETURN)
+			{
+				CppUtils::Logger::logInformation("}", false);
 				return result;
+			}
 		}
 		CppUtils::Logger::logInformation("}", false);
 		return std::make_unique<AST::Scope::Type::Number>(0);

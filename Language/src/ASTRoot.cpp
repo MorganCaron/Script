@@ -13,12 +13,12 @@ namespace Language
 {
 	ASTRoot::ASTRoot()
 	{
-		addNativeInstructions();
+		addNativeRules();
 	}
 
 	ASTRoot::ASTRoot(std::string src)
 	{
-		addNativeInstructions();
+		addNativeRules();
 		parse(std::move(src));
 	}
 
@@ -27,11 +27,10 @@ namespace Language
 		auto pos = std::size_t{0};
 		auto parsingInformations = Parser::ParsingInformations{*this, *this, src, pos};
 		const auto length = parsingInformations.src.length();
-
-		CppUtils::Logger::logImportant("#- PARSER_/");
+		
 		while (parsingInformations.pos < length)
 		{
-			auto instruction = parsingInformations.parseInstruction();
+			auto instruction = Parser::parseInstruction(parsingInformations);
 			if (instruction != nullptr)
 				addInstruction(std::move(instruction));
 			parsingInformations.skipSpaces();
@@ -40,12 +39,11 @@ namespace Language
 
 	void ASTRoot::interpret()
 	{
-		CppUtils::Logger::logImportant("#- INTERPRETER_/");
 		for (auto& instruction : m_instructions)
 			static_cast<void>(instruction->interpret());
 	}
 
-	void ASTRoot::addNativeInstructions()
+	void ASTRoot::addNativeRules()
 	{
 		static const auto nativeInstructions = std::unordered_map<std::string, Parser::InstructionParser>{
 			{ "Bracket", &Instruction::Bracket::parse },
@@ -54,8 +52,14 @@ namespace Language
 			{ "ImportStatement", &Instruction::ImportStatement::parse },
 			{ "Object", &Instruction::Object::parse },
 			{ "Return", &Instruction::Return::parse },
-			{ "Operation", std::bind(&Instruction::Operator::parseOperation, std::placeholders::_1, nullptr, nullptr) }
+			{ "Value", &Parser::parseValue }
+			
 		};
 		addInstructionParsers(nativeInstructions);
+
+		static const auto nativeValues = std::unordered_map<std::string, Parser::ValueParser>{
+			{ "Operation", std::bind(&Instruction::Operator::parseOperation, std::placeholders::_1, nullptr, nullptr) }
+		};
+		addValueParsers(nativeValues);
 	}
 }

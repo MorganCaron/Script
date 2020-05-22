@@ -13,7 +13,7 @@ sources = files([
 ])
 
 headers = files([
-	'include/Language/AST/Scope/InstructionScope.hpp',
+	'include/Language/AST/Scope/LanguageScope.hpp',
 	'include/Language/Parser/Number.hpp',
 	'include/Language/Parser/Parser.hpp',
 	'include/Language/Parser/String.hpp'

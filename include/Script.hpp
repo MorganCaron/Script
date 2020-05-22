@@ -1,5 +1,6 @@
 #pragma once
 
+#include <CppUtils.hpp>
 #include <Language/Language.hpp>
 
 #include <config.h>
@@ -19,7 +20,7 @@ namespace Script
 		Script()
 		{
 			CppUtils::Logger::logImportant("#- Script_/\nv: "s + VERSION);
-		};
+		}
 
 		inline void addFunction(std::string name, std::unique_ptr<Function>&& function)
 		{
@@ -29,6 +30,8 @@ namespace Script
 	private:
 		void parse(std::string code)
 		{
+			CppUtils::Logger::logImportant("#- PARSER_/");
+			m_chrono.start();
 			try
 			{
 				m_ast.parse(std::move(code));
@@ -37,10 +40,14 @@ namespace Script
 			{
 				CppUtils::Logger::logError("!Parsing error: "s + error.what());
 			}
+			m_chrono.stop();
+			CppUtils::Logger::logDebug("Duration: "s + m_chrono.getText());
 		}
 
 		void interpret()
 		{
+			CppUtils::Logger::logImportant("#- INTERPRETER_/");
+			m_chrono.start();
 			try
 			{
 				m_ast.interpret();
@@ -52,22 +59,31 @@ namespace Script
 			{
 				CppUtils::Logger::logError("!Interpretation error: "s + error.what());
 			}
+			m_chrono.stop();
+			CppUtils::Logger::logDebug("Duration: "s + m_chrono.getText());
 		}
 
 		std::unique_ptr<Value> execute()
 		{
 			CppUtils::Logger::logImportant("#- EXECUTION_/");
+			m_chrono.start();
 			try
 			{
 				if (!m_ast.functionExists("main"))
 					throw std::runtime_error{"Fonction main() requise."};
-				CppUtils::Logger::logInformation(">main()");
-				return m_ast.getFunction("main")({});
+				CppUtils::Logger::logInformation("main()");
+				auto result = m_ast.getFunction("main")({});
+				m_chrono.stop();
+				std::cout << std::endl;
+				CppUtils::Logger::logDebug("Duration: "s + m_chrono.getText());
+				return result;
 			}
 			catch (const std::exception& error)
 			{
 				CppUtils::Logger::logError("!Runtime error: "s + error.what());
 			}
+			m_chrono.stop();
+			CppUtils::Logger::logDebug("Duration: "s + m_chrono.getText());
 			return std::make_unique<Number>(0);
 		}
 
@@ -87,5 +103,6 @@ namespace Script
 
 	private:
 		Language::ASTRoot m_ast;
+		CppUtils::Chrono::Chronometer m_chrono;
 	};
 }

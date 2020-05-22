@@ -54,7 +54,7 @@ namespace Language::Instruction
 		parsingInformations.skipSpaces();
 		while (parsingInformations.currentChar() != '}')
 		{
-			objectParsingInformations.parseInstruction();
+			Parser::parseInstruction(objectParsingInformations);
 			parsingInformations.skipSpaces();
 		}
 		++pos;

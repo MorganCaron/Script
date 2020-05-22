@@ -33,7 +33,7 @@ namespace Language::Instruction
 		CppUtils::Logger::logInformation(controlStructure->getName().data() + " ("s, false);
 		controlStructure->addInstruction(Operator::parseOperation(controlStructureParsingInformations));
 		CppUtils::Logger::logInformation(") ", false);
-		if (controlStructureParsingInformations.parseInstruction() == nullptr)
+		if (Parser::parseInstruction(controlStructureParsingInformations) == nullptr)
 			throw std::runtime_error{"La condition doit etre suivie d une instruction."};
 		
 		return controlStructure;

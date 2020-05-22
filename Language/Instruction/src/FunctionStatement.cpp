@@ -82,7 +82,7 @@ namespace Language::Instruction
 		++parsingInformations.pos;
 		CppUtils::Logger::logInformation(")");
 		
-		auto instruction = functionStatementParserInformations.parseInstruction();
+		auto instruction = Parser::parseInstruction(functionStatementParserInformations);
 		if (!instruction)
 			throw std::runtime_error{"Une instruction est requise dans la declaration de la fonction."};
 		functionStatement->addInstruction(std::move(instruction));

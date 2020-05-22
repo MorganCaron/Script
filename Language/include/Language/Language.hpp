@@ -6,7 +6,7 @@
 #include <Language/AST/Scope/Type/String.hpp>
 #include <Language/AST/Scope/Type/Value.hpp>
 
-#include <Language/AST/Scope/InstructionScope.hpp>
+#include <Language/AST/Scope/LanguageScope.hpp>
 #include <Language/AST/Scope/FileScope.hpp>
 #include <Language/AST/Scope/FunctionScope.hpp>
 #include <Language/AST/Scope/ObjectScope.hpp>
