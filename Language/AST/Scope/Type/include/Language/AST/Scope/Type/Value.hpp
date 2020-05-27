@@ -26,7 +26,7 @@ namespace Language::AST::Scope::Type
 			return std::make_unique<Value>(*this);
 		}
 
-		inline std::string_view getType() const noexcept
+		inline const std::string& getType() const noexcept
 		{
 			return m_type;
 		}

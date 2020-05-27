@@ -71,7 +71,6 @@ namespace Script
 			{
 				if (!m_ast.functionExists("main"))
 					throw std::runtime_error{"No entry point found: The main function is missing."};
-				CppUtils::Logger::logInformation("main()");
 				auto result = m_ast.getFunction("main")({});
 				m_chrono.stop();
 				std::cout << std::endl;

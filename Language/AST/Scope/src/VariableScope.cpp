@@ -40,6 +40,8 @@ namespace Language::AST::Scope
 			auto& variable = m_variables[name.data()];
 			if (variable.isConstant)
 				throw std::runtime_error("La variable "s + name.data() + " est constante. Sa valeur ne peut pas etre modifiee");
+			if (variable.value->getType() != value->getType())
+				throw std::runtime_error("La variable est de type "s + variable.value->getType() + ". Vous ne pouvez pas lui affecter une valeur de type "s + value->getType());
 			variable.value = std::move(value);
 		}
 		else if (hasScope())

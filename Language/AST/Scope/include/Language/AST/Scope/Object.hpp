@@ -16,7 +16,7 @@ namespace Language::AST::Scope::Type
 	public:
 		static constexpr const auto type = "Object"sv;
 
-		Object(std::string name, BaseScope* scope = nullptr):
+		explicit Object(std::string name, BaseScope* scope = nullptr):
 			Value{type.data()},
 			CppUtils::Type::Named{std::move(name)},
 			FunctionScope{scope},

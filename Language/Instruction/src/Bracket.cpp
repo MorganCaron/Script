@@ -35,17 +35,12 @@ namespace Language::Instruction
 
 	std::unique_ptr<AST::Scope::Type::Value> Bracket::interpret()
 	{
-		CppUtils::Logger::logInformation("{");
 		for (auto& instruction : m_instructions)
 		{
 			auto result = instruction->interpret();
 			if (instruction->getInstructionType() == Return::type)
-			{
-				CppUtils::Logger::logInformation("}", false);
 				return result;
-			}
 		}
-		CppUtils::Logger::logInformation("}", false);
 		return nullptr;
 	}
 }

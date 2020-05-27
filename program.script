@@ -5,15 +5,19 @@ import [ Array ] from "Array";
 
 function main()
 {
-	const a = 1;
-	const b = 1;
-	const c = a + b;
-	print(c);
+	{
+		const a = 1;
+		const b = 1;
+		const c = a + b;
+		print(c);
+	}
 
-	a = "foo";
-	b = "bar";
-	c = a + b;
-	print(c);
+	{
+		const a = "foo";
+		const b = "bar";
+		const c = a + b;
+		print(c);
+	}
 
 	/*
 	a = [1, 2];

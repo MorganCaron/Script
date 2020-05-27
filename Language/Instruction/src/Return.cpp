@@ -23,10 +23,6 @@ namespace Language::Instruction
 
 	std::unique_ptr<AST::Scope::Type::Value> Return::interpret()
 	{
-		auto value = m_instructions.at(0)->interpret();
-		auto stream = std::stringstream{};
-		value->print(stream);
-		CppUtils::Logger::logInformation(std::string{keyword} + " " + stream.str());
-		return value;
+		return m_instructions.at(0)->interpret();
 	}
 }
