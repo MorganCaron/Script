@@ -1,5 +1,7 @@
 #pragma once
 
+#include <unordered_map>
+
 #include <Language/AST/Scope/FileScope.hpp>
 #include <Language/Parser/Parser.hpp>
 

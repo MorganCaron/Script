@@ -2,20 +2,20 @@
 
 namespace Language::AST::Scope
 {
-	VariableScope::VariableScope(BaseScope* scope, ScopeType scopeType): NormalScope(scope, scopeType)
+	VariableScope::VariableScope(BaseScope* scope, ScopeType scopeType): NormalScope{scope, scopeType}
 	{}
 
-	VariableScope::VariableScope(const VariableScope& src): NormalScope(src)
+	VariableScope::VariableScope(const VariableScope& src): NormalScope{src}
 	{
-		for (const auto &[key, value] : src.m_variables)
-			addVariable(key, value->cloneValue());
+		for (const auto &[key, variable] : src.m_variables)
+			declareVariable(key, Type::Variable{variable});
 	}
 
 	VariableScope& VariableScope::operator=(const VariableScope& rhs)
 	{
 		NormalScope::operator=(rhs);
-		for (const auto &[key, value] : rhs.m_variables)
-			addVariable(key, value->cloneValue());
+		for (const auto &[key, variable] : rhs.m_variables)
+			declareVariable(key, Type::Variable{variable});
 		return *this;
 	}
 
@@ -28,22 +28,27 @@ namespace Language::AST::Scope
 		return false;
 	}
 
-	void VariableScope::addVariable(std::string_view name, std::unique_ptr<Type::Value>&& value, bool local)
+	void VariableScope::declareVariable(std::string_view name, Type::Variable&& variable)
 	{
-		if (local)
-		{
-			m_variables[name.data()] = std::move(value);
-			return;
-		}
-		if (m_variables.find(name.data()) != m_variables.end())
-			m_variables[name.data()] = std::move(value);
-		else if (hasScope())
-			dynamic_cast<VariableScope&>(getScope().findScope(getType())).addVariable(name, std::move(value), local);
-		else
-			m_variables[name.data()] = std::move(value);
+		m_variables[name.data()] = std::move(variable);
 	}
 
-	const std::unique_ptr<Type::Value>& VariableScope::getVariable(std::string_view name) const
+	void VariableScope::setVariableValue(std::string_view name, std::unique_ptr<Type::Value>&& value)
+	{
+		if (m_variables.find(name.data()) != m_variables.end())
+		{
+			auto& variable = m_variables[name.data()];
+			if (variable.isConstant)
+				throw std::runtime_error("La variable "s + name.data() + " est constante. Sa valeur ne peut pas etre modifiee");
+			variable.value = std::move(value);
+		}
+		else if (hasScope())
+			dynamic_cast<VariableScope&>(getScope().findScope(getType())).setVariableValue(name, std::move(value));
+		else
+			throw std::runtime_error("La variable "s + name.data() + " n existe pas.");
+	}
+
+	const Type::Variable& VariableScope::getVariable(std::string_view name) const
 	{
 		if (m_variables.find(name.data()) != m_variables.end())
 			return m_variables.at(name.data());

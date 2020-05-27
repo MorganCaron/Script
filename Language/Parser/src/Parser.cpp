@@ -67,13 +67,15 @@ namespace Language::Parser
 			auto startPos = pos;
 			instruction = instructionParserIterator->second(parsingInformations);
 			if (!instruction)
+			{
 				pos = startPos;
-			++instructionParserIterator;
+				++instructionParserIterator;
+			}
 		}
-		if (parsingInformations.currentChar() == ';')
+		if (!parsingInformations.endOfCode() && parsingInformations.currentChar() == ';')
 			++pos;
 		if (instruction)
-			std::cout << std::endl;
+			CppUtils::Logger::logDebug(" -> " + instructionParserIterator->first + " parser: " + instruction->getInstructionType());
 		return instruction;
 	}
 
@@ -94,5 +96,10 @@ namespace Language::Parser
 			++valueParserIterator;
 		}
 		return instruction;
+	}
+
+	std::unique_ptr<AST::Instruction> parseOperator([[maybe_unused]] ParsingInformations& parsingInformations)
+	{
+		return nullptr;
 	}
 }

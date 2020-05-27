@@ -18,14 +18,15 @@ namespace Language::AST::Scope
 		VariableScope& operator=(VariableScope&& rhs) noexcept = default;
 
 		bool variableExists(std::string_view name) const;
-		void addVariable(std::string_view name, std::unique_ptr<Type::Value>&& value, bool local = 0);
+		void declareVariable(std::string_view name, Type::Variable&& variable);
+		void setVariableValue(std::string_view name, std::unique_ptr<Type::Value>&& value);
 		inline void resetVariables()
 		{
 			m_variables.clear();
 		}
-		const std::unique_ptr<Type::Value>& getVariable(std::string_view name) const;
+		const Type::Variable& getVariable(std::string_view name) const;
 
 	private:
-		std::unordered_map<std::string, std::unique_ptr<Type::Value>> m_variables;
+		std::unordered_map<std::string, Type::Variable> m_variables;
 	};
 }

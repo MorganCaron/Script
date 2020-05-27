@@ -7,50 +7,44 @@ namespace Language::Instruction
 {
 	bool Variable::exists() const
 	{
-		return dynamic_cast<const AST::Scope::VariableScope&>(getScope().findScope(AST::Scope::VariableScopeType)).variableExists(getName());
+		const auto& variableScope = dynamic_cast<const AST::Scope::VariableScope&>(getScope().findScope(AST::Scope::VariableScopeType));
+		return variableScope.variableExists(getName());
 	}
 
 	void Variable::setValue(std::unique_ptr<AST::Scope::Type::Value>&& value)
 	{
-		dynamic_cast<AST::Scope::VariableScope&>(getScope().findScope(AST::Scope::VariableScopeType)).addVariable(getName(), std::move(value), m_local);
+		auto& variableScope = dynamic_cast<AST::Scope::VariableScope&>(getScope().findScope(AST::Scope::VariableScopeType));
+		variableScope.setVariableValue(getName(), std::move(value));
 	}
 
 	const std::unique_ptr<AST::Scope::Type::Value>& Variable::getValue() const
 	{
-		return dynamic_cast<const AST::Scope::VariableScope&>(getScope().findScope(AST::Scope::VariableScopeType)).getVariable(getName());
+		const auto& variableScope = dynamic_cast<const AST::Scope::VariableScope&>(getScope().findScope(AST::Scope::VariableScopeType));
+		return variableScope.getVariable(getName()).value;
 	}
 
 	std::unique_ptr<AST::Instruction> Variable::parse(Parser::ParsingInformations& parsingInformations)
 	{
 		auto& [container, scope, src, pos] = parsingInformations;
 
-		auto local = false;
-		auto firstWord = parsingInformations.nextWord();
-		if (firstWord.empty())
+		auto variableName = parsingInformations.nextWord();
+		if (variableName.empty())
 			return nullptr;
-		pos += firstWord.length();
-		if (firstWord == "var" || firstWord == "const")
-			local = true;
+		const auto& variableScope = dynamic_cast<const AST::Scope::VariableScope&>(scope.findScope(AST::Scope::VariableScopeType));
+		if (!variableScope.variableExists(variableName))
+			return nullptr;
+		pos += variableName.length();
 
 		parsingInformations.skipSpaces();
-		auto secondWord = std::string{};
-		if (local)
-		{
-			if ((secondWord = parsingInformations.nextWord()).empty())
-				throw std::runtime_error{"Le mot clef " + firstWord + " doit etre suivi d'un nom de variable."};
-			pos += secondWord.length();
-		}
 
-		CppUtils::Logger::logInformation(firstWord + (local ? (" " + secondWord) : ""), false);
-		return std::make_unique<Variable>(std::move(local ? secondWord : firstWord), &scope, local);
+		CppUtils::Logger::logInformation(variableName, false);
+		return std::make_unique<Variable>(std::move(variableName), &scope);
 	}
 	
 	std::unique_ptr<AST::Scope::Type::Value> Variable::interpret()
 	{
 		const auto &variableScope = dynamic_cast<const AST::Scope::VariableScope&>(getScope().findScope(AST::Scope::VariableScopeType));
-		if (!variableScope.variableExists(getName()))
-			setValue(std::make_unique<AST::Scope::Type::Number>());
-		return variableScope.getVariable(getName())->cloneValue();
+		return variableScope.getVariable(getName()).value->cloneValue();
 	}
 
 	std::ostream& operator<<(std::ostream& os, const Variable& variable)

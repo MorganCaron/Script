@@ -5,9 +5,9 @@ import [ Array ] from "Array";
 
 function main()
 {
-	a = 1;
-	b = 1;
-	c = a + b;
+	const a = 1;
+	const b = 1;
+	const c = a + b;
 	print(c);
 
 	a = "foo";

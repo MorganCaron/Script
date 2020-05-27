@@ -15,7 +15,7 @@ versionArray = version.split('.')
 
 configuration = {
 	'NAME': meson.project_name(),
-	'DESCRIPTION': 'Script is an object-oriented interpreted programming language for software and video game development.',
+	'DESCRIPTION': 'Script is an object-oriented interpreted programming language.',
 	'VERSION': version,
 	'VERSION_MAJOR': versionArray[0],
 	'VERSION_MINOR': versionArray[1],
@@ -28,8 +28,8 @@ configuration = {
 }
 
 configure_file(
-	input: 'config.in.h',
-	output: 'config.h',
+	input: 'config.in.hpp',
+	output: 'config.hpp',
 	configuration: configuration
 )
 

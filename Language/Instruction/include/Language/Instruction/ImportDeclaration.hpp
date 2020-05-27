@@ -7,16 +7,19 @@
 
 namespace Language::Instruction
 {
-	class ImportStatement final: public AST::Instruction
+	class ImportDeclaration final: public AST::Instruction
 	{
 	public:
-		static constexpr const auto Keyword = "import"sv;
-
-		ImportStatement();
+		static constexpr const auto type = "Import declaration"sv;
+		static constexpr const auto keyword = "import"sv;
+		
+		explicit ImportDeclaration():
+			AST::Instruction{std::string{type}}
+		{}
 		
 		std::unique_ptr<AST::Instruction> cloneInstruction() const override
 		{
-			return std::make_unique<ImportStatement>(*this);
+			return std::make_unique<ImportDeclaration>(*this);
 		}
 
 		static std::unique_ptr<AST::Instruction> parse(Parser::ParsingInformations& parsingInformations);

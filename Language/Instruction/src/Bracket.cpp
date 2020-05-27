@@ -1,5 +1,6 @@
 #include <Language/Instruction/Bracket.hpp>
 
+#include <Language/Instruction/Return.hpp>
 #include <Language/AST/Scope/Type/Number.hpp>
 
 namespace Language::Instruction
@@ -22,11 +23,10 @@ namespace Language::Instruction
 			if (instruction != nullptr)
 				bracket->addInstruction(std::move(instruction));
 			else if (parsingInformations.currentChar() != '}')
-				throw std::runtime_error{"Erreur de syntaxe. La chaine ne correspond à aucune instruction connue."};
+				throw std::runtime_error{"Erreur de syntaxe. La chaine ne correspond a aucune instruction connue."};
 		}
-
-		if (parsingInformations.endOfCode() || parsingInformations.currentChar() != '}')
-			throw std::runtime_error{"Une accolade n'est jamais fermée."};
+		if (parsingInformations.endOfCode())
+			throw std::runtime_error{"Une accolade n est jamais fermee."};
 		++pos;
 		CppUtils::Logger::logInformation("}", false);
 
@@ -39,13 +39,13 @@ namespace Language::Instruction
 		for (auto& instruction : m_instructions)
 		{
 			auto result = instruction->interpret();
-			if (instruction->getInstructionType() == AST::InstructionType::RETURN)
+			if (instruction->getInstructionType() == Return::type)
 			{
 				CppUtils::Logger::logInformation("}", false);
 				return result;
 			}
 		}
 		CppUtils::Logger::logInformation("}", false);
-		return std::make_unique<AST::Scope::Type::Number>(0);
+		return nullptr;
 	}
 }

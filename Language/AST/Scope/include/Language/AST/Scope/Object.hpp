@@ -14,7 +14,7 @@ namespace Language::AST::Scope::Type
 		public FunctionScope
 	{
 	public:
-		constexpr static const auto type = "Object"sv;
+		static constexpr const auto type = "Object"sv;
 
 		Object(std::string name, BaseScope* scope = nullptr):
 			Value{type.data()},

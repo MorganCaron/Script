@@ -1,40 +1,27 @@
 #pragma once
 
+#include <string>
 #include <optional>
 
 #include <Language/AST/Interpreter.hpp>
 
 namespace Language::AST
 {
-	enum class InstructionType
-	{
-		UNKNOWN,
-		NUMBER,
-		STRING,
-		OBJECT,
-		BRACKET,
-		CONTROLSTRUCTURE,
-		FUNCTIONCALL,
-		FUNCTIONSTATEMENT,
-		IMPORTSTATEMENT,
-		EXTERNALFUNCTION,
-		OPERATOR,
-		VARIABLE,
-		SIGN,
-		VALUE,
-		RETURN
-	};
-
 	class Instruction: public Interpreter
 	{
 	public:
 		Instruction() = delete;
-		explicit Instruction(InstructionType instructionType):
-			m_instructionType{instructionType}
+		explicit Instruction(std::string instructionType):
+			m_instructionType{std::move(instructionType)}
 		{}
 		virtual ~Instruction() = default;
 
-		inline InstructionType getInstructionType() const noexcept
+		Instruction(const Instruction&) = default;
+		Instruction(Instruction&&) = default;
+		Instruction& operator=(const Instruction&) = default;
+		Instruction& operator=(Instruction&&) = default;
+
+		inline const std::string& getInstructionType() const noexcept
 		{
 			return m_instructionType;
 		}
@@ -42,6 +29,6 @@ namespace Language::AST
 		virtual std::unique_ptr<Instruction> cloneInstruction() const = 0;
 
 	protected:
-		InstructionType m_instructionType;
+		std::string m_instructionType;
 	};
 }

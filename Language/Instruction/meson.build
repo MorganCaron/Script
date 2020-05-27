@@ -13,26 +13,28 @@ sources = files([
 	'src/Bracket.cpp',
 	'src/ControlStructure.cpp',
 	'src/FunctionCall.cpp',
-	'src/FunctionStatement.cpp',
-	'src/ImportStatement.cpp',
+	'src/FunctionDeclaration.cpp',
+	'src/ImportDeclaration.cpp',
 	'src/Object.cpp',
 	'src/Operator.cpp',
 	'src/Return.cpp',
 	'src/Value.cpp',
-	'src/Variable.cpp'
+	'src/Variable.cpp',
+	'src/VariableDeclaration.cpp'
 ])
 
 headers = files([
 	'include/Language/Instruction/Bracket.hpp',
 	'include/Language/Instruction/ControlStructure.hpp',
 	'include/Language/Instruction/FunctionCall.hpp',
-	'include/Language/Instruction/FunctionStatement.hpp',
-	'include/Language/Instruction/ImportStatement.hpp',
+	'include/Language/Instruction/FunctionDeclaration.hpp',
+	'include/Language/Instruction/ImportDeclaration.hpp',
 	'include/Language/Instruction/Object.hpp',
 	'include/Language/Instruction/Operator.hpp',
 	'include/Language/Instruction/Return.hpp',
 	'include/Language/Instruction/Value.hpp',
-	'include/Language/Instruction/Variable.hpp'
+	'include/Language/Instruction/Variable.hpp',
+	'include/Language/Instruction/VariableDeclaration.hpp'
 ])
 
 instruction_lib = library(

@@ -2,13 +2,21 @@
 #include <vector>
 
 #include <CppUtils.hpp>
+#include <Script.hpp>
 
 int main()
 {
 	const auto tests = std::vector<CppUtils::Test::UnitTest>{
 
-		CppUtils::Test::UnitTest("Unit tests", [] {
-			ASSERT(true);
+		CppUtils::Test::UnitTest("Main function", [] {
+			static const auto src = "\
+			function main() {\
+				return 42;\
+			}"s;
+			auto script = Script::Script{};
+			auto result = Script::Value::ensureType<Script::Number>(script.executeCode(src))->getValue();
+			std::cout << result << std::endl;
+			ASSERT(result == 42);
 		}),
 
 		CppUtils::Test::UnitTest("MeshNode", [] {

@@ -14,9 +14,11 @@ namespace Language::Instruction
 		public AST::InstructionContainer
 	{
 	public:
+		static constexpr const auto type = "Function call"sv;
+
 		explicit FunctionCall(std::string name, AST::Scope::BaseScope* scope):
 			CppUtils::Type::Named{std::move(name)},
-			AST::Instruction{AST::InstructionType::FUNCTIONCALL},
+			AST::Instruction{std::string{type}},
 			AST::Scope::NormalScope{scope}
 		{}
 		virtual ~FunctionCall() = default;

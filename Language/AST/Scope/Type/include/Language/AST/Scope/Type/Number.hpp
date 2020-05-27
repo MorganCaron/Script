@@ -10,7 +10,7 @@ namespace Language::AST::Scope::Type
 	class DLL_PUBLIC Number: public Value
 	{
 	public:
-		constexpr static const auto type = "Number"sv;
+		static constexpr const auto type = "Number"sv;
 		
 		Number(const double& value = 0): Value{type.data()}, m_value{value}
 		{}

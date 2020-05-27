@@ -7,7 +7,7 @@
 
 namespace Language::Instruction
 {
-	class FunctionStatement final:
+	class FunctionDeclaration final:
 		public CppUtils::Type::Named,
 		public AST::Instruction,
 		public AST::Scope::VariableScope,
@@ -15,16 +15,17 @@ namespace Language::Instruction
 		public AST::Scope::Type::ITFunction<std::unique_ptr<AST::Scope::Type::Value>(const AST::Scope::Type::Args&)>
 	{
 	public:
-		static constexpr const auto Keyword = "function"sv;
+		static constexpr const auto type = "Function declaration"sv;
+		static constexpr const auto keyword = "function"sv;
 
-		explicit FunctionStatement(std::string name, AST::Scope::BaseScope* scope);
-		virtual ~FunctionStatement() = default;
+		explicit FunctionDeclaration(std::string name, AST::Scope::BaseScope* scope);
+		virtual ~FunctionDeclaration() = default;
 		
 		std::unique_ptr<AST::Scope::Type::ITFunction<std::unique_ptr<AST::Scope::Type::Value>(const AST::Scope::Type::Args&)>> cloneFunction() const override;
 
 		std::unique_ptr<AST::Instruction> cloneInstruction() const override
 		{
-			return std::make_unique<FunctionStatement>(*this);
+			return std::make_unique<FunctionDeclaration>(*this);
 		}
 
 		void addArgument(std::string argumentName);
@@ -38,5 +39,5 @@ namespace Language::Instruction
 		std::vector<std::string> m_argumentNames;
 	};
 
-	std::ostream& operator<<(std::ostream& os, const FunctionStatement& functionStatement);
+	std::ostream& operator<<(std::ostream& os, const FunctionDeclaration& functionDeclaration);
 }

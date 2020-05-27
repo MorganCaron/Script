@@ -2,12 +2,13 @@
 
 #include <Language/Instruction/Bracket.hpp>
 #include <Language/Instruction/ControlStructure.hpp>
-#include <Language/Instruction/FunctionStatement.hpp>
-#include <Language/Instruction/ImportStatement.hpp>
+#include <Language/Instruction/FunctionDeclaration.hpp>
+#include <Language/Instruction/ImportDeclaration.hpp>
+#include <Language/Instruction/VariableDeclaration.hpp>
 #include <Language/Instruction/Object.hpp>
 #include <Language/Instruction/Operator.hpp>
-#include <Language/Instruction/Value.hpp>
 #include <Language/Instruction/Return.hpp>
+#include <Language/Instruction/Value.hpp>
 
 namespace Language
 {
@@ -47,13 +48,13 @@ namespace Language
 	{
 		static const auto nativeInstructions = std::unordered_map<std::string, Parser::InstructionParser>{
 			{ "Bracket", &Instruction::Bracket::parse },
-			{ "ControlStructure", &Instruction::ControlStructure::parse },
-			{ "FunctionStatement", &Instruction::FunctionStatement::parse },
-			{ "ImportStatement", &Instruction::ImportStatement::parse },
+			{ "Control structure", &Instruction::ControlStructure::parse },
+			{ "Function declaration", &Instruction::FunctionDeclaration::parse },
+			{ "Import declaration", &Instruction::ImportDeclaration::parse },
+			{ "Variable declaration", &Instruction::VariableDeclaration::parse },
 			{ "Object", &Instruction::Object::parse },
 			{ "Return", &Instruction::Return::parse },
 			{ "Value", &Parser::parseValue }
-			
 		};
 		addInstructionParsers(nativeInstructions);
 

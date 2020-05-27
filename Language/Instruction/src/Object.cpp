@@ -1,7 +1,7 @@
 #include <Language/Instruction/Object.hpp>
 
 #include <Language/AST/Scope/ObjectScope.hpp>
-#include <Language/Instruction/FunctionStatement.hpp>
+#include <Language/Instruction/FunctionDeclaration.hpp>
 
 namespace Language::Instruction
 {
@@ -11,7 +11,7 @@ namespace Language::Instruction
 		AST::InstructionContainer{src}
 	{
 		for (const std::pair<const std::string, std::unique_ptr<AST::Scope::FunctionType>>& pair : getFunctions())
-			addFunction(pair.first, std::make_unique<FunctionStatement>(static_cast<const FunctionStatement&>(*pair.second)));
+			addFunction(pair.first, std::make_unique<FunctionDeclaration>(static_cast<const FunctionDeclaration&>(*pair.second)));
 	}
 
 	Object &Object::operator=(Object const &rhs)
@@ -20,7 +20,7 @@ namespace Language::Instruction
 		AST::Instruction::operator=(rhs);
 		AST::InstructionContainer::operator=(rhs);
 		for (const std::pair<const std::string, std::unique_ptr<AST::Scope::FunctionType>>& pair : getFunctions())
-			addFunction(pair.first, std::make_unique<FunctionStatement>(static_cast<const FunctionStatement&>(*pair.second)));
+			addFunction(pair.first, std::make_unique<FunctionDeclaration>(static_cast<const FunctionDeclaration&>(*pair.second)));
 		return *this;
 	}
 
@@ -29,7 +29,7 @@ namespace Language::Instruction
 		auto& [container, scope, src, pos] = parsingInformations;
 
 		auto firstWord = parsingInformations.nextWord();
-		if (firstWord != Keyword)
+		if (firstWord != keyword)
 			return std::unique_ptr<Instruction>{nullptr};
 		pos += firstWord.length();
 		parsingInformations.skipSpaces();
@@ -49,7 +49,7 @@ namespace Language::Instruction
 
 		auto object = std::make_unique<Object>(secondWord, &scope);
 		auto objectParsingInformations = Parser::ParsingInformations{*object, *object, src, pos};
-		CppUtils::Logger::logInformation("Object "s + object->getName().data() + ':', false);
+		CppUtils::Logger::logInformation(std::string{keyword} + " " + object->getName().data() + ':', false);
 
 		parsingInformations.skipSpaces();
 		while (parsingInformations.currentChar() != '}')

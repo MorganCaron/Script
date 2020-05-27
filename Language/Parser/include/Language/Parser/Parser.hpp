@@ -51,4 +51,5 @@ namespace Language::Parser
 
 	std::unique_ptr<AST::Instruction> parseInstruction(ParsingInformations& parsingInformations);
 	std::unique_ptr<AST::Instruction> parseValue(ParsingInformations& parsingInformations);
+	std::unique_ptr<AST::Instruction> parseOperator(ParsingInformations& parsingInformations);
 }

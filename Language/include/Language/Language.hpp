@@ -24,7 +24,7 @@
 #include <Language/Instruction/Bracket.hpp>
 #include <Language/Instruction/ControlStructure.hpp>
 #include <Language/Instruction/FunctionCall.hpp>
-#include <Language/Instruction/FunctionStatement.hpp>
+#include <Language/Instruction/FunctionDeclaration.hpp>
 #include <Language/Instruction/Object.hpp>
 #include <Language/Instruction/Operator.hpp>
 #include <Language/Instruction/Value.hpp>

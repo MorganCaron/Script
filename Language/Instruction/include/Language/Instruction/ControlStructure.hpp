@@ -20,6 +20,8 @@ namespace Language::Instruction
 		public AST::InstructionContainer
 	{
 	public:
+		static constexpr const auto type = "Control structure"sv;
+
 		explicit ControlStructure(std::string name, AST::Scope::BaseScope* scope);
 		virtual ~ControlStructure() = default;
 

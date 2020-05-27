@@ -1,4 +1,4 @@
-#include "Script.hpp"
+#include <Script.hpp>
 
 std::unique_ptr<Script::Value> print(const Script::Args& args)
 {

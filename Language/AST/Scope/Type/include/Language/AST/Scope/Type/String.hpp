@@ -7,7 +7,7 @@ namespace Language::AST::Scope::Type
 	class DLL_PUBLIC String: public Value
 	{
 	public:
-		constexpr static const auto type = "String"sv;
+		static constexpr const auto type = "String"sv;
 
 		String(std::string value = ""): Value{type.data()}, m_value{std::move(value)}
 		{}

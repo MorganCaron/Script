@@ -12,9 +12,11 @@ namespace Language::Instruction
 		public AST::InstructionContainer
 	{
 	public:
-		static constexpr const auto Keyword = "return"sv;
+		static constexpr const auto type = "Return"sv;
+		static constexpr const auto keyword = "return"sv;
 
-		explicit Return(): AST::Instruction{AST::InstructionType::RETURN}
+		explicit Return():
+			AST::Instruction{std::string{type}}
 		{}
 
 		std::unique_ptr<AST::Instruction> cloneInstruction() const override

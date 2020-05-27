@@ -3,7 +3,7 @@
 #include <CppUtils.hpp>
 #include <Language/Language.hpp>
 
-#include <config.h>
+#include <config.hpp>
 
 namespace Script
 {
@@ -41,7 +41,7 @@ namespace Script
 				CppUtils::Logger::logError("!Parsing error: "s + error.what());
 			}
 			m_chrono.stop();
-			CppUtils::Logger::logDebug("Duration: "s + m_chrono.getText());
+			CppUtils::Logger::logWarning("Duration: "s + m_chrono.getText());
 		}
 
 		void interpret()
@@ -51,16 +51,16 @@ namespace Script
 			try
 			{
 				m_ast.interpret();
-				CppUtils::Logger::logInformation(">Functions: "s + std::to_string(m_ast.getFunctions().size()));
-				for (const auto& function : m_ast.getFunctions())
-					CppUtils::Logger::logInformation("- "s + function.first + "()");
 			}
 			catch (const std::exception& error)
 			{
 				CppUtils::Logger::logError("!Interpretation error: "s + error.what());
 			}
 			m_chrono.stop();
-			CppUtils::Logger::logDebug("Duration: "s + m_chrono.getText());
+			CppUtils::Logger::logWarning("Duration: "s + m_chrono.getText());
+			CppUtils::Logger::logSuccess("Global functions: "s + std::to_string(m_ast.getFunctions().size()));
+			for (const auto& function : m_ast.getFunctions())
+				CppUtils::Logger::logSuccess("- "s + function.first + "()");
 		}
 
 		std::unique_ptr<Value> execute()
@@ -70,12 +70,12 @@ namespace Script
 			try
 			{
 				if (!m_ast.functionExists("main"))
-					throw std::runtime_error{"Fonction main() requise."};
+					throw std::runtime_error{"No entry point found: The main function is missing."};
 				CppUtils::Logger::logInformation("main()");
 				auto result = m_ast.getFunction("main")({});
 				m_chrono.stop();
 				std::cout << std::endl;
-				CppUtils::Logger::logDebug("Duration: "s + m_chrono.getText());
+				CppUtils::Logger::logWarning("Duration: "s + m_chrono.getText());
 				return result;
 			}
 			catch (const std::exception& error)
@@ -83,7 +83,7 @@ namespace Script
 				CppUtils::Logger::logError("!Runtime error: "s + error.what());
 			}
 			m_chrono.stop();
-			CppUtils::Logger::logDebug("Duration: "s + m_chrono.getText());
+			CppUtils::Logger::logWarning("Duration: "s + m_chrono.getText());
 			return std::make_unique<Number>(0);
 		}
 

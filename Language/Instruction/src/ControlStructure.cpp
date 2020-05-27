@@ -7,7 +7,7 @@ namespace Language::Instruction
 {
 	ControlStructure::ControlStructure(std::string name, AST::Scope::BaseScope* scope):
 		CppUtils::Type::Named{std::move(name)},
-		AST::Instruction{AST::InstructionType::CONTROLSTRUCTURE},
+		AST::Instruction{std::string{type}},
 		AST::Scope::NormalScope{scope}
 	{
 		if (getName() == "if")
