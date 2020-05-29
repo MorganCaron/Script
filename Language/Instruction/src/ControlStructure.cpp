@@ -7,7 +7,7 @@ namespace Language::Instruction
 {
 	ControlStructure::ControlStructure(std::string name, AST::Scope::BaseScope* scope):
 		CppUtils::Type::Named{std::move(name)},
-		AST::Instruction{std::string{type}},
+		AST::Instruction{std::string{Type}},
 		AST::Scope::NormalScope{scope}
 	{
 		if (getName() == "if")
@@ -20,19 +20,24 @@ namespace Language::Instruction
 	{
 		auto& [container, scope, src, pos] = parsingInformations;
 
-		auto word = parsingInformations.nextWord();
+		auto keyword = parsingInformations.nextWord();
 		static const auto controlStructureWords = std::vector<std::string>{"if", "then", "while", "else", "do", "switch", "case", "repeat", "break", "for"};
-		if (std::find(controlStructureWords.begin(), controlStructureWords.end(), word) == controlStructureWords.end())
+		if (std::find(controlStructureWords.begin(), controlStructureWords.end(), keyword) == controlStructureWords.end())
 			return nullptr;
-		pos += word.length();
+		pos += keyword.length();
 		parsingInformations.skipSpaces();
 
-		auto controlStructure = std::make_unique<ControlStructure>(word, &scope);
+		auto controlStructure = std::make_unique<ControlStructure>(keyword, &scope);
 		auto controlStructureParsingInformations = Parser::ParsingInformations{*controlStructure, *controlStructure, src, pos};
 
 		CppUtils::Logger::logInformation(controlStructure->getName().data() + " ("s, false);
 		controlStructure->addInstruction(Operator::parseOperation(controlStructureParsingInformations));
 		CppUtils::Logger::logInformation(") ", false);
+
+		parsingInformations.skipSpaces();
+		if (parsingInformations.currentChar() == ':')
+			++pos;
+		
 		if (Parser::parseInstruction(controlStructureParsingInformations) == nullptr)
 			throw std::runtime_error{"La condition doit etre suivie d une instruction."};
 		
@@ -47,7 +52,7 @@ namespace Language::Instruction
 		while (loop)
 		{
 			value = m_instructions[0]->interpret();
-			if (value->getType() == AST::Scope::Type::Number::type)
+			if (value->getType() == AST::Scope::Type::Number::Type)
 				condition = (*value != AST::Scope::Type::Number{});
 			else
 				condition = false;

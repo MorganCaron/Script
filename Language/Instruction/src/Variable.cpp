@@ -14,13 +14,13 @@ namespace Language::Instruction
 	void Variable::setValue(std::unique_ptr<AST::Scope::Type::Value>&& value)
 	{
 		auto& variableScope = dynamic_cast<AST::Scope::VariableScope&>(getScope().findScope(AST::Scope::VariableScopeType));
-		variableScope.setVariableValue(getName(), std::move(value));
+		variableScope.setVariable(getName(), std::move(value));
 	}
 
 	const std::unique_ptr<AST::Scope::Type::Value>& Variable::getValue() const
 	{
 		const auto& variableScope = dynamic_cast<const AST::Scope::VariableScope&>(getScope().findScope(AST::Scope::VariableScopeType));
-		return variableScope.getVariable(getName()).value;
+		return variableScope.getVariable(getName());
 	}
 
 	std::unique_ptr<AST::Instruction> Variable::parse(Parser::ParsingInformations& parsingInformations)
@@ -31,7 +31,7 @@ namespace Language::Instruction
 		if (variableName.empty())
 			return nullptr;
 		const auto& variableScope = dynamic_cast<const AST::Scope::VariableScope&>(scope.findScope(AST::Scope::VariableScopeType));
-		if (!variableScope.variableExists(variableName))
+		if (!variableScope.variableSignatureExists(variableName))
 			return nullptr;
 		pos += variableName.length();
 
@@ -44,7 +44,7 @@ namespace Language::Instruction
 	std::unique_ptr<AST::Scope::Type::Value> Variable::interpret()
 	{
 		const auto &variableScope = dynamic_cast<const AST::Scope::VariableScope&>(getScope().findScope(AST::Scope::VariableScopeType));
-		return variableScope.getVariable(getName()).value->cloneValue();
+		return variableScope.getVariable(getName())->cloneValue();
 	}
 
 	std::ostream& operator<<(std::ostream& os, const Variable& variable)

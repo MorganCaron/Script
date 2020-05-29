@@ -2,21 +2,37 @@
 
 namespace Language::AST::Scope
 {
-	VariableScope::VariableScope(BaseScope* scope, ScopeType scopeType): NormalScope{scope, scopeType}
+	VariableScope::VariableScope(BaseScope* scope, ScopeType scopeType):
+		NormalScope{scope, scopeType}
 	{}
 
-	VariableScope::VariableScope(const VariableScope& src): NormalScope{src}
+	VariableScope::VariableScope(const VariableScope& src):
+		NormalScope{src},
+		m_variableSignatures{src.m_variableSignatures}
 	{
-		for (const auto &[key, variable] : src.m_variables)
-			declareVariable(key, Type::Variable{variable});
+		for (const auto &[key, value] : src.m_variables)
+			setVariable(key, value->cloneValue());
 	}
 
 	VariableScope& VariableScope::operator=(const VariableScope& rhs)
 	{
 		NormalScope::operator=(rhs);
-		for (const auto &[key, variable] : rhs.m_variables)
-			declareVariable(key, Type::Variable{variable});
+		m_variableSignatures = rhs.m_variableSignatures;
+		for (const auto &[key, value] : rhs.m_variables)
+			setVariable(key, value->cloneValue());
 		return *this;
+	}
+
+	bool VariableScope::variableSignatureExists(std::string_view name) const
+	{
+		if (m_variableSignatures.find(name.data()) != m_variableSignatures.end())
+			return true;
+		if (hasScope())
+		{
+			const auto& parentVariableScope = dynamic_cast<const VariableScope&>(getScope().findScope(getType()));
+			return parentVariableScope.variableSignatureExists(name);
+		}
+		return false;
 	}
 
 	bool VariableScope::variableExists(std::string_view name) const
@@ -24,38 +40,58 @@ namespace Language::AST::Scope
 		if (m_variables.find(name.data()) != m_variables.end())
 			return true;
 		if (hasScope())
-			return dynamic_cast<const VariableScope&>(getScope().findScope(getType())).variableExists(name);
+		{
+			const auto& parentVariableScope = dynamic_cast<const VariableScope&>(getScope().findScope(getType()));
+			return parentVariableScope.variableExists(name);
+		}
 		return false;
 	}
 
-	void VariableScope::declareVariable(std::string_view name, Type::Variable&& variable)
+	void VariableScope::addVariableSignature(std::string_view name, VariableSignature&& signature)
 	{
-		m_variables[name.data()] = std::move(variable);
+		m_variableSignatures[name.data()] = std::move(signature);
 	}
 
-	void VariableScope::setVariableValue(std::string_view name, std::unique_ptr<Type::Value>&& value)
+	void VariableScope::setVariable(std::string_view name, std::unique_ptr<Type::Value>&& value)
 	{
-		if (m_variables.find(name.data()) != m_variables.end())
+		if (m_variableSignatures.find(name.data()) != m_variableSignatures.end())
 		{
-			auto& variable = m_variables[name.data()];
-			if (variable.isConstant)
-				throw std::runtime_error("La variable "s + name.data() + " est constante. Sa valeur ne peut pas etre modifiee");
-			if (variable.value->getType() != value->getType())
-				throw std::runtime_error("La variable est de type "s + variable.value->getType() + ". Vous ne pouvez pas lui affecter une valeur de type "s + value->getType());
-			variable.value = std::move(value);
+			const auto& signature = m_variableSignatures[name.data()];
+
+			if (signature.constant && m_variables.find(name.data()) != m_variables.end())
+				throw std::runtime_error{"La variable "s + name.data() + " est constante. Sa valeur ne peut pas etre modifiee"};
+			
+			if (value->getType() != signature.type)
+				throw std::runtime_error{"La variable est de type "s + signature.type + ". Vous ne pouvez pas lui affecter une valeur de type " + value->getType().data()};
+
+			m_variables[name.data()] = std::move(value);
 		}
 		else if (hasScope())
-			dynamic_cast<VariableScope&>(getScope().findScope(getType())).setVariableValue(name, std::move(value));
+		{
+			auto& parentVariableScope = dynamic_cast<VariableScope&>(getScope().findScope(getType()));
+			parentVariableScope.setVariable(name, std::move(value));
+		}
 		else
-			throw std::runtime_error("La variable "s + name.data() + " n existe pas.");
+			throw std::runtime_error{"La variable "s + name.data() + " n existe pas. Elle doit etre declaree avant d y affecter une valeur."};
 	}
 
-	const Type::Variable& VariableScope::getVariable(std::string_view name) const
+	const VariableScope::VariableSignature& VariableScope::getVariableSignature(std::string_view name) const
+	{
+		if (m_variableSignatures.find(name.data()) != m_variableSignatures.end())
+			return m_variableSignatures.at(name.data());
+		if (!hasScope())
+			throw std::runtime_error{"La signature de la variable "s + name.data() + " n existe pas."};
+		const auto& parentVariableScope = dynamic_cast<const VariableScope&>(getScope().findScope(getType()));
+		return parentVariableScope.getVariableSignature(name);
+	}
+
+	const std::unique_ptr<Type::Value>& VariableScope::getVariable(std::string_view name) const
 	{
 		if (m_variables.find(name.data()) != m_variables.end())
 			return m_variables.at(name.data());
 		if (!hasScope())
-			throw std::runtime_error("La variable "s + name.data() + " n existe pas.");
-		return dynamic_cast<const VariableScope&>(getScope().findScope(getType())).getVariable(name);
+			throw std::runtime_error{"La variable "s + name.data() + " n existe pas."};
+		const auto& parentVariableScope = dynamic_cast<const VariableScope&>(getScope().findScope(getType()));
+		return parentVariableScope.getVariable(name);
 	}
 }

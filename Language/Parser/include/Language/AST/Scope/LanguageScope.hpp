@@ -62,9 +62,31 @@ namespace Language::AST::Scope
 		{
 			return m_valueParsers;
 		}
+
+		inline bool OperatorParserExists(const std::string& name) const noexcept
+		{
+			return (m_operatorParsers.find(name) != m_operatorParsers.end());
+		}
+		inline void addOperatorParser(const std::string& name, Parser::OperatorParser operatorParser)
+		{
+			m_operatorParsers[name] = std::move(operatorParser);
+		}
+		inline void addOperatorParsers(const std::unordered_map<std::string, Parser::OperatorParser>& operatorParsers)
+		{
+			m_operatorParsers.insert(operatorParsers.begin(), operatorParsers.end());
+		}
+		inline void removeOperatorParser(const std::string& name)
+		{
+			m_operatorParsers.erase(name);
+		}
+		inline const std::unordered_map<std::string, Parser::OperatorParser>& getOperatorParsers() const
+		{
+			return m_operatorParsers;
+		}
 		
 	private:
 		std::unordered_map<std::string, Parser::InstructionParser> m_instructionParsers;
 		std::unordered_map<std::string, Parser::ValueParser> m_valueParsers;
+		std::unordered_map<std::string, Parser::OperatorParser> m_operatorParsers;
 	};
 }

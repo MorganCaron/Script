@@ -12,10 +12,10 @@ namespace Language::Instruction
 		public AST::Scope::NormalScope
 	{
 	public:
-		static constexpr const auto type = "Value"sv;
+		static constexpr const auto Type = "Value"sv;
 
 		explicit Value(std::unique_ptr<AST::Scope::Type::Value>&& value, AST::Scope::BaseScope* scope):
-			AST::Instruction{std::string{type}},
+			AST::Instruction{std::string{Type}},
 			AST::Scope::NormalScope{scope},
 			m_value{std::move(value)}
 		{}

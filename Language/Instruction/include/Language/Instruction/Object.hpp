@@ -12,12 +12,12 @@ namespace Language::Instruction
 		public AST::InstructionContainer
 	{
 	public:
-		static constexpr const auto type = "Object"sv;
-		static constexpr const auto keyword = "class"sv;
+		static constexpr const auto Type = "Object"sv;
+		static constexpr const auto Keyword = "class"sv;
 
 		explicit Object(std::string name, AST::Scope::BaseScope* scope = nullptr):
 			AST::Scope::Type::Object{std::move(name), scope},
-			AST::Instruction{std::string{type}}
+			AST::Instruction{std::string{Type}}
 		{}
 		Object(const Object& src);
 		Object(Object&&) = default;

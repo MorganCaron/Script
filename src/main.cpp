@@ -4,9 +4,9 @@ std::unique_ptr<Script::Value> print(const Script::Args& args)
 {
 	if (args.size() != 1)
 		throw std::runtime_error{"La fonction print(text); prend 1 argument."};
-	if (args[0]->getType() == Script::String::type)
+	if (args[0]->getType() == Script::String::Type)
 		std::cout << Script::Value::ensureType<Script::String>(args[0])->getValue() << std::endl;
-	else if (args[0]->getType() == Script::Number::type)
+	else if (args[0]->getType() == Script::Number::Type)
 		std::cout << Script::Value::ensureType<Script::Number>(args[0])->getValue() << std::endl;
 	return std::make_unique<Script::Number>();
 }

@@ -15,9 +15,9 @@ namespace Language::Instruction
 		public AST::Scope::Type::ITFunction<std::unique_ptr<AST::Scope::Type::Value>(const AST::Scope::Type::Args&)>
 	{
 	public:
-		static constexpr const auto type = "Function declaration"sv;
-		static constexpr const auto keyword = "function"sv;
-
+		static constexpr const auto Type = "Function declaration"sv;
+		static constexpr const auto Keyword = "function"sv;
+		
 		explicit FunctionDeclaration(std::string name, AST::Scope::BaseScope* scope);
 		virtual ~FunctionDeclaration() = default;
 		
@@ -28,7 +28,7 @@ namespace Language::Instruction
 			return std::make_unique<FunctionDeclaration>(*this);
 		}
 
-		void addArgument(std::string argumentName);
+		void addArgument(std::string name, AST::Scope::VariableScope::VariableSignature&& signature);
 
 		std::unique_ptr<AST::Scope::Type::Value> operator()(const AST::Scope::Type::Args& arguments) override final;
 
@@ -36,7 +36,7 @@ namespace Language::Instruction
 		std::unique_ptr<AST::Scope::Type::Value> interpret() override final;
 		
 	private:
-		std::vector<std::string> m_argumentNames;
+		std::vector<std::string> m_arguments;
 	};
 
 	std::ostream& operator<<(std::ostream& os, const FunctionDeclaration& functionDeclaration);

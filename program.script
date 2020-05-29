@@ -3,6 +3,12 @@ import [ Terminal ] from "Terminal";
 import [ Array ] from "Array";
 */
 
+function test()
+	return 42;
+
+function addition(const a: Number, const b: Number)
+	return a + b;
+
 function main()
 {
 	{
@@ -10,6 +16,7 @@ function main()
 		const b = 1;
 		const c = a + b;
 		print(c);
+		print(addition(a, b));
 	}
 
 	{
@@ -20,11 +27,13 @@ function main()
 	}
 
 	/*
-	a = [1, 2];
-	b = a + 3;
-	c = b + [4, 5];
-	for d in c:
-		print(d);
+	{
+		const a = [1, 2];
+		const b = a + 3;
+		const c = b + [4, 5];
+		for d in c:
+			print(d);
+	}
 	*/
 	
 	/*

@@ -12,14 +12,14 @@ namespace Language::Instruction
 		public AST::Scope::NormalScope
 	{
 	public:
-		static constexpr const auto type = "Variable declaration"sv;
+		static constexpr const auto Type = "Variable declaration"sv;
 
-		explicit VariableDeclaration(std::string name, AST::Scope::BaseScope* scope, AST::Scope::Type::Variable&& variable):
+		explicit VariableDeclaration(std::string name, AST::Scope::BaseScope* scope, std::unique_ptr<AST::Scope::Type::Value>&& value, bool constant):
 			CppUtils::Type::Named{std::move(name)},
-			AST::Instruction{std::string{type}},
+			AST::Instruction{std::string{Type}},
 			AST::Scope::NormalScope{scope}
 		{
-			declare(std::move(variable));
+			declare(std::move(value), constant);
 		}
 		VariableDeclaration(const VariableDeclaration&) = default;
 		VariableDeclaration(VariableDeclaration&&) = default;
@@ -30,7 +30,7 @@ namespace Language::Instruction
 
 		bool exists() const;
 	private:
-		void declare(AST::Scope::Type::Variable&& variable);
+		void declare(std::unique_ptr<AST::Scope::Type::Value>&& value, bool constant);
 	public:
 		void setValue(std::unique_ptr<AST::Scope::Type::Value>&& value);
 		const std::unique_ptr<AST::Scope::Type::Value>& getValue() const;

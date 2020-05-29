@@ -28,10 +28,10 @@ namespace Language::Instruction
 	{
 		auto& [container, scope, src, pos] = parsingInformations;
 
-		auto firstWord = parsingInformations.nextWord();
-		if (firstWord != keyword)
+		auto keyword = parsingInformations.nextWord();
+		if (keyword != Keyword)
 			return std::unique_ptr<Instruction>{nullptr};
-		pos += firstWord.length();
+		pos += Keyword.length();
 		parsingInformations.skipSpaces();
 
 		auto secondWord = parsingInformations.nextWord();
@@ -49,7 +49,7 @@ namespace Language::Instruction
 
 		auto object = std::make_unique<Object>(secondWord, &scope);
 		auto objectParsingInformations = Parser::ParsingInformations{*object, *object, src, pos};
-		CppUtils::Logger::logInformation(std::string{keyword} + " " + object->getName().data() + ':', false);
+		CppUtils::Logger::logInformation(std::string{Keyword} + " " + object->getName().data() + ':', false);
 
 		parsingInformations.skipSpaces();
 		while (parsingInformations.currentChar() != '}')

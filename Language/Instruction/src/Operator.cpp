@@ -8,7 +8,7 @@ namespace Language::Instruction
 {
 	Operator::Operator(std::string name, AST::Scope::BaseScope* scope):
 		CppUtils::Type::Named{std::move(name)},
-		AST::Instruction{std::string{type}},
+		AST::Instruction{std::string{Type}},
 		AST::Scope::NormalScope{scope}
 	{
 		static const auto operators = std::unordered_map<std::string_view, eOperatorPriority>{
@@ -135,7 +135,7 @@ namespace Language::Instruction
 		auto& operand1 = m_instructions[1];
 		auto value0 = operand0->interpret();
 
-		if (getName() == "=" && operand0->getInstructionType() == Variable::type && !dynamic_cast<const AST::Scope::VariableScope&>(getScope().findScope(AST::Scope::VariableScopeType)).variableExists(dynamic_cast<Variable*>(operand0.get())->getName()))
+		if (getName() == "=" && operand0->getInstructionType() == Variable::Type && !dynamic_cast<const AST::Scope::VariableScope&>(getScope().findScope(AST::Scope::VariableScopeType)).variableExists(dynamic_cast<Variable*>(operand0.get())->getName()))
 			dynamic_cast<Variable*>(operand0.get())->setValue(std::make_unique<AST::Scope::Type::Number>());
 		if (getName() == ".")
 		{

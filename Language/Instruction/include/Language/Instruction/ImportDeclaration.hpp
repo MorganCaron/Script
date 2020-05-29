@@ -7,14 +7,17 @@
 
 namespace Language::Instruction
 {
-	class ImportDeclaration final: public AST::Instruction
+	class ImportDeclaration final:
+		public AST::Instruction,
+		public AST::Scope::NormalScope
 	{
 	public:
-		static constexpr const auto type = "Import declaration"sv;
-		static constexpr const auto keyword = "import"sv;
+		static constexpr const auto Type = "Import declaration"sv;
+		static constexpr const auto Keyword = "import"sv;
 		
-		explicit ImportDeclaration():
-			AST::Instruction{std::string{type}}
+		explicit ImportDeclaration(AST::Scope::BaseScope* scope):
+			AST::Instruction{std::string{Type}},
+			AST::Scope::NormalScope{scope}
 		{}
 		
 		std::unique_ptr<AST::Instruction> cloneInstruction() const override

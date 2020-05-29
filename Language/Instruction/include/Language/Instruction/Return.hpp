@@ -9,14 +9,16 @@ namespace Language::Instruction
 {
 	class Return final:
 		public AST::Instruction,
-		public AST::InstructionContainer
+		public AST::InstructionContainer,
+		public AST::Scope::NormalScope
 	{
 	public:
-		static constexpr const auto type = "Return"sv;
-		static constexpr const auto keyword = "return"sv;
+		static constexpr const auto Type = "Return"sv;
+		static constexpr const auto Keyword = "return"sv;
 
-		explicit Return():
-			AST::Instruction{std::string{type}}
+		explicit Return(AST::Scope::BaseScope* scope):
+			AST::Instruction{std::string{Type}},
+			AST::Scope::NormalScope{scope}
 		{}
 
 		std::unique_ptr<AST::Instruction> cloneInstruction() const override

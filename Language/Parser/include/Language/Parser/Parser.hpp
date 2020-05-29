@@ -46,10 +46,11 @@ namespace Language::Parser
 		std::size_t& pos;
 	};
 
-	using InstructionParser = std::function<std::unique_ptr<AST::Instruction>(ParsingInformations& parsingInformations)>;
-	using ValueParser = std::function<std::unique_ptr<AST::Instruction>(ParsingInformations& parsingInformations)>;
+	using InstructionParser = std::function<std::unique_ptr<AST::Instruction>(ParsingInformations&)>;
+	using ValueParser = std::function<std::unique_ptr<AST::Instruction>(ParsingInformations&)>;
+	using OperatorParser = std::function<std::unique_ptr<AST::Instruction>(ParsingInformations&, std::unique_ptr<AST::Instruction>&&)>;
 
 	std::unique_ptr<AST::Instruction> parseInstruction(ParsingInformations& parsingInformations);
 	std::unique_ptr<AST::Instruction> parseValue(ParsingInformations& parsingInformations);
-	std::unique_ptr<AST::Instruction> parseOperator(ParsingInformations& parsingInformations);
+	std::unique_ptr<AST::Instruction> parseOperator(ParsingInformations& parsingInformations, std::unique_ptr<AST::Instruction>&& operand0);
 }

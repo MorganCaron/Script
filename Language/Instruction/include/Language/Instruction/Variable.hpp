@@ -12,11 +12,11 @@ namespace Language::Instruction
 		public AST::Scope::NormalScope
 	{
 	public:
-		static constexpr const auto type = "Variable"sv;
+		static constexpr const auto Type = "Variable"sv;
 
 		explicit Variable(std::string name, AST::Scope::BaseScope* scope):
 			CppUtils::Type::Named{std::move(name)},
-			AST::Instruction{std::string{type}},
+			AST::Instruction{std::string{Type}},
 			AST::Scope::NormalScope{scope}
 		{}
 		Variable(const Variable&) = default;

@@ -59,24 +59,22 @@ namespace Language::Parser
 		auto& [container, scope, src, pos] = parsingInformations;
 
 		parsingInformations.skipSpaces();
-		auto instruction = std::unique_ptr<AST::Instruction>{nullptr};
-		const auto& instructionParsers = dynamic_cast<const AST::Scope::LanguageScope&>(scope.findScope(AST::Scope::LanguageScopeType)).getInstructionParsers();
-		auto instructionParserIterator = instructionParsers.begin();
-		while (instruction == nullptr && instructionParserIterator != instructionParsers.end())
+		const auto& languageScope = dynamic_cast<const AST::Scope::LanguageScope&>(scope.findScope(AST::Scope::LanguageScopeType));
+		const auto& instructionParsers = languageScope.getInstructionParsers();
+		for (const auto& instructionParser : instructionParsers)
 		{
 			auto startPos = pos;
-			instruction = instructionParserIterator->second(parsingInformations);
-			if (!instruction)
+			auto instruction = instructionParser.second(parsingInformations);
+			if (instruction)
 			{
-				pos = startPos;
-				++instructionParserIterator;
+				if (!parsingInformations.endOfCode() && parsingInformations.currentChar() == ';')
+					++pos;
+				CppUtils::Logger::logDebug(" -> " + instructionParser.first + " parser: " + instruction->getInstructionType());
+				return instruction;
 			}
+			pos = startPos;
 		}
-		if (!parsingInformations.endOfCode() && parsingInformations.currentChar() == ';')
-			++pos;
-		if (instruction)
-			CppUtils::Logger::logDebug(" -> " + instructionParserIterator->first + " parser: " + instruction->getInstructionType());
-		return instruction;
+		return nullptr;
 	}
 
 	std::unique_ptr<AST::Instruction> parseValue(ParsingInformations& parsingInformations)
@@ -84,22 +82,34 @@ namespace Language::Parser
 		auto& [container, scope, src, pos] = parsingInformations;
 
 		parsingInformations.skipSpaces();
-		auto instruction = std::unique_ptr<AST::Instruction>{nullptr};
-		const auto& valueParsers = dynamic_cast<const AST::Scope::LanguageScope&>(scope.findScope(AST::Scope::LanguageScopeType)).getValueParsers();
-		auto valueParserIterator = valueParsers.begin();
-		while (instruction == nullptr && valueParserIterator != valueParsers.end())
+		const auto& languageScope = dynamic_cast<const AST::Scope::LanguageScope&>(scope.findScope(AST::Scope::LanguageScopeType));
+		const auto& valueParsers = languageScope.getValueParsers();
+		for (const auto& valueParser : valueParsers)
 		{
 			auto startPos = pos;
-			instruction = valueParserIterator->second(parsingInformations);
-			if (!instruction)
-				pos = startPos;
-			++valueParserIterator;
+			auto instruction = valueParser.second(parsingInformations);
+			if (instruction)
+				return parseOperator(parsingInformations, std::move(instruction));
+			pos = startPos;
 		}
-		return instruction;
+		return nullptr;
 	}
 
-	std::unique_ptr<AST::Instruction> parseOperator([[maybe_unused]] ParsingInformations& parsingInformations)
+	std::unique_ptr<AST::Instruction> parseOperator(ParsingInformations& parsingInformations, std::unique_ptr<AST::Instruction>&& operand0)
 	{
-		return nullptr;
+		auto& [container, scope, src, pos] = parsingInformations;
+
+		parsingInformations.skipSpaces();
+		const auto& languageScope = dynamic_cast<const AST::Scope::LanguageScope&>(scope.findScope(AST::Scope::LanguageScopeType));
+		const auto& operatorParsers = languageScope.getOperatorParsers();
+		for (const auto& operatorParser : operatorParsers)
+		{
+			auto startPos = pos;
+			operand0 = operatorParser.second(parsingInformations, std::move(operand0));
+			if (pos != startPos)
+				return std::move(operand0);
+			pos = startPos;
+		}
+		return std::move(operand0);
 	}
 }

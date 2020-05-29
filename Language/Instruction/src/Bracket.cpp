@@ -38,7 +38,7 @@ namespace Language::Instruction
 		for (auto& instruction : m_instructions)
 		{
 			auto result = instruction->interpret();
-			if (instruction->getInstructionType() == Return::type)
+			if (instruction->getInstructionType() == Return::Type)
 				return result;
 		}
 		return nullptr;

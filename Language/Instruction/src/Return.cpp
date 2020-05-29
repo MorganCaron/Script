@@ -8,16 +8,18 @@ namespace Language::Instruction
 	{
 		auto& [container, scope, src, pos] = parsingInformations;
 
-		auto word = parsingInformations.nextWord();
-		if (word != keyword)
+		auto keyword = parsingInformations.nextWord();
+		if (keyword != Keyword)
 			return std::unique_ptr<Instruction>{nullptr};
-		pos += word.length();
-		parsingInformations.skipSpaces();
-
+		pos += Keyword.length();
 		CppUtils::Logger::logInformation(std::string{keyword} + " ", false);
+
 		parsingInformations.skipSpaces();
-		auto returnStatement = std::make_unique<Return>();
-		returnStatement->addInstruction(Operator::parseOperation(parsingInformations));
+		auto returnStatement = std::make_unique<Return>(&scope);
+		auto value = Parser::parseValue(parsingInformations);
+		if (value == nullptr)
+			throw std::runtime_error{"Le mot clef return doit etre suivi d une expression qui retourne une valeur."};
+		returnStatement->addInstruction(std::move(value));
 		return returnStatement;
 	}
 

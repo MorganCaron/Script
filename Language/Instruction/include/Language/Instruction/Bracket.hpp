@@ -13,10 +13,10 @@ namespace Language::Instruction
 		public AST::InstructionContainer
 	{
 	public:
-		static constexpr const auto type = "Bracket"sv;
+		static constexpr const auto Type = "Bracket"sv;
 
 		explicit Bracket(AST::Scope::BaseScope* scope = nullptr):
-			AST::Instruction{std::string{type}},
+			AST::Instruction{std::string{Type}},
 			VariableScope{scope}
 		{}
 		virtual ~Bracket() = default;

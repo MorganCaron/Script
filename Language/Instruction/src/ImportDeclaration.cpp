@@ -6,18 +6,18 @@ namespace Language::Instruction
 	{
 		auto& [container, scope, src, pos] = parsingInformations;
 
-		auto firstWord = parsingInformations.nextWord();
-		if (firstWord != keyword)
+		auto keyword = parsingInformations.nextWord();
+		if (keyword != Keyword)
 			return nullptr;
-		parsingInformations.pos += firstWord.length();
+		parsingInformations.pos += Keyword.length();
 		parsingInformations.skipSpaces();
 
-		CppUtils::Logger::logInformation(std::string{keyword} + " ", false);
+		CppUtils::Logger::logInformation(Keyword.data() + " "s, false);
 		auto filenameString = Parser::parseString(parsingInformations);
 		if (filenameString == nullptr)
 			throw std::runtime_error{"Une valeur textuelle est attendue. Il manque une ouverture de guillemet ou d'apostrophe."};
 		dynamic_cast<AST::Scope::FileScope&>(scope.findScope(AST::Scope::FileScopeType)).importDll(filenameString->getValue());
-		return std::make_unique<ImportDeclaration>();
+		return std::make_unique<ImportDeclaration>(&scope);
 	}
 
 	std::unique_ptr<AST::Scope::Type::Value> ImportDeclaration::interpret()

@@ -9,6 +9,8 @@
 #include <Language/Instruction/Operator.hpp>
 #include <Language/Instruction/Return.hpp>
 #include <Language/Instruction/Value.hpp>
+#include <Language/Instruction/FunctionCall.hpp>
+#include <Language/Instruction/Variable.hpp>
 
 namespace Language
 {
@@ -59,8 +61,15 @@ namespace Language
 		addInstructionParsers(nativeInstructions);
 
 		static const auto nativeValues = std::unordered_map<std::string, Parser::ValueParser>{
-			{ "Operation", std::bind(&Instruction::Operator::parseOperation, std::placeholders::_1, nullptr, nullptr) }
+			{ "Value", &Instruction::Value::parse },
+			{ "Function call", &Instruction::FunctionCall::parse },
+			{ "Variable", &Instruction::Variable::parse }
 		};
 		addValueParsers(nativeValues);
+
+		static const auto nativeOperators = std::unordered_map<std::string, Parser::OperatorParser>{
+			{ "Operation", std::bind(&Instruction::Operator::parseOperation, std::placeholders::_1, std::placeholders::_2, nullptr) }
+		};
+		addOperatorParsers(nativeOperators);
 	}
 }

@@ -24,7 +24,7 @@ namespace Language::Instruction
 		public AST::InstructionContainer
 	{
 	public:
-		static constexpr const auto type = "Operation"sv;
+		static constexpr const auto Type = "Operation"sv;
 
 		Operator(std::string name, AST::Scope::BaseScope* scope);
 		virtual ~Operator() = default;
