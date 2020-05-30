@@ -11,12 +11,13 @@ namespace Language::Instruction
 		return variableScope.variableExists(getName());
 	}
 
-	void VariableDeclaration::declare(std::unique_ptr<AST::Scope::Type::Value>&& value, bool constant)
+	void VariableDeclaration::declare(bool constant, std::unique_ptr<AST::Scope::Type::Value>&& value, std::string type)
 	{
 		auto& variableScope = dynamic_cast<AST::Scope::VariableScope&>(getScope().findScope(AST::Scope::VariableScopeType));
-		auto variableSignature = AST::Scope::VariableScope::VariableSignature{constant, value->getType().data()};
+		auto variableSignature = AST::Scope::VariableScope::VariableSignature{constant, std::move(type)};
 		variableScope.addVariableSignature(getName(), std::move(variableSignature));
-		variableScope.setVariable(getName(), std::move(value));
+		if (value != nullptr)
+			variableScope.setVariable(getName(), std::move(value));
 	}
 
 	void VariableDeclaration::setValue(std::unique_ptr<AST::Scope::Type::Value>&& value)
@@ -48,18 +49,43 @@ namespace Language::Instruction
 		if (variableName.empty())
 			throw std::runtime_error{"Le mot clef " + keyword + " doit etre suivi d'un nom de variable."};
 		pos += variableName.length();
+		CppUtils::Logger::logInformation(keyword + " " + variableName, false);
+   
+		parsingInformations.skipSpaces();
+		auto typeName = std::string{};
+		const auto typed = (parsingInformations.currentChar() == ':');
+		if (typed)
+		{
+			++pos;
+			parsingInformations.skipSpaces();
+			typeName = parsingInformations.nextWord();
+			if (typeName.empty())
+				throw std::runtime_error{"Le nom d'un type est attendu."};
+			pos += typeName.length();
+			CppUtils::Logger::logInformation(": " + typeName, false);
+		}
 
 		parsingInformations.skipSpaces();
-		if (parsingInformations.currentChar() != '=')
-			throw std::runtime_error{"Une declaration de variable doit etre suivie par l affectation d'une valeur."};
-		++pos;
-		CppUtils::Logger::logInformation(keyword + " " + variableName + " = ", false);
+		auto value = std::unique_ptr<AST::Scope::Type::Value>(nullptr);
+		const auto initialized = (parsingInformations.currentChar() == '=');
+		if (initialized)
+		{
+			++pos;
+			CppUtils::Logger::logInformation(" = ", false);
+			parsingInformations.skipSpaces();
+			auto valueInstruction = Parser::parseValue(parsingInformations);
+			if (valueInstruction == nullptr)
+				throw std::runtime_error{"Une valeur est attendue."};
+			value = valueInstruction->interpret();
+			if (typed && value->getType() != typeName)
+				throw std::runtime_error{"La valeur ne correspond pas au type de la variable."};
+		}
 
-		parsingInformations.skipSpaces();
-		auto value = Parser::parseValue(parsingInformations);
-		if (value == nullptr)
-			throw std::runtime_error{"Vous devez renseigner une valeur lors de la declaration d'une variable."};
-		return std::make_unique<VariableDeclaration>(std::move(variableName), &scope, value->interpret(), constant);
+		if (typed && initialized)
+			throw std::runtime_error{"Vous n avez pas besoin de préciser le type de la variable."};
+
+		typeName = typed ? typeName : value->getType().data();
+		return std::make_unique<VariableDeclaration>(std::move(variableName), &scope, constant, std::move(value), typeName);
 	}
 	
 	std::unique_ptr<AST::Scope::Type::Value> VariableDeclaration::interpret()

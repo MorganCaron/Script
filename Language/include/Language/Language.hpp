@@ -25,7 +25,7 @@
 #include <Language/Instruction/ControlStructure.hpp>
 #include <Language/Instruction/FunctionCall.hpp>
 #include <Language/Instruction/FunctionDeclaration.hpp>
-#include <Language/Instruction/Object.hpp>
+#include <Language/Instruction/Class.hpp>
 #include <Language/Instruction/Operator.hpp>
 #include <Language/Instruction/Value.hpp>
 #include <Language/Instruction/Variable.hpp>

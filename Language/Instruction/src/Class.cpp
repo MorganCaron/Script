@@ -1,11 +1,11 @@
-#include <Language/Instruction/Object.hpp>
+#include <Language/Instruction/Class.hpp>
 
 #include <Language/AST/Scope/ObjectScope.hpp>
 #include <Language/Instruction/FunctionDeclaration.hpp>
 
 namespace Language::Instruction
 {
-	Object::Object(Object const &src):
+	Class::Class(Class const &src):
 		AST::Scope::Type::Object{src},
 		AST::Instruction{src},
 		AST::InstructionContainer{src}
@@ -14,7 +14,7 @@ namespace Language::Instruction
 			addFunction(pair.first, std::make_unique<FunctionDeclaration>(static_cast<const FunctionDeclaration&>(*pair.second)));
 	}
 
-	Object &Object::operator=(Object const &rhs)
+	Class &Class::operator=(Class const &rhs)
 	{
 		AST::Scope::Type::Object::operator=(rhs);
 		AST::Instruction::operator=(rhs);
@@ -24,7 +24,7 @@ namespace Language::Instruction
 		return *this;
 	}
 
-	std::unique_ptr<AST::Instruction> Object::parse(Parser::ParsingInformations& parsingInformations)
+	std::unique_ptr<AST::Instruction> Class::parse(Parser::ParsingInformations& parsingInformations)
 	{
 		auto& [container, scope, src, pos] = parsingInformations;
 
@@ -34,37 +34,28 @@ namespace Language::Instruction
 		pos += Keyword.length();
 		parsingInformations.skipSpaces();
 
-		auto secondWord = parsingInformations.nextWord();
-		if (secondWord.empty())
+		auto className = parsingInformations.nextWord();
+		if (className.empty())
 			throw std::runtime_error{"Le mot clef object doit etre suivi d un nom d objet."};
-		pos += secondWord.size();
+		pos += className.size();
 		parsingInformations.skipSpaces();
 
-		CppUtils::Logger::logInformation("+Object \""s + secondWord + '"', false);
-		pos += secondWord.length();
-		parsingInformations.skipSpaces();
-		if (src.at(pos) != '{')
-			throw std::runtime_error{"La declaration d un objet doit etre encadree par des accolades."};
-		++pos;
-
-		auto object = std::make_unique<Object>(secondWord, &scope);
+		CppUtils::Logger::logInformation(Keyword.data() + " "s + className);
+		auto object = std::make_unique<Class>(className, &scope);
 		auto objectParsingInformations = Parser::ParsingInformations{*object, *object, src, pos};
-		CppUtils::Logger::logInformation(std::string{Keyword} + " " + object->getName().data() + ':', false);
-
-		parsingInformations.skipSpaces();
-		while (parsingInformations.currentChar() != '}')
-		{
-			Parser::parseInstruction(objectParsingInformations);
-			parsingInformations.skipSpaces();
-		}
-		++pos;
-
+		auto instruction = Parser::parseInstruction(objectParsingInformations);
+		if (!instruction)
+			throw std::runtime_error{"Une instruction est requise dans la declaration de la classe."};
+		object->addInstruction(std::move(instruction));
 		return object;
 	}
 
-	std::unique_ptr<AST::Scope::Type::Value> Object::interpret()
+	std::unique_ptr<AST::Scope::Type::Value> Class::interpret()
 	{
-		dynamic_cast<AST::Scope::ObjectScope&>(getScope().findScope(AST::Scope::ObjectScopeType)).addInstance(this);
+		CppUtils::Logger::logInformation("Declare "s + Keyword.data() + " " + getName().data() + "{", false);
+		auto& objectScope = dynamic_cast<AST::Scope::ObjectScope&>(getScope().findScope(AST::Scope::ObjectScopeType));
+		objectScope.addInstance(this);
+		CppUtils::Logger::logInformation("}");
 		return std::make_unique<AST::Scope::Type::Number>();
 	}
 }

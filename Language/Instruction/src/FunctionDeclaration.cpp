@@ -69,7 +69,7 @@ namespace Language::Instruction
 
 		auto functionDeclaration = std::make_unique<FunctionDeclaration>(std::move(functionName), &scope);
 		auto functionStatementParserInformations = Parser::ParsingInformations{*functionDeclaration, *functionDeclaration, src, pos};
-		CppUtils::Logger::logInformation("function "s + functionDeclaration->getName().data() + '(', false);
+		CppUtils::Logger::logInformation(Keyword.data() + " "s + functionDeclaration->getName().data() + '(', false);
 		
 		parsingInformations.skipSpaces();
 		if (parsingInformations.currentChar() != ')')
@@ -131,8 +131,9 @@ namespace Language::Instruction
 
 	std::unique_ptr<AST::Scope::Type::Value> FunctionDeclaration::interpret()
 	{
-		CppUtils::Logger::logInformation("Declare function "s + getName().data() + "(", false);
-		dynamic_cast<AST::Scope::FunctionScope&>(getScope().findScope(AST::Scope::FunctionScopeType)).addFunction(getName(), std::make_unique<FunctionDeclaration>(*this));
+		CppUtils::Logger::logInformation("Declare "s + Keyword.data() + " " + getName().data() + "(", false);
+		auto& functionScope = dynamic_cast<AST::Scope::FunctionScope&>(getScope().findScope(AST::Scope::FunctionScopeType));
+		functionScope.addFunction(getName(), std::make_unique<FunctionDeclaration>(*this));
 		CppUtils::Logger::logInformation(")");
 		return std::make_unique<AST::Scope::Type::Number>();
 	}

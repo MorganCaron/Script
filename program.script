@@ -1,16 +1,32 @@
 /*
-import [ Terminal ] from "Terminal";
-import [ Array ] from "Array";
+import [ Terminal ] from "Terminal.dll";
+import [ Array ] from "Array.dll";
 */
 
-function test()
-	return 42;
-
+/*
 function addition(const a: Number, const b: Number)
 	return a + b;
+/*
+function addition(const a: String, const b: String)
+	return a + b;
+*/
+
+class Player
+{
+	const m_name: Number;
+
+	function constructor(const name: String)
+		m_name = name;
+
+	function getName()
+		return m_name;
+}
 
 function main()
 {
+	const player = new Player("Mout");
+	print(player.getName());
+	/*
 	{
 		const a = 1;
 		const b = 1;
@@ -25,13 +41,14 @@ function main()
 		const c = a + b;
 		print(c);
 	}
+	*/
 
 	/*
 	{
 		const a = [1, 2];
 		const b = a + 3;
 		const c = b + [4, 5];
-		for d in c:
+		foreach d in c:
 			print(d);
 	}
 	*/

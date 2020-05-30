@@ -6,24 +6,24 @@
 
 namespace Language::Instruction
 {
-	class Object final:
+	class Class final:
 		public AST::Scope::Type::Object,
 		public AST::Instruction,
 		public AST::InstructionContainer
 	{
 	public:
-		static constexpr const auto Type = "Object"sv;
+		static constexpr const auto Type = "Class"sv;
 		static constexpr const auto Keyword = "class"sv;
 
-		explicit Object(std::string name, AST::Scope::BaseScope* scope = nullptr):
+		explicit Class(std::string name, AST::Scope::BaseScope* scope = nullptr):
 			AST::Scope::Type::Object{std::move(name), scope},
 			AST::Instruction{std::string{Type}}
 		{}
-		Object(const Object& src);
-		Object(Object&&) = default;
-		virtual ~Object() = default;
-		Object &operator=(const Object& rhs);
-		Object &operator=(Object&&) = default;
+		Class(const Class& src);
+		Class(Class&&) = default;
+		virtual ~Class() = default;
+		Class &operator=(const Class& rhs);
+		Class &operator=(Class&&) = default;
 
 		std::unique_ptr<AST::Scope::Type::Value> cloneValue() const override
 		{
@@ -32,7 +32,7 @@ namespace Language::Instruction
 
 		std::unique_ptr<AST::Instruction> cloneInstruction() const override
 		{
-			return std::make_unique<Object>(*this);
+			return std::make_unique<Class>(*this);
 		}
 
 		static std::unique_ptr<AST::Instruction> parse(Parser::ParsingInformations& parsingInformations);
