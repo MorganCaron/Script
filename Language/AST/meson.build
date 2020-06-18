@@ -1,24 +1,30 @@
 cppUtils_dep = dependency('CppUtils', fallback: ['CppUtils', 'cppUtils_dep'])
 
+subdir('Type')
+subdir('Core')
 subdir('Scope')
+subdir('Variable')
+subdir('Function')
+subdir('Object')
+subdir('Operator')
+subdir('File')
+subdir('Value')
+subdir('Instruction')
+subdir('ParsingTools')
 
 public_dependencies = [
-	cppUtils_dep,
-	scope_dep
+	instruction_dep,
+	parsingTools_dep
 ]
-private_dependencies = []
+private_dependencies = [
+	cppUtils_dep
+]
 
 includeDir = include_directories(['include/', '.'])
 
-sources = files([
-	
-])
+sources = files([])
 
-headers = files([
-	'include/Language/AST/Instruction.hpp',
-	'include/Language/AST/InstructionContainer.hpp',
-	'include/Language/AST/Interpreter.hpp'
-])
+headers = files([])
 
 ast_lib = library(
 	'AST',

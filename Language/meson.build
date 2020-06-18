@@ -2,13 +2,10 @@ cppUtils_dep = dependency('CppUtils', fallback: ['CppUtils', 'cppUtils_dep'])
 
 subdir('AST')
 subdir('Parser')
-subdir('Instruction')
 
 public_dependencies = [
 	cppUtils_dep,
-	ast_dep,
-	parser_dep,
-	instruction_dep
+	parser_dep
 ]
 private_dependencies = []
 

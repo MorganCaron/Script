@@ -1,16 +1,24 @@
 #include <Language/ASTRoot.hpp>
 
-#include <Language/Instruction/Bracket.hpp>
-#include <Language/Instruction/ControlStructure.hpp>
-#include <Language/Instruction/FunctionDeclaration.hpp>
-#include <Language/Instruction/ImportDeclaration.hpp>
-#include <Language/Instruction/VariableDeclaration.hpp>
-#include <Language/Instruction/Class.hpp>
-#include <Language/Instruction/Operator.hpp>
-#include <Language/Instruction/Return.hpp>
-#include <Language/Instruction/Value.hpp>
-#include <Language/Instruction/FunctionCall.hpp>
-#include <Language/Instruction/Variable.hpp>
+#include <Language/Parser/Instruction/BracketParser.hpp>
+#include <Language/Parser/Instruction/ClassParser.hpp>
+#include <Language/Parser/Instruction/ControlStructureParser.hpp>
+#include <Language/Parser/Instruction/FunctionDeclarationParser.hpp>
+#include <Language/Parser/Instruction/ImportDeclarationParser.hpp>
+#include <Language/Parser/Instruction/InstructionParser.hpp>
+#include <Language/Parser/Instruction/ReturnParser.hpp>
+#include <Language/Parser/Instruction/VariableDeclarationParser.hpp>
+
+#include <Language/Parser/Value/FunctionCallParser.hpp>
+#include <Language/Parser/Value/NumberParser.hpp>
+#include <Language/Parser/Value/ParenthesisParser.hpp>
+#include <Language/Parser/Value/StringParser.hpp>
+#include <Language/Parser/Value/ValueParser.hpp>
+#include <Language/Parser/Value/VariableParser.hpp>
+
+#include <Language/Parser/Operator/OperatorParser.hpp>
+#include <Language/Parser/Operator/AssignmentParser.hpp>
+#include <Language/Parser/Operator/AdditionParser.hpp>
 
 namespace Language
 {
@@ -28,48 +36,53 @@ namespace Language
 	void ASTRoot::parse(const std::string src)
 	{
 		auto pos = std::size_t{0};
-		auto parsingInformations = Parser::ParsingInformations{*this, *this, src, pos};
-		const auto length = parsingInformations.src.length();
+		auto cursor = AST::ParsingTools::Cursor{*this, *this, src, pos};
+		const auto length = cursor.src.length();
 		
-		while (parsingInformations.pos < length)
+		while (cursor.pos < length)
 		{
-			auto instruction = Parser::parseInstruction(parsingInformations);
+			auto instruction = Parser::Instruction::parseInstruction(cursor);
 			if (instruction != nullptr)
+			{
 				addInstruction(std::move(instruction));
-			parsingInformations.skipSpaces();
+				cursor.skipSpaces();
+			}
 		}
 	}
 
-	void ASTRoot::interpret()
+	void ASTRoot::indexe()
 	{
 		for (auto& instruction : m_instructions)
-			static_cast<void>(instruction->interpret());
+			instruction->indexe();
 	}
 
 	void ASTRoot::addNativeRules()
 	{
-		static const auto nativeInstructions = std::unordered_map<std::string, Parser::InstructionParser>{
-			{ "Bracket", &Instruction::Bracket::parse },
-			{ "Control structure", &Instruction::ControlStructure::parse },
-			{ "Function declaration", &Instruction::FunctionDeclaration::parse },
-			{ "Import declaration", &Instruction::ImportDeclaration::parse },
-			{ "Variable declaration", &Instruction::VariableDeclaration::parse },
-			{ "Class", &Instruction::Class::parse },
-			{ "Return", &Instruction::Return::parse },
-			{ "Value", &Parser::parseValue }
+		static const auto instructions = std::unordered_map<std::string, AST::ParsingTools::InstructionParser>{
+			{ "Bracket", &Parser::Instruction::parseBracket },
+			{ "Class", &Parser::Instruction::parseClass },
+			{ "Control structure", &Parser::Instruction::parseControlStructure },
+			{ "Function declaration", &Parser::Instruction::parseFunctionDeclaration },
+			{ "Import declaration", &Parser::Instruction::parseImportDeclaration },
+			{ "Value", &Parser::Value::parseValue },
+			{ "Return", &Parser::Instruction::parseReturn },
+			{ "Variable declaration", &Parser::Instruction::parseVariableDeclaration }
 		};
-		addInstructionParsers(nativeInstructions);
+		addInstructionParsers(instructions);
 
-		static const auto nativeValues = std::unordered_map<std::string, Parser::ValueParser>{
-			{ "Value", &Instruction::Value::parse },
-			{ "Function call", &Instruction::FunctionCall::parse },
-			{ "Variable", &Instruction::Variable::parse }
+		static const auto values = std::unordered_map<std::string, AST::ParsingTools::ValueParser>{
+			{ "Function call", &Parser::Value::parseFunctionCall },
+			{ "Number", &Parser::Value::parseNumber },
+			{ "Parenthesis", &Parser::Value::parseParenthesis },
+			{ "String", &Parser::Value::parseString },
+			{ "Variable", &Parser::Value::parseVariable }
 		};
-		addValueParsers(nativeValues);
+		addValueParsers(values);
 
-		static const auto nativeOperators = std::unordered_map<std::string, Parser::OperatorParser>{
-			{ "Operation", std::bind(&Instruction::Operator::parseOperation, std::placeholders::_1, std::placeholders::_2, nullptr) }
+		static const auto operators = std::unordered_map<std::string, AST::ParsingTools::OperatorParser>{
+			{ "Assignment", &Parser::Operator::parseAssignment },
+			{ "Addition", &Parser::Operator::parseAddition }
 		};
-		addOperatorParsers(nativeOperators);
+		addOperatorParsers(operators);
 	}
 }

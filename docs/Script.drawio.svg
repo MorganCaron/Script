@@ -52,17 +52,17 @@
         </g>
         <g fill="#000000" font-family="Helvetica" clip-path="url(#mx-clip-44-123-552-26-0)" font-size="12px">
             <text x="45.5" y="135.5">
-                + Args: Language::Scope::Type::Args
+                + Args: Language::Type::Args
             </text>
         </g>
         <g fill="#000000" font-family="Helvetica" clip-path="url(#mx-clip-44-149-552-26-0)" font-size="12px">
             <text x="45.5" y="161.5">
-                + Number: Language::Scope::Type::Number
+                + Number: Language::Type::Number
             </text>
         </g>
         <g fill="#000000" font-family="Helvetica" clip-path="url(#mx-clip-44-175-552-26-0)" font-size="12px">
             <text x="45.5" y="187.5">
-                + String: Language::Scope::Type::String
+                + String: Language::Type::String
             </text>
         </g>
         <g fill="#000000" font-family="Helvetica" clip-path="url(#mx-clip-44-201-552-26-0)" font-size="12px">
@@ -72,7 +72,7 @@
         </g>
         <g fill="#000000" font-family="Helvetica" clip-path="url(#mx-clip-44-227-552-26-0)" font-size="12px">
             <text x="45.5" y="239.5">
-                + ExternalFunction: Language::Scope::Type::Function&lt;std::unique_ptr&lt;Value&gt;(const Args&amp;)&gt;
+                + ExternalFunction: Language::Type::Function&lt;std::unique_ptr&lt;Value&gt;(const Args&amp;)&gt;
             </text>
         </g>
         <path d="M 40 252 L 600 252" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>

@@ -14,7 +14,7 @@ int main()
 				return 42;\
 			}"s;
 			auto script = Script::Script{};
-			auto result = Script::Value::ensureType<Script::Number>(script.executeCode(src))->getValue();
+			auto result = Script::ensureType<Script::Number>(script.executeCode(src))->getValue();
 			std::cout << result << std::endl;
 			ASSERT(result == 42);
 		}),

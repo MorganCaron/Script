@@ -3,14 +3,14 @@
 #include <functional>
 #include <unordered_map>
 
-#include <Language/AST/InstructionContainer.hpp>
-#include <Language/AST/Scope/LanguageScope.hpp>
+#include <Language/AST/Core/InstructionContainer.hpp>
+#include <Language/AST/ParsingTools/ParserScope.hpp>
 
 namespace Language
 {
 	class ASTRoot final:
-		public AST::InstructionContainer,
-		public AST::Scope::LanguageScope
+		public AST::Core::InstructionContainer,
+		public AST::ParsingTools::ParserScope
 	{
 	public:
 		ASTRoot();
@@ -18,7 +18,7 @@ namespace Language
 		virtual ~ASTRoot() = default;
 
 		void parse(const std::string src);
-		void interpret();
+		void indexe();
 
 	private:
 		void addNativeRules();

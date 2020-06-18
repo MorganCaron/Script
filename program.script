@@ -3,17 +3,16 @@ import [ Terminal ] from "Terminal.dll";
 import [ Array ] from "Array.dll";
 */
 
-/*
 function addition(const a: Number, const b: Number)
 	return a + b;
 /*
-function addition(const a: String, const b: String)
+function addition(const a: String, const b: String): String
 	return a + b;
 */
 
 class Player
 {
-	const m_name: Number;
+	const m_name: String;
 
 	function constructor(const name: String)
 		m_name = name;
@@ -24,9 +23,11 @@ class Player
 
 function main()
 {
+	/*
 	const player = new Player("Mout");
 	print(player.getName());
-	/*
+	*/
+	
 	{
 		const a = 1;
 		const b = 1;
@@ -34,15 +35,13 @@ function main()
 		print(c);
 		print(addition(a, b));
 	}
-
+	/*
 	{
 		const a = "foo";
 		const b = "bar";
 		const c = a + b;
 		print(c);
 	}
-	*/
-
 	/*
 	{
 		const a = [1, 2];

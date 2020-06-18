@@ -1,23 +1,23 @@
 cppUtils_dep = dependency('CppUtils', fallback: ['CppUtils', 'cppUtils_dep'])
 
+subdir('Value')
+subdir('Operator')
+subdir('Instruction')
+
 public_dependencies = [
 	cppUtils_dep,
-	ast_dep
+	ast_dep,
+	value_dep,
+	operator_dep,
+	instruction_dep
 ]
 private_dependencies = []
 
 includeDir = include_directories(['include/', '.'])
 
-sources = files([
-	'src/Parser.cpp'
-])
+sources = files([])
 
-headers = files([
-	'include/Language/AST/Scope/LanguageScope.hpp',
-	'include/Language/Parser/Number.hpp',
-	'include/Language/Parser/Parser.hpp',
-	'include/Language/Parser/String.hpp'
-])
+headers = files([])
 
 parser_lib = library(
 	'Parser',

@@ -7,12 +7,15 @@
 
 namespace Script
 {
-	using Value = Language::AST::Scope::Type::Value;
-	using Args = Language::AST::Scope::Type::Args;
-	using Number = Language::AST::Scope::Type::Number;
-	using String = Language::AST::Scope::Type::String;
-	using Function = Language::AST::Scope::FunctionType;
-	using ExternalFunction = Language::AST::Scope::Type::Function<std::unique_ptr<Value>(const Args&)>;
+	using Value = Language::AST::Type::IValue;
+	using Args = Language::AST::Type::Args;
+	using Number = Language::AST::Type::Number;
+	using String = Language::AST::Type::String;
+	using Function = Language::AST::Function::FunctionType;
+	using ExternalFunction = Language::AST::Type::Function<std::unique_ptr<Value>(const Args&)>;
+	
+	template<typename TargetType>
+	constexpr const auto ensureType = Language::AST::Type::ensureType<TargetType>;
 
 	class Script final
 	{
@@ -24,7 +27,7 @@ namespace Script
 
 		inline void addFunction(std::string name, std::unique_ptr<Function>&& function)
 		{
-			m_ast.addFunction(std::move(name), std::move(function));	
+			m_ast.addFunction(std::move(name), std::move(function));
 		}
 
 	private:
@@ -44,17 +47,17 @@ namespace Script
 			CppUtils::Logger::logWarning("Duration: "s + m_chrono.getText());
 		}
 
-		void interpret()
+		void indexe()
 		{
-			CppUtils::Logger::logImportant("#- INTERPRETER_/");
+			CppUtils::Logger::logImportant("#- INDEXER_/");
 			m_chrono.start();
 			try
 			{
-				m_ast.interpret();
+				m_ast.indexe();
 			}
 			catch (const std::exception& error)
 			{
-				CppUtils::Logger::logError("!Interpretation error: "s + error.what());
+				CppUtils::Logger::logError("!Indexer error: "s + error.what());
 			}
 			m_chrono.stop();
 			CppUtils::Logger::logWarning("Duration: "s + m_chrono.getText());
@@ -90,7 +93,7 @@ namespace Script
 		std::unique_ptr<Value> executeCode(std::string code)
 		{
 			parse(std::move(code));
-			interpret();
+			indexe();
 			return execute();
 		}
 		

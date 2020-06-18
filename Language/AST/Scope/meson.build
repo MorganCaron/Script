@@ -1,27 +1,19 @@
 cppUtils_dep = dependency('CppUtils', fallback: ['CppUtils', 'cppUtils_dep'])
 
-subdir('Type')
-
 public_dependencies = [
 	cppUtils_dep,
-	type_dep
+	core_dep
 ]
 private_dependencies = []
 
 includeDir = include_directories(['include/', '.'])
 
 sources = files([
-	'src/BaseScope.cpp',
-	'src/VariableScope.cpp'
+	'src/BaseScope.cpp'
 ])
 
 headers = files([
-	'include/Language/AST/Scope/BaseScope.hpp',
-	'include/Language/AST/Scope/FileScope.hpp',
-	'include/Language/AST/Scope/FunctionScope.hpp',
-	'include/Language/AST/Scope/Object.hpp',
-	'include/Language/AST/Scope/ObjectScope.hpp',
-	'include/Language/AST/Scope/VariableScope.hpp'
+	'include/Language/AST/Scope/BaseScope.hpp'
 ])
 
 scope_lib = library(
