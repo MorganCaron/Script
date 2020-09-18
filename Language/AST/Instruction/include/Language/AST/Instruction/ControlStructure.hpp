@@ -20,17 +20,22 @@ namespace Language::AST::Instruction
 		public Core::InstructionContainer
 	{
 	public:
-		static constexpr const auto Type = "Control structure"sv;
+		static constexpr const auto Type = CppUtils::Type::TypeId{"Control structure"};
 
 		explicit ControlStructure(std::string name, Scope::BaseScope* scope);
 		virtual ~ControlStructure() = default;
 
-		std::unique_ptr<Core::Instruction> cloneInstruction() const override
+		[[nodiscard]] std::unique_ptr<Core::Instruction> cloneInstruction() const override
 		{
 			return std::make_unique<ControlStructure>(*this);
 		}
 
 		std::unique_ptr<Type::IValue> interpret() override final;
+
+		[[nodiscard]] const CppUtils::Type::TypeId& getReturnType() const override final
+		{
+			return Type::VoidType;
+		}
 
 	private:
 		eControlStructureSort m_sort;

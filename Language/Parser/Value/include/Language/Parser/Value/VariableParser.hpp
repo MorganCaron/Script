@@ -7,7 +7,7 @@ namespace Language::Parser::Value
 {
 	inline std::unique_ptr<AST::Core::Instruction> parseVariable(AST::ParsingTools::Cursor& cursor)
 	{
-		auto& [container, scope, src, pos] = cursor;
+		auto& [container, scope, src, pos, verbose] = cursor;
 
 		auto variableName = cursor.getWordAndSkipIt();
 		if (variableName.empty())
@@ -16,7 +16,8 @@ namespace Language::Parser::Value
 		if (!variableScope.variableSignatureExists(variableName))
 			return nullptr;
 		
-		CppUtils::Logger::logInformation(variableName, false);
+		if (verbose)
+			CppUtils::Log::Logger::logInformation(variableName, false);
 		return std::make_unique<AST::Variable::Variable>(std::move(variableName), &scope);
 	}
 }

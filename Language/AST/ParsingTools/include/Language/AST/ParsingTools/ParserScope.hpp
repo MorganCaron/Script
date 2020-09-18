@@ -2,24 +2,45 @@
 
 #include <unordered_map>
 
-#include <Language/AST/File/FileScope.hpp>
+#include <Language/AST/Namespace/NamespaceScope.hpp>
 #include <Language/AST/ParsingTools/Cursor.hpp>
 
 namespace Language::AST::ParsingTools
 {
 	constexpr static const Scope::ScopeType ParserScopeType = 5;
 
-	class ParserScope: public File::FileScope
+	class ParserScope: public Namespace::NamespaceScope
 	{
 	public:
-		ParserScope(BaseScope* scope = nullptr, Scope::ScopeType scopeType = ParserScopeType):
-			FileScope{scope, scopeType}
+		ParserScope(Scope::BaseScope* scope = nullptr, Scope::ScopeType scopeType = ParserScopeType):
+			NamespaceScope{scope, scopeType}
 		{}
 		ParserScope(const ParserScope&) = default;
 		ParserScope(ParserScope&&) noexcept = default;
 		virtual ~ParserScope() = default;
 		ParserScope& operator=(const ParserScope&) = default;
 		ParserScope &operator=(ParserScope&&) noexcept = default;
+
+		inline bool declarationParserExists(const std::string& name) const noexcept
+		{
+			return (m_declarationParsers.find(name) != m_declarationParsers.end());
+		}
+		inline void addDeclarationParser(const std::string& name, DeclarationParser declarationParser)
+		{
+			m_declarationParsers[name] = std::move(declarationParser);
+		}
+		inline void addDeclarationParsers(const std::unordered_map<std::string, DeclarationParser>& declarationParsers)
+		{
+			m_declarationParsers.insert(declarationParsers.begin(), declarationParsers.end());
+		}
+		inline void removeDeclarationParser(const std::string& name)
+		{
+			m_declarationParsers.erase(name);
+		}
+		inline const std::unordered_map<std::string, DeclarationParser>& getDeclarationParsers() const
+		{
+			return m_declarationParsers;
+		}
 
 		inline bool instructionParserExists(const std::string& name) const noexcept
 		{
@@ -85,6 +106,7 @@ namespace Language::AST::ParsingTools
 		}
 		
 	private:
+		std::unordered_map<std::string, DeclarationParser> m_declarationParsers;
 		std::unordered_map<std::string, InstructionParser> m_instructionParsers;
 		std::unordered_map<std::string, ValueParser> m_valueParsers;
 		std::unordered_map<std::string, OperatorParser> m_operatorParsers;

@@ -2,6 +2,7 @@
 
 #include <string>
 #include <optional>
+#include <CppUtils.hpp>
 
 #include <Language/AST/Core/Interpreter.hpp>
 
@@ -11,7 +12,7 @@ namespace Language::AST::Core
 	{
 	public:
 		Instruction() = delete;
-		explicit Instruction(std::string instructionType):
+		explicit Instruction(CppUtils::Type::TypeId instructionType):
 			m_instructionType{std::move(instructionType)}
 		{}
 		virtual ~Instruction() = default;
@@ -21,14 +22,14 @@ namespace Language::AST::Core
 		Instruction& operator=(const Instruction&) = default;
 		Instruction& operator=(Instruction&&) = default;
 
-		inline const std::string& getInstructionType() const noexcept
+		[[nodiscard]] inline const CppUtils::Type::TypeId& getInstructionType() const noexcept
 		{
 			return m_instructionType;
 		}
 
-		virtual std::unique_ptr<Instruction> cloneInstruction() const = 0;
+		[[nodiscard]] virtual std::unique_ptr<Instruction> cloneInstruction() const = 0;
 
 	protected:
-		std::string m_instructionType;
+		CppUtils::Type::TypeId m_instructionType;
 	};
 }

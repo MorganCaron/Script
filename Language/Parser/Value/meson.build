@@ -12,6 +12,8 @@ sources = files([])
 
 headers = files([
 	'include/Language/Parser/Value/FunctionCallParser.hpp',
+	'include/Language/Parser/Value/InstanceParser.hpp',
+	'include/Language/Parser/Value/NamespaceCallParser.hpp',
 	'include/Language/Parser/Value/NumberParser.hpp',
 	'include/Language/Parser/Value/ParenthesisParser.hpp',
 	'include/Language/Parser/Value/StringParser.hpp',

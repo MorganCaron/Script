@@ -47,4 +47,4 @@ jobs:
     - name: Run Ninja
       run: ninja -C build
     - name: Run Tests
-      run: ninja -C build test
+      run: ./build/UnitTests/UnitTests && ninja -C build test

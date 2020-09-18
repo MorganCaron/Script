@@ -12,5 +12,6 @@ namespace Language::AST::Core
 		virtual ~Interpreter() = default;
 		virtual void indexe() {};
 		virtual std::unique_ptr<Type::IValue> interpret() = 0;
+		[[nodiscard]] virtual const CppUtils::Type::TypeId& getReturnType() const = 0;
 	};
 }

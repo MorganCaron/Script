@@ -5,7 +5,7 @@
 
 namespace Language::AST::Variable
 {
-	bool Variable::exists() const
+	[[nodiscard]] bool Variable::exists() const
 	{
 		const auto& variableScope = dynamic_cast<const VariableScope&>(getScope().findScope(VariableScopeType));
 		return variableScope.variableExists(getName());
@@ -17,7 +17,7 @@ namespace Language::AST::Variable
 		variableScope.setVariable(getName(), std::move(value));
 	}
 
-	const std::unique_ptr<Type::IValue>& Variable::getValue() const
+	[[nodiscard]] const std::unique_ptr<Type::IValue>& Variable::getValue() const
 	{
 		const auto& variableScope = dynamic_cast<const VariableScope&>(getScope().findScope(VariableScopeType));
 		return variableScope.getVariable(getName());
@@ -27,6 +27,12 @@ namespace Language::AST::Variable
 	{
 		const auto &variableScope = dynamic_cast<const VariableScope&>(getScope().findScope(VariableScopeType));
 		return variableScope.getVariable(getName())->cloneValue();
+	}
+
+	[[nodiscard]] const CppUtils::Type::TypeId& Variable::getReturnType() const
+	{
+		const auto &variableScope = dynamic_cast<const VariableScope&>(getScope().findScope(VariableScopeType));
+		return variableScope.getVariableSignature(getName()).type;
 	}
 
 	std::ostream& operator<<(std::ostream& os, const Variable& variable)

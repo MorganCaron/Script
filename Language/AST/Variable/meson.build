@@ -10,7 +10,6 @@ private_dependencies = []
 includeDir = include_directories(['include/', '.'])
 
 sources = files([
-	'src/VariableScope.cpp',
 	'src/Variable.cpp',
 	'src/VariableDeclaration.cpp'
 ])

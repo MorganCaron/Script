@@ -13,7 +13,8 @@ sources = files([])
 
 headers = files([
 	'include/Language/AST/Operator/Assignment.hpp',
-	'include/Language/AST/Operator/Addition.hpp'
+	'include/Language/AST/Operator/Addition.hpp',
+	'include/Language/AST/Operator/Member.hpp'
 ])
 
 operator_lib = library(

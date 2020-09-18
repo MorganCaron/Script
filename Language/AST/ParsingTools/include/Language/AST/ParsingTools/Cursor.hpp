@@ -11,60 +11,66 @@ using namespace std::literals;
 
 namespace Language::AST::ParsingTools
 {
-	static constexpr const auto AlphaChar = "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN_"sv;
-	static constexpr const auto AlphaNumChar = "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN0123456789_"sv;
-	static constexpr const auto SpaceChar = " \n\t"sv;
-	static constexpr const auto OperatorChar = "=+*-/%<>!&|^."sv;
-	static constexpr const auto NumberChar = "0123456789"sv;
-
 	struct Cursor
 	{
-		explicit Cursor(Core::InstructionContainer& c_container, Scope::BaseScope& c_scope, const std::string& c_src, std::size_t& c_pos):
-			container(c_container), scope(c_scope), src(c_src), pos(c_pos)
+		explicit Cursor(Core::InstructionContainer& c_container, Scope::BaseScope& c_scope, const std::string& c_src, std::size_t& c_pos, bool c_verbose):
+			container{c_container}, scope{c_scope}, src{c_src}, pos{c_pos}, verbose{c_verbose}
 		{}
 
-		inline bool isEndOfCode() const
+		[[nodiscard]] inline bool isEndOfCode() const noexcept
 		{
 			return (pos >= src.length());
 		}
-		inline char getChar() const
+		
+		[[nodiscard]] inline char getChar() const
 		{
 			return src.at(pos);
 		}
-		inline char getCharAndSkipIt()
+
+		[[nodiscard]] inline char getCharAndSkipIt()
 		{
 			return src.at(pos++);
 		}
-		std::string getWord() const
+
+		[[nodiscard]] inline std::string getNextNChar(const std::size_t size) const
+		{
+			return src.substr(pos, std::min(size, src.length() - pos));
+		}
+
+		[[nodiscard]] std::string getWord() const
 		{
 			auto wordLength = std::size_t{0};
 
-			if (std::string{AlphaChar}.find(src.at(pos + wordLength)) != std::string::npos)
+			if (std::isalpha(src.at(pos + wordLength)) || src.at(pos + wordLength) == '_')
 			{
 				do
 					++wordLength;
-				while (std::string{AlphaNumChar}.find(src.at(pos + wordLength)) != std::string::npos);
+				while (std::isalnum(src.at(pos + wordLength)) || src.at(pos + wordLength) == '_');
 			}
 			return src.substr(pos, wordLength);
 		}
-		std::string getWordAndSkipIt()
+
+		[[nodiscard]] std::string getWordAndSkipIt()
 		{
 			auto word = getWord();
 			pos += word.length();
 			return word;
 		}
-		std::string getWordRequired(std::string_view errorMessage)
+
+		[[nodiscard]] std::string getWordRequired(std::string_view errorMessage)
 		{
 			auto word = getWordAndSkipIt();
 			if (word.empty())
 				throw std::runtime_error{errorMessage.data()};
 			return word;
 		}
+
 		bool isKeywordSkipIt(std::string_view keyword)
 		{
-			if (getWord() != keyword)
+			const auto length = keyword.length();
+			if (getNextNChar(length) != keyword)
 				return false;
-			pos += keyword.length();
+			pos += length;
 			return true;
 		}
 
@@ -99,17 +105,29 @@ namespace Language::AST::ParsingTools
 		{
 			do
 			{
-				while (!isEndOfCode() && std::string{SpaceChar}.find(getChar()) != std::string::npos)
+				while (!isEndOfCode() && std::isspace(getChar()))
 					++pos;
 			} while (!isEndOfCode() && parseCommentary());
+		}
+
+		void parseSemicolon()
+		{
+			skipSpaces();
+			if (isEndOfCode() || getChar() != ';')
+				CppUtils::Log::Logger::logWarning("You forgot a semicolon after an instruction.\nSemicolons avoid misunderstandings by separating each instruction separately.\nWithout a semicolon, Script may think that two instructions form an operation if an operator is found between them.");
+			else if (verbose)
+				CppUtils::Log::Logger::logInformation(";", false);
+			++pos;
 		}
 
 		Core::InstructionContainer& container;
 		Scope::BaseScope& scope;
 		const std::string& src;
 		std::size_t& pos;
+		bool verbose;
 	};
 
+	using DeclarationParser = std::function<std::unique_ptr<Core::Instruction>(Cursor&)>;
 	using InstructionParser = std::function<std::unique_ptr<Core::Instruction>(Cursor&)>;
 	using ValueParser = std::function<std::unique_ptr<Core::Instruction>(Cursor&)>;
 	using OperatorParser = std::function<std::unique_ptr<Core::Instruction>(Cursor&, std::unique_ptr<Core::Instruction>&&)>;

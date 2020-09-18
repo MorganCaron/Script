@@ -29,6 +29,11 @@ namespace Language::AST::Core
 			m_instructions.emplace_back(std::move(instruction));
 		}
 
+		[[nodiscard]] std::size_t getNbInstructions() const noexcept
+		{
+			return m_instructions.size();
+		}
+
 	protected:
 		std::vector<std::unique_ptr<Instruction>> m_instructions;
 	};

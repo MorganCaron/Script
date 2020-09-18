@@ -14,15 +14,15 @@ namespace Language::AST::Operator
 		public Core::InstructionContainer
 	{
 	public:
-		static constexpr const auto Type = "Assignment"sv;
+		static constexpr const auto Type = CppUtils::Type::TypeId{"Assignment"};
 
 		Assignment(Scope::BaseScope* scope):
-			Core::Instruction{std::string{Type}},
+			Core::Instruction{Type},
 			Scope::NormalScope{scope}
 		{}
 		virtual ~Assignment() = default;
 
-		std::unique_ptr<Core::Instruction> cloneInstruction() const override
+		[[nodiscard]] std::unique_ptr<Core::Instruction> cloneInstruction() const override
 		{
 			return std::make_unique<Assignment>(*this);
 		}
@@ -40,6 +40,11 @@ namespace Language::AST::Operator
 			auto& variableScope = dynamic_cast<Variable::VariableScope&>(getScope().findScope(Variable::VariableScopeType));
 			variableScope.setVariable(variableName, std::move(value));
 			return variableScope.getVariable(variableName)->cloneValue();
+		}
+
+		[[nodiscard]] const CppUtils::Type::TypeId& getReturnType() const override final
+		{
+			return m_instructions[1]->getReturnType();
 		}
 	};
 }

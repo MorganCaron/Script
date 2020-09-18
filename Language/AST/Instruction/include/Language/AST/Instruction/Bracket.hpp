@@ -13,15 +13,16 @@ namespace Language::AST::Instruction
 		public Core::InstructionContainer
 	{
 	public:
-		static constexpr const auto Type = "Bracket"sv;
+		static constexpr const auto Type = CppUtils::Type::TypeId{"Bracket"};
 
 		explicit Bracket(Scope::BaseScope* scope = nullptr):
-			Core::Instruction{std::string{Type}},
-			VariableScope{scope}
+			Core::Instruction{Type},
+			VariableScope{scope},
+			m_returnType{Type::VoidType}
 		{}
 		virtual ~Bracket() = default;
 
-		std::unique_ptr<Core::Instruction> cloneInstruction() const override
+		[[nodiscard]] std::unique_ptr<Core::Instruction> cloneInstruction() const override
 		{
 			return std::make_unique<Bracket>(*this);
 		}
@@ -33,5 +34,13 @@ namespace Language::AST::Instruction
 		}
 		
 		std::unique_ptr<Type::IValue> interpret() override final;
+
+		[[nodiscard]] const CppUtils::Type::TypeId& getReturnType() const override final
+		{
+			return m_returnType;
+		}
+
+	private:
+		CppUtils::Type::TypeId m_returnType;
 	};
 }

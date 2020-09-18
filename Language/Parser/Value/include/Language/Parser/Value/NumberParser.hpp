@@ -5,33 +5,30 @@
 
 namespace Language::Parser::Value
 {
-	inline bool isNumber(AST::ParsingTools::Cursor& cursor)
-	{
-		return (cursor.getChar() == '.' || std::string{AST::ParsingTools::NumberChar}.find(cursor.getChar()) != std::string::npos);
-	}
-
 	inline std::string getNumericString(AST::ParsingTools::Cursor& cursor)
 	{
 		auto string = ""s;
-		while (std::string{AST::ParsingTools::NumberChar}.find(cursor.getChar()) != std::string::npos)
+		while (!cursor.isEndOfCode() && std::isdigit(cursor.getChar()))
 			string += cursor.getCharAndSkipIt();
 		return string;
 	}
 	
-	inline double parseDouble(AST::ParsingTools::Cursor& cursor)
-	{
-		auto string = getNumericString(cursor);
-		if (cursor.getChar() == '.')
-			string += cursor.getCharAndSkipIt();
-		string += getNumericString(cursor);
-		
-		CppUtils::Logger::logInformation(string, false);
-
-		return std::stod(string);
-	}
-	
 	inline std::unique_ptr<AST::Core::Instruction> parseNumber(AST::ParsingTools::Cursor& cursor)
 	{
-		return isNumber(cursor) ? std::make_unique<AST::Value::Number>(std::make_unique<AST::Type::Number>(parseDouble(cursor))) : nullptr;
+		auto string = getNumericString(cursor);
+		if (!cursor.isEndOfCode() && cursor.getChar() == '.')
+		{
+			string += cursor.getCharAndSkipIt();
+			string += getNumericString(cursor);
+		}
+		
+		if (string.empty() || string == ".")
+			return nullptr;
+		
+		if (cursor.verbose)
+			CppUtils::Log::Logger::logInformation(string, false);
+		auto nb = std::stod(string);
+
+		return std::make_unique<AST::Value::Number>(std::make_unique<AST::Type::Number>(nb));
 	}
 }

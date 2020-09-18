@@ -2,7 +2,7 @@ cppUtils_dep = dependency('CppUtils', fallback: ['CppUtils', 'cppUtils_dep'])
 
 public_dependencies = [
 	cppUtils_dep,
-	file_dep,
+	namespace_dep,
 	value_dep,
 	instruction_dep,
 	operator_dep

@@ -12,12 +12,10 @@ sources = files([])
 
 headers = files([
 	'include/Language/Parser/Instruction/BracketParser.hpp',
-	'include/Language/Parser/Instruction/ClassParser.hpp',
 	'include/Language/Parser/Instruction/ControlStructureParser.hpp',
-	'include/Language/Parser/Instruction/FunctionDeclarationParser.hpp',
-	'include/Language/Parser/Instruction/ImportDeclarationParser.hpp',
 	'include/Language/Parser/Instruction/InstructionParser.hpp',
 	'include/Language/Parser/Instruction/ReturnParser.hpp',
+	'include/Language/Parser/Instruction/ValueParser.hpp',
 	'include/Language/Parser/Instruction/VariableDeclarationParser.hpp'
 ])
 

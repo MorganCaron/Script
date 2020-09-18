@@ -7,14 +7,15 @@ subdir('Variable')
 subdir('Function')
 subdir('Object')
 subdir('Operator')
-subdir('File')
 subdir('Value')
 subdir('Instruction')
+subdir('Namespace')
 subdir('ParsingTools')
 
 public_dependencies = [
 	instruction_dep,
-	parsingTools_dep
+	parsingTools_dep,
+	namespace_dep
 ]
 private_dependencies = [
 	cppUtils_dep

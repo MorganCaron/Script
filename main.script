@@ -3,31 +3,39 @@ import [ Terminal ] from "Terminal.dll";
 import [ Array ] from "Array.dll";
 */
 
-function addition(const a: Number, const b: Number)
+function addition(const a: Number, const b: Number): Number
 	return a + b;
-/*
+
 function addition(const a: String, const b: String): String
 	return a + b;
-*/
 
-class Player
+namespace Game
 {
-	const m_name: String;
+	const Test = 42;
 
-	function constructor(const name: String)
-		m_name = name;
+	class Player
+	{
+		const m_name: String;
 
-	function getName()
-		return m_name;
+		function constructor(const name: String)
+		{
+			print("X");
+			m_name = name;
+		}
+
+		function getName(): String
+			return m_name;
+	}
 }
 
-function main()
+function main(): Number
 {
-	/*
-	const player = new Player("Mout");
+	print(Game::Test);
+	print("A");
+	const player = Game::Player("Mout");
+	print("B");
 	print(player.getName());
-	*/
-	
+	print("C");
 	{
 		const a = 1;
 		const b = 1;
@@ -41,8 +49,9 @@ function main()
 		const b = "bar";
 		const c = a + b;
 		print(c);
+		// print(addition(a, b));
 	}
-	/*
+	
 	{
 		const a = [1, 2];
 		const b = a + 3;

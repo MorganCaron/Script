@@ -11,6 +11,9 @@ includeDir = include_directories(['include/', '.'])
 sources = files([])
 
 headers = files([
+	'include/Language/Parser/Operator/AdditionParser.hpp',
+	'include/Language/Parser/Operator/AssignmentParser.hpp',
+	'include/Language/Parser/Operator/MemberParser.hpp',
 	'include/Language/Parser/Operator/OperatorParser.hpp'
 ])
 

@@ -7,18 +7,12 @@ private_dependencies = []
 
 includeDir = include_directories(['include/', '.'])
 
-sources = files([
-	'src/Number.cpp',
-	'src/String.cpp',
-	'src/Type.cpp'
-])
+sources = files([])
 
 headers = files([
-	'include/Language/AST/Type/Function.hpp',
 	'include/Language/AST/Type/Number.hpp',
 	'include/Language/AST/Type/String.hpp',
 	'include/Language/AST/Type/Type.hpp'
-	
 ])
 
 type_lib = library(

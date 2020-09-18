@@ -13,15 +13,15 @@ namespace Language::AST::Instruction
 		public Scope::NormalScope
 	{
 	public:
-		static constexpr const auto Type = "Return"sv;
+		static constexpr const auto Type = CppUtils::Type::TypeId{"Return"};
 		static constexpr const auto Keyword = "return"sv;
 
 		explicit Return(Scope::BaseScope* scope):
-			Core::Instruction{std::string{Type}},
+			Core::Instruction{Type},
 			Scope::NormalScope{scope}
 		{}
 
-		std::unique_ptr<Core::Instruction> cloneInstruction() const override
+		[[nodiscard]] std::unique_ptr<Core::Instruction> cloneInstruction() const override
 		{
 			return std::make_unique<Return>(*this);
 		}
@@ -29,6 +29,11 @@ namespace Language::AST::Instruction
 		std::unique_ptr<Type::IValue> interpret() override final
 		{
 			return m_instructions.at(0)->interpret();
+		}
+
+		[[nodiscard]] const CppUtils::Type::TypeId& getReturnType() const override final
+		{
+			return m_instructions.at(0)->getReturnType();
 		}
 	};
 }

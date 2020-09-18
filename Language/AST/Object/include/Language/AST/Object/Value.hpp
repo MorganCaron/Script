@@ -5,16 +5,16 @@
 
 namespace Language::AST::Object::Value
 {
-	class Instance final: public Value<Type::Instance>
+	class Instance final: public AST::Value::Value<Type::Instance>
 	{
 	public:
-		static constexpr const auto Typename = "Instance"sv;
+		static constexpr const auto Type = CppUtils::Type::TypeId{"Instance"};
 
-		explicit Instance(std::unique_ptr<Type::Instance>&& string):
-			Value<Type::Instance>{string, Typename}
+		explicit Instance(std::unique_ptr<Type::Instance>&& instance):
+			AST::Value::Value<Type::Instance>{std::move(instance), Type}
 		{}
 
-		std::unique_ptr<Core::Instruction> cloneInstruction() const override
+		[[nodiscard]] std::unique_ptr<Core::Instruction> cloneInstruction() const override
 		{
 			return std::make_unique<Instance>(*this);
 		}

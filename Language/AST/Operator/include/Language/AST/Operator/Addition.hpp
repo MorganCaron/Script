@@ -15,15 +15,15 @@ namespace Language::AST::Operator
 		public Core::InstructionContainer
 	{
 	public:
-		static constexpr const auto Type = "Addition"sv;
+		static constexpr const auto Type = CppUtils::Type::TypeId{"Addition"};
 
 		Addition(Scope::BaseScope* scope):
-			Core::Instruction{std::string{Type}},
+			Core::Instruction{Type},
 			Scope::NormalScope{scope}
 		{}
 		virtual ~Addition() = default;
 
-		std::unique_ptr<Core::Instruction> cloneInstruction() const override
+		[[nodiscard]] std::unique_ptr<Core::Instruction> cloneInstruction() const override
 		{
 			return std::make_unique<Addition>(*this);
 		}
@@ -37,6 +37,11 @@ namespace Language::AST::Operator
 			const auto number0 = Type::ensureType<Type::Number>(value0)->getValue();
 			const auto number1 = Type::ensureType<Type::Number>(value1)->getValue();
 			return std::make_unique<Type::Number>(number0 + number1);
+		}
+
+		[[nodiscard]] const CppUtils::Type::TypeId& getReturnType() const override final
+		{
+			return m_instructions[1]->getReturnType();
 		}
 	};
 }

@@ -7,7 +7,7 @@ namespace Language::Parser::Value
 {
 	inline std::unique_ptr<AST::Core::Instruction> parseParenthesis(AST::ParsingTools::Cursor& cursor)
 	{
-		auto& [container, scope, src, pos] = cursor;
+		auto& [container, scope, src, pos, verbose] = cursor;
 		
 		if (cursor.getChar() != '(')
 			return nullptr;

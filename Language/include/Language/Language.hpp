@@ -4,11 +4,14 @@
 #include <Language/AST/Core/InstructionContainer.hpp>
 #include <Language/AST/Core/Interpreter.hpp>
 
-#include <Language/AST/File/FileScope.hpp>
-#include <Language/AST/File/ImportDeclaration.hpp>
-
+#include <Language/AST/Function/Function.hpp>
 #include <Language/AST/Function/FunctionDeclaration.hpp>
 #include <Language/AST/Function/FunctionScope.hpp>
+
+#include <Language/AST/Namespace/ImportDeclaration.hpp>
+#include <Language/AST/Namespace/NamespaceCall.hpp>
+#include <Language/AST/Namespace/NamespaceDeclaration.hpp>
+#include <Language/AST/Namespace/NamespaceScope.hpp>
 
 #include <Language/AST/Instruction/Bracket.hpp>
 #include <Language/AST/Instruction/ControlStructure.hpp>
@@ -28,7 +31,6 @@
 
 #include <Language/AST/Scope/BaseScope.hpp>
 
-#include <Language/AST/Type/Function.hpp>
 #include <Language/AST/Type/Number.hpp>
 #include <Language/AST/Type/String.hpp>
 #include <Language/AST/Type/Type.hpp>
@@ -37,11 +39,13 @@
 #include <Language/AST/Variable/VariableDeclaration.hpp>
 #include <Language/AST/Variable/VariableScope.hpp>
 
+#include <Language/Parser/Declaration/ClassParser.hpp>
+#include <Language/Parser/Declaration/FunctionDeclarationParser.hpp>
+#include <Language/Parser/Declaration/ImportDeclarationParser.hpp>
+#include <Language/Parser/Declaration/NamespaceParser.hpp>
+
 #include <Language/Parser/Instruction/BracketParser.hpp>
-#include <Language/Parser/Instruction/ClassParser.hpp>
 #include <Language/Parser/Instruction/ControlStructureParser.hpp>
-#include <Language/Parser/Instruction/FunctionDeclarationParser.hpp>
-#include <Language/Parser/Instruction/ImportDeclarationParser.hpp>
 #include <Language/Parser/Instruction/InstructionParser.hpp>
 #include <Language/Parser/Instruction/ReturnParser.hpp>
 #include <Language/Parser/Instruction/VariableDeclarationParser.hpp>
@@ -51,6 +55,8 @@
 #include <Language/Parser/Operator/AdditionParser.hpp>
 
 #include <Language/Parser/Value/FunctionCallParser.hpp>
+#include <Language/Parser/Value/InstanceParser.hpp>
+#include <Language/Parser/Value/NamespaceCallParser.hpp>
 #include <Language/Parser/Value/NumberParser.hpp>
 #include <Language/Parser/Value/ParenthesisParser.hpp>
 #include <Language/Parser/Value/StringParser.hpp>

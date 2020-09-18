@@ -5,19 +5,16 @@
 
 namespace Language::AST::Variable
 {
-	bool VariableDeclaration::exists() const
+	[[nodiscard]] bool VariableDeclaration::exists() const
 	{
 		const auto& variableScope = dynamic_cast<const Variable::VariableScope&>(getScope().findScope(Variable::VariableScopeType));
 		return variableScope.variableExists(getName());
 	}
 
-	void VariableDeclaration::declare(bool constant, std::unique_ptr<Type::IValue>&& value, std::string type)
+	void VariableDeclaration::declare(VariableSignature variableSignature)
 	{
 		auto& variableScope = dynamic_cast<Variable::VariableScope&>(getScope().findScope(Variable::VariableScopeType));
-		auto variableSignature = Variable::VariableScope::VariableSignature{constant, std::move(type)};
-		variableScope.addVariableSignature(getName(), std::move(variableSignature));
-		if (value != nullptr)
-			variableScope.setVariable(getName(), std::move(value));
+		variableScope.addVariableSignature(std::move(variableSignature));
 	}
 
 	void VariableDeclaration::setValue(std::unique_ptr<Type::IValue>&& value)
@@ -26,7 +23,7 @@ namespace Language::AST::Variable
 		variableScope.setVariable(getName(), std::move(value));
 	}
 
-	const std::unique_ptr<Type::IValue>& VariableDeclaration::getValue() const
+	[[nodiscard]] const std::unique_ptr<Type::IValue>& VariableDeclaration::getValue() const
 	{
 		const auto& variableScope = dynamic_cast<const Variable::VariableScope&>(getScope().findScope(Variable::VariableScopeType));
 		return variableScope.getVariable(getName());
@@ -34,8 +31,21 @@ namespace Language::AST::Variable
 	
 	std::unique_ptr<Type::IValue> VariableDeclaration::interpret()
 	{
+		auto &variableScope = dynamic_cast<Variable::VariableScope&>(getScope().findScope(Variable::VariableScopeType));
+
+		if (m_instructions.empty())
+			return std::make_unique<Type::Number>(0);
+		
+		auto& valueInstruction = *m_instructions[0];
+		auto value = valueInstruction.interpret();
+		variableScope.setVariable(getName(), value->cloneValue());
+		return value;
+	}
+
+	[[nodiscard]] const CppUtils::Type::TypeId& VariableDeclaration::getReturnType() const
+	{
 		const auto &variableScope = dynamic_cast<const Variable::VariableScope&>(getScope().findScope(Variable::VariableScopeType));
-		return variableScope.getVariable(getName())->cloneValue();
+		return variableScope.getVariableSignature(getName()).type;
 	}
 
 	std::ostream& operator<<(std::ostream& os, const VariableDeclaration& variable)

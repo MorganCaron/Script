@@ -1,9 +1,7 @@
 #pragma once
 
-#include <CppUtils.hpp>
+#include <Parameters.hpp>
 #include <Language/Language.hpp>
-
-#include <config.hpp>
 
 namespace Script
 {
@@ -11,8 +9,9 @@ namespace Script
 	using Args = Language::AST::Type::Args;
 	using Number = Language::AST::Type::Number;
 	using String = Language::AST::Type::String;
+	using FunctionSignature = Language::AST::Function::FunctionSignature;
 	using Function = Language::AST::Function::FunctionType;
-	using ExternalFunction = Language::AST::Type::Function<std::unique_ptr<Value>(const Args&)>;
+	using ExternalFunction = Language::AST::Function::Function<std::unique_ptr<Value>(const Args&)>;
 	
 	template<typename TargetType>
 	constexpr const auto ensureType = Language::AST::Type::ensureType<TargetType>;
@@ -20,91 +19,109 @@ namespace Script
 	class Script final
 	{
 	public:
-		Script()
+		Script(Settings settings):
+			m_settings{settings}
 		{
-			CppUtils::Logger::logImportant("#- Script_/\nv: "s + VERSION);
+			if (!m_settings.warning)
+				CppUtils::Switch::disable(CppUtils::Log::Logger::WarningType);
+
+			if (m_settings.verbose)
+				CppUtils::Log::Logger::logImportant("_"s + EXECUTABLE_NAME + "_v" + EXECUTABLE_VERSION + "_/");
 		}
 
-		inline void addFunction(std::string name, std::unique_ptr<Function>&& function)
+		inline void addFunction(const FunctionSignature& functionSignature, std::unique_ptr<Function>&& function)
 		{
-			m_ast.addFunction(std::move(name), std::move(function));
+			m_ast.addFunction(functionSignature, std::move(function));
 		}
 
 	private:
-		void parse(std::string code)
+		[[nodiscard]] bool parse(std::string code)
 		{
-			CppUtils::Logger::logImportant("#- PARSER_/");
-			m_chrono.start();
+			if (m_settings.verbose)
+				CppUtils::Log::Logger::logImportant("Parser:");
+			auto chronoLogger = CppUtils::Log::ChronoLogger{"Parsing", m_settings.chrono};
 			try
 			{
-				m_ast.parse(std::move(code));
+				m_ast.parse(std::move(code), m_settings.verbose);
 			}
 			catch (const std::exception& error)
 			{
-				CppUtils::Logger::logError("!Parsing error: "s + error.what());
+				CppUtils::Log::Logger::logError("!Parsing error:\n"s + error.what());
+				chronoLogger.stop();
+				return false;
 			}
-			m_chrono.stop();
-			CppUtils::Logger::logWarning("Duration: "s + m_chrono.getText());
+			chronoLogger.stop();
+			return true;
 		}
 
 		void indexe()
 		{
-			CppUtils::Logger::logImportant("#- INDEXER_/");
-			m_chrono.start();
+			if (m_settings.verbose)
+				CppUtils::Log::Logger::logImportant("Indexer:");
+			auto chronoLogger = CppUtils::Log::ChronoLogger{"Indexing", m_settings.chrono};
 			try
 			{
 				m_ast.indexe();
 			}
 			catch (const std::exception& error)
 			{
-				CppUtils::Logger::logError("!Indexer error: "s + error.what());
+				CppUtils::Log::Logger::logError("!Indexer error:\n"s + error.what());
 			}
-			m_chrono.stop();
-			CppUtils::Logger::logWarning("Duration: "s + m_chrono.getText());
-			CppUtils::Logger::logSuccess("Global functions: "s + std::to_string(m_ast.getFunctions().size()));
-			for (const auto& function : m_ast.getFunctions())
-				CppUtils::Logger::logSuccess("- "s + function.first + "()");
+			chronoLogger.stop();
+
+			if (m_settings.verbose)
+			{
+				CppUtils::Log::Logger::logSuccess("Global classes: "s + std::to_string(m_ast.getClasses().size()));
+				for (const auto& [prototypeName, prototype] : m_ast.getClasses())
+					CppUtils::Log::Logger::logSuccess("- "s + prototypeName + "{}");
+				
+				CppUtils::Log::Logger::logSuccess("Global functions: "s + std::to_string(m_ast.getFunctions().size()));
+				for (const auto& [functionSignature, function] : m_ast.getFunctions())
+					CppUtils::Log::Logger::logSuccess("- "s + functionSignature.printable);
+			}
 		}
 
 		std::unique_ptr<Value> execute()
 		{
-			CppUtils::Logger::logImportant("#- EXECUTION_/");
-			m_chrono.start();
+			if (m_settings.verbose)
+				CppUtils::Log::Logger::logImportant("Execution:");
+			auto chronoLogger = CppUtils::Log::ChronoLogger{"Execution", m_settings.chrono};
 			try
 			{
-				if (!m_ast.functionExists("main"))
+				const auto mainFunctionSignature = FunctionSignature{"main"};
+				if (!m_ast.functionExists(mainFunctionSignature))
 					throw std::runtime_error{"No entry point found: The main function is missing."};
-				auto result = m_ast.getFunction("main")({});
-				m_chrono.stop();
-				std::cout << std::endl;
-				CppUtils::Logger::logWarning("Duration: "s + m_chrono.getText());
+				auto& mainFunction = m_ast.getFunction(mainFunctionSignature);
+				auto result = mainFunction({});
+				chronoLogger.stop();
 				return result;
 			}
 			catch (const std::exception& error)
 			{
-				CppUtils::Logger::logError("!Runtime error: "s + error.what());
+				CppUtils::Log::Logger::logError("!Runtime error:\n"s + error.what());
 			}
-			m_chrono.stop();
-			CppUtils::Logger::logWarning("Duration: "s + m_chrono.getText());
-			return std::make_unique<Number>(0);
+			chronoLogger.stop();
+			return std::make_unique<Number>(-1);
 		}
 
 	public:
 		std::unique_ptr<Value> executeCode(std::string code)
 		{
-			parse(std::move(code));
+			if (!parse(std::move(code)))
+				return std::make_unique<Number>(-1);
 			indexe();
 			return execute();
 		}
 		
 		std::unique_ptr<Value> executeFile(const std::filesystem::path& filePath)
 		{
-			CppUtils::Logger::logInformation("Execute file: " + filePath.string());
-			return executeCode(CppUtils::FileSystem::readString(filePath));
+			if (m_settings.verbose)
+				CppUtils::Log::Logger::logInformation("Execute file: " + filePath.string());
+			return executeCode(CppUtils::FileSystem::File::String::read(filePath));
 		}
 
 	private:
+		Settings m_settings;
 		Language::ASTRoot m_ast;
-		CppUtils::Chrono::Chronometer m_chrono;
 	};
 }

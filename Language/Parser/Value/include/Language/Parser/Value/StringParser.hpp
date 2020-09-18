@@ -7,7 +7,7 @@ namespace Language::Parser::Value
 {
 	inline std::string parseQuote(AST::ParsingTools::Cursor& cursor)
 	{
-		auto& [container, scope, src, pos] = cursor;
+		auto& [container, scope, src, pos, verbose] = cursor;
 
 		auto string = ""s;
 		const auto quoteChar = cursor.getChar();
@@ -29,7 +29,8 @@ namespace Language::Parser::Value
 			return nullptr;
 		
 		auto string = parseQuote(cursor);
-		CppUtils::Logger::logInformation("\""s + string + '"', false);
+		if (cursor.verbose)
+			CppUtils::Log::Logger::logInformation("\""s + string + '"', false);
 		return std::make_unique<AST::Value::String>(std::make_unique<AST::Type::String>(std::move(string)));
 	}
 }

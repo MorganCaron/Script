@@ -11,10 +11,21 @@ std::unique_ptr<Script::Value> print(const Script::Args& args)
 	return std::make_unique<Script::Number>(0);
 }
 
-int main(int ac, char *av[])
+int main(const int argc, const char *argv[])
 {
-	auto filename = (ac > 1) ? av[1] : "program.script";
-	auto script = Script::Script{};
-	script.addFunction("print", std::make_unique<Script::ExternalFunction>(print));
-	return Script::ensureType<Script::Number>(script.executeFile(filename))->getValue();
+	try
+	{
+		const auto settings = Script::executeCommands(argc, argv);
+		if (settings.abort)
+			return 0;
+		
+		auto script = Script::Script{settings};
+		script.addFunction(Script::FunctionSignature{"print"}, std::make_unique<Script::ExternalFunction>(print, Language::AST::Type::VoidType));
+		return Script::ensureType<Script::Number>(script.executeFile(settings.filename))->getValue();
+	}
+	catch (const std::exception& exception)
+	{
+		CppUtils::Log::Logger::logError("An exception occurred: "s + exception.what());
+		return 1;
+	}
 }

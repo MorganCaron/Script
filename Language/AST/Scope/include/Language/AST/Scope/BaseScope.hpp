@@ -18,8 +18,8 @@ namespace Language::AST::Scope
 	public:
 		virtual ~ScopeFinder() = default;
 
-		virtual BaseScope& findScope(ScopeType scopeType) = 0;
-		virtual const BaseScope& findScope(ScopeType scopeType) const = 0;
+		[[nodiscard]] virtual BaseScope& findScope(ScopeType scopeType) = 0;
+		[[nodiscard]] virtual const BaseScope& findScope(ScopeType scopeType) const = 0;
 	};
 
 	class Scopable;
@@ -31,13 +31,13 @@ namespace Language::AST::Scope
 		{}
 		virtual ~BaseScope() = default;
 
-		inline constexpr ScopeType getType() const noexcept
+		[[nodiscard]] inline constexpr ScopeType getType() const noexcept
 		{
 			return m_type;
 		}
 
-		BaseScope& findScope(ScopeType scopeType) override;
-		const BaseScope& findScope(ScopeType scopeType) const override;
+		[[nodiscard]] BaseScope& findScope(ScopeType scopeType) override;
+		[[nodiscard]] const BaseScope& findScope(ScopeType scopeType) const override;
 
 	private:
 		ScopeType m_type;
@@ -54,15 +54,15 @@ namespace Language::AST::Scope
 		{
 			m_scope = &scope;
 		}
-		BaseScope& getScope();
-		const BaseScope& getScope() const;
-		inline bool hasScope() const noexcept
+		[[nodiscard]] BaseScope& getScope();
+		[[nodiscard]] const BaseScope& getScope() const;
+		[[nodiscard]] inline bool hasScope() const noexcept
 		{
 			return m_scope;
 		}
 
-		BaseScope& findScope(ScopeType scopeType) override;
-		const BaseScope& findScope(ScopeType scopeType) const override;
+		[[nodiscard]] BaseScope& findScope(ScopeType scopeType) override;
+		[[nodiscard]] const BaseScope& findScope(ScopeType scopeType) const override;
 
 	private:
 		BaseScope* m_scope;
@@ -75,7 +75,7 @@ namespace Language::AST::Scope
 		{}
 		virtual ~NormalScope() = default;
 
-		BaseScope& findScope(ScopeType scopeType) override final;
-		const BaseScope& findScope(ScopeType scopeType) const override final;
+		[[nodiscard]] BaseScope& findScope(ScopeType scopeType) override final;
+		[[nodiscard]] const BaseScope& findScope(ScopeType scopeType) const override final;
 	};
 }

@@ -17,7 +17,7 @@ namespace Language
 		explicit ASTRoot(std::string src);
 		virtual ~ASTRoot() = default;
 
-		void parse(const std::string src);
+		void parse(const std::string src, bool verbose = false);
 		void indexe();
 
 	private:

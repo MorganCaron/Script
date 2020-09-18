@@ -7,19 +7,20 @@ namespace Language::AST::Function
 {
 	FunctionDeclaration::FunctionDeclaration(std::string name, Scope::BaseScope* scope):
 		CppUtils::Type::Named{std::move(name)},
-		Core::Instruction{std::string{Type}},
-		Variable::VariableScope{scope}
+		Core::Instruction{Type},
+		Variable::VariableScope{scope},
+		m_returnType{Type::VoidType}
 	{}
 
-	std::unique_ptr<Type::ITFunction<std::unique_ptr<Type::IValue>(const Type::Args&)>> FunctionDeclaration::cloneFunction() const
+	std::unique_ptr<ITFunction<std::unique_ptr<Type::IValue>(const Type::Args&)>> FunctionDeclaration::cloneFunction() const
 	{
 		return std::make_unique<FunctionDeclaration>(*this);
 	}
 
-	void FunctionDeclaration::addArgument(std::string name, Variable::VariableScope::VariableSignature&& signature)
+	void FunctionDeclaration::addArgument(Variable::VariableSignature variableSignature)
 	{
-		addVariableSignature(name, std::move(signature));
-		m_argumentNames.emplace_back(std::move(name));
+		addVariableSignature(variableSignature);
+		m_arguments.emplace_back(std::move(variableSignature));
 	}
 
 	std::unique_ptr<Type::IValue> FunctionDeclaration::operator()(const Type::Args& arguments)
@@ -31,12 +32,12 @@ namespace Language::AST::Function
 		auto& variableScope = dynamic_cast<Variable::VariableScope&>(scope.findScope(Variable::VariableScopeType));
 		variableScope.resetVariables();
 		const auto nbPassedArgument = arguments.size();
-		const auto nbArguments = m_argumentNames.size();
+		const auto nbArguments = m_arguments.size();
 		if (nbPassedArgument > nbArguments)
 			throw std::runtime_error{"Le nombre d argument passes est superieur au nombre d arguments de la fonction."};
 		for (auto i = std::size_t{0}; i < nbArguments; ++i)
 		{
-			const auto& argumentName = m_argumentNames[i];
+			const auto& argumentName = m_arguments[i].name;
 			auto value = arguments[i]->cloneValue();
 			variableScope.setVariable(argumentName, std::move(value));
 		}
@@ -45,10 +46,14 @@ namespace Language::AST::Function
 
 	void FunctionDeclaration::indexe()
 	{
-		CppUtils::Logger::logInformation("Declare "s + Keyword.data() + " " + getName().data() + "(", false);
-		auto& functionScope = dynamic_cast<Function::FunctionScope&>(getScope().findScope(Function::FunctionScopeType));
-		functionScope.addFunction(getName(), std::make_unique<FunctionDeclaration>(*this));
-		CppUtils::Logger::logInformation(")");
+		auto& functionScope = dynamic_cast<FunctionScope&>(getScope().findScope(FunctionScopeType));
+		auto argumentTypes = std::vector<CppUtils::Type::TypeId>{};
+		std::transform(m_arguments.begin(), m_arguments.end(), std::back_inserter(argumentTypes), [](const auto& variableSignature) {
+			return variableSignature.type;
+		});
+		const auto functionSignature = FunctionSignature{getName().data(), argumentTypes};
+		functionScope.addFunction(functionSignature, std::make_unique<FunctionDeclaration>(*this));
+		CppUtils::Log::Logger::logInformation("Declare "s + Keyword.data() + " " + functionSignature.printable);
 	}
 
 	std::unique_ptr<Type::IValue> FunctionDeclaration::interpret()

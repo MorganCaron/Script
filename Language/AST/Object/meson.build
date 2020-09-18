@@ -9,7 +9,8 @@ private_dependencies = []
 includeDir = include_directories(['include/', '.'])
 
 sources = files([
-	'src/Class.cpp'
+	'src/Class.cpp',
+	'src/Instantiation.cpp'
 ])
 
 headers = files([
@@ -17,7 +18,8 @@ headers = files([
 	'include/Language/AST/Object/Instance.hpp',
 	'include/Language/AST/Object/Type.hpp',
 	'include/Language/AST/Object/Value.hpp',
-	'include/Language/AST/Object/ObjectScope.hpp'
+	'include/Language/AST/Object/ObjectScope.hpp',
+	'include/Language/AST/Object/Instantiation.hpp'
 ])
 
 object_lib = library(

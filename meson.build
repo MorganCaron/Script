@@ -47,12 +47,11 @@ private_dependencies = [
 
 includeDir = include_directories(['include', 'res', '.'])
 
-sources = files([
-
-])
+sources = files([])
 
 headers = files([
-	'include/Script.hpp'
+	'include/Script.hpp',
+	'include/Parameters.hpp'
 ])
 
 script_exe = executable(
@@ -60,7 +59,7 @@ script_exe = executable(
 	sources: ['src/main.cpp'] + sources + headers + resources,
 	include_directories: includeDir,
 	dependencies: public_dependencies + private_dependencies,
-	link_args: '-Wl,--out-implib=libScript.dll.a'
+	#link_args: '-Wl,--out-implib=libScript.dll.a'
 )
 
 script_dep = declare_dependency(
@@ -69,17 +68,10 @@ script_dep = declare_dependency(
 	dependencies: public_dependencies
 )
 
-unitTests_exe = executable(
-	'UnitTests',
-	sources: ['src/tests.cpp'] + sources + headers + resources,
-	include_directories: includeDir,
-	dependencies: public_dependencies + private_dependencies
-)
-
 configure_file(
 	copy: true,
-	input: 'program.script',
-	output: 'program.script'
+	input: 'main.script',
+	output: 'main.script'
 )
 
-test('Unit tests', unitTests_exe)
+subdir('UnitTests')

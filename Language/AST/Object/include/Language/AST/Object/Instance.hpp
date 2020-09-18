@@ -6,7 +6,7 @@
 
 namespace Language::AST::Object
 {
-	using ConstructorType = Type::ITFunction<void(Type::Args&)>;
+	using ConstructorType = Function::ITFunction<void(const Type::Args&)>;
 
 	class Instance:
 		public CppUtils::Type::Named,
@@ -42,7 +42,7 @@ namespace Language::AST::Object
 			m_constructor = std::move(constructor);
 		}
 
-		void callConstructor(Type::Args& arguments)
+		void callConstructor(const Type::Args& arguments)
 		{
 			if (m_constructor)
 				(*m_constructor)(arguments);

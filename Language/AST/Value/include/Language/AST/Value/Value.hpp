@@ -8,7 +8,7 @@ namespace Language::AST::Value
 	class Value: public Core::Instruction
 	{
 	public:
-		explicit Value(std::unique_ptr<T>&& value, std::string type):
+		explicit Value(std::unique_ptr<T>&& value, CppUtils::Type::TypeId type):
 			Core::Instruction{std::move(type)},
 			m_value{std::make_unique<T>(*value)}
 		{}
@@ -25,12 +25,12 @@ namespace Language::AST::Value
 		}
 		Value& operator=(Value&&) noexcept = default;
 
-		inline const T& getValue() const noexcept
+		[[nodiscard]] inline const T& getValue() const noexcept
 		{
 			return *m_value;
 		}
 
-		std::unique_ptr<T> cloneValue() const
+		[[nodiscard]] std::unique_ptr<T> cloneValue() const
 		{
 			return std::make_unique<T>(m_value);
 		}
@@ -38,6 +38,11 @@ namespace Language::AST::Value
 		std::unique_ptr<Type::IValue> interpret() override final
 		{
 			return m_value->cloneValue();
+		}
+
+		[[nodiscard]] const CppUtils::Type::TypeId& getReturnType() const override final
+		{
+			return T::TypeId;
 		}
 
 	private:
