@@ -27,7 +27,7 @@ namespace UnitTests::Class
 					return 42;\
 				return 21;\
 			}"s;
-			auto script = Script::Script{Script::Settings{ .verbose = true, .chrono = true }};
+			auto script = Script::Script{Script::Settings{Script::Settings::Mode::Test}};
 			auto result = Script::ensureType<Script::Number>(script.executeCode(src))->getValue();
 			std::cout << result << std::endl;
 			ASSERT(result == 42);
@@ -53,7 +53,7 @@ namespace UnitTests::Class
 					return 42;\
 				return 21;\
 			}"s;
-			auto script = Script::Script{Script::Settings{ .verbose = true, .chrono = true }};
+			auto script = Script::Script{Script::Settings{Script::Settings::Mode::Test}};
 			auto result = Script::ensureType<Script::Number>(script.executeCode(src))->getValue();
 			std::cout << result << std::endl;
 			ASSERT(result == 42);
@@ -76,7 +76,7 @@ namespace UnitTests::Class
 					return 21;\
 				return 42;\
 			}"s;
-			auto script = Script::Script{Script::Settings{ .verbose = true, .chrono = true }};
+			auto script = Script::Script{Script::Settings{Script::Settings::Mode::Test}};
 			auto result = Script::ensureType<Script::Number>(script.executeCode(src))->getValue();
 			std::cout << result << std::endl;
 			ASSERT(result == 42);

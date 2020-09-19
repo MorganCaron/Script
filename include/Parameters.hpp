@@ -8,6 +8,24 @@ namespace Script
 {
 	struct Settings
 	{
+		enum class Mode
+		{
+			Dev,
+			Test,
+			Prod
+		};
+
+		explicit Settings(const Mode& mode)
+		{
+			if (mode == Mode::Test)
+			{
+				verbose = true;
+				chrono = true;
+			}
+			else if (mode == Mode::Prod)
+				warning = false;
+		}
+
 		std::string filename = "main.script";
 		bool verbose = false;
 		bool warning = true;
@@ -17,7 +35,7 @@ namespace Script
 
 	[[nodiscard]] Settings executeCommands(const int argc, const char *argv[])
 	{
-		auto settings = Settings{};
+		auto settings = Settings{Settings::Mode::Dev};
 		
 		settings.abort = CppUtils::Terminal::Parameters::executeCommands(argc, argv, {
 			{

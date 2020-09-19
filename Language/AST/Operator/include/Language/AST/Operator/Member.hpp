@@ -16,7 +16,7 @@ namespace Language::AST::Operator
 	public:
 		static constexpr const auto Type = CppUtils::Type::TypeId{"Member"};
 
-		Member(Scope::BaseScope* scope):
+		explicit Member(Scope::BaseScope* scope):
 			Core::Instruction{Type},
 			Scope::NormalScope{scope}
 		{}

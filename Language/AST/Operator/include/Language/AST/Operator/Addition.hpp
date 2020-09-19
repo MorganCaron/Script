@@ -17,7 +17,7 @@ namespace Language::AST::Operator
 	public:
 		static constexpr const auto Type = CppUtils::Type::TypeId{"Addition"};
 
-		Addition(Scope::BaseScope* scope):
+		explicit Addition(Scope::BaseScope* scope):
 			Core::Instruction{Type},
 			Scope::NormalScope{scope}
 		{}

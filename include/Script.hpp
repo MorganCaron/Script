@@ -19,8 +19,8 @@ namespace Script
 	class Script final
 	{
 	public:
-		Script(Settings settings):
-			m_settings{settings}
+		explicit Script(Settings settings):
+			m_settings{std::move(settings)}
 		{
 			if (!m_settings.warning)
 				CppUtils::Switch::disable(CppUtils::Log::Logger::WarningType);

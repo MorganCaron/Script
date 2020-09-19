@@ -21,7 +21,7 @@ private_dependencies = [
 	cppUtils_dep
 ]
 
-includeDir = include_directories(['include/', '.'])
+includeDir = include_directories(['.'])
 
 sources = files([])
 

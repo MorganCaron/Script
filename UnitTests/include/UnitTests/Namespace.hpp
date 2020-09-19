@@ -18,7 +18,7 @@ namespace UnitTests::Namespace
 			{\
 				return Test::variable;\
 			}"s;
-			auto script = Script::Script{Script::Settings{ .verbose = true, .chrono = true }};
+			auto script = Script::Script{Script::Settings{Script::Settings::Mode::Test}};
 			auto result = Script::ensureType<Script::Number>(script.executeCode(src))->getValue();
 			std::cout << result << std::endl;
 			ASSERT(result == 42);

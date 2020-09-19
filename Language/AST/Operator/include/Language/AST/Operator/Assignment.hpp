@@ -16,7 +16,7 @@ namespace Language::AST::Operator
 	public:
 		static constexpr const auto Type = CppUtils::Type::TypeId{"Assignment"};
 
-		Assignment(Scope::BaseScope* scope):
+		explicit Assignment(Scope::BaseScope* scope):
 			Core::Instruction{Type},
 			Scope::NormalScope{scope}
 		{}

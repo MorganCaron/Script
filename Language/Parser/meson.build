@@ -15,7 +15,7 @@ public_dependencies = [
 ]
 private_dependencies = []
 
-includeDir = include_directories(['include/', '.'])
+includeDir = include_directories(['.'])
 
 sources = files([])
 
