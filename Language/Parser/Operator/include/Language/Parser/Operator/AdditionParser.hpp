@@ -1,20 +1,21 @@
 #pragma once
 
-#include <Language/AST/ParsingTools/Cursor.hpp>
+#include <Language/AST/ParsingTools/Context.hpp>
 #include <Language/AST/Operator/Addition.hpp>
 #include <Language/Parser/Value/ValueParser.hpp>
 
 namespace Language::Parser::Operator
 {
-	inline std::unique_ptr<AST::Core::Instruction> parseAddition(AST::ParsingTools::Cursor& cursor, std::unique_ptr<AST::Core::Instruction>&& lhs)
+	inline std::unique_ptr<AST::Core::Instruction> parseAddition(AST::ParsingTools::Context& context, std::unique_ptr<AST::Core::Instruction>&& lhs)
 	{
-		auto& [container, scope, src, pos, verbose] = cursor;
+		auto& [container, scope, cursor, verbose] = context;
 
 		if (cursor.getChar() != '+')
 			return nullptr;
 		
 		auto addition = std::make_unique<AST::Operator::Addition>(&scope);
-		auto additionParsingInformations = AST::ParsingTools::Cursor{*addition, *addition, src, ++pos, verbose};
+		++cursor.pos;
+		auto additionParsingInformations = AST::ParsingTools::Context{*addition, *addition, cursor, verbose};
 		addition->addInstruction(std::move(lhs));
 		if (verbose)
 			CppUtils::Log::Logger::logInformation(" + ", false);

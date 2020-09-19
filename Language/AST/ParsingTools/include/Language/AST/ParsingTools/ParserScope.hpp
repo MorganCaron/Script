@@ -3,7 +3,7 @@
 #include <unordered_map>
 
 #include <Language/AST/Namespace/NamespaceScope.hpp>
-#include <Language/AST/ParsingTools/Cursor.hpp>
+#include <Language/AST/ParsingTools/Context.hpp>
 
 namespace Language::AST::ParsingTools
 {

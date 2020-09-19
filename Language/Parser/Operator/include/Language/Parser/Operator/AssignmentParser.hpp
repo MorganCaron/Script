@@ -1,22 +1,23 @@
 #pragma once
 
-#include <Language/AST/ParsingTools/Cursor.hpp>
+#include <Language/AST/ParsingTools/Context.hpp>
 #include <Language/AST/Operator/Assignment.hpp>
 #include <Language/Parser/Value/ValueParser.hpp>
 
 namespace Language::Parser::Operator
 {
-	inline std::unique_ptr<AST::Core::Instruction> parseAssignment(AST::ParsingTools::Cursor& cursor, std::unique_ptr<AST::Core::Instruction>&& lhs)
+	inline std::unique_ptr<AST::Core::Instruction> parseAssignment(AST::ParsingTools::Context& context, std::unique_ptr<AST::Core::Instruction>&& lhs)
 	{
-		auto& [container, scope, src, pos, verbose] = cursor;
+		auto& [container, scope, cursor, verbose] = context;
 
 		if (cursor.getChar() != '=')
 			return nullptr;
-		if (!cursor.isEndOfCode() && src.at(pos + 1) == '=')
+		if (!cursor.isEndOfString() && cursor.src.at(cursor.pos + 1) == '=')
 			return nullptr;
 
 		auto assignment = std::make_unique<AST::Operator::Assignment>(&scope);
-		auto assignmentParsingInformations = AST::ParsingTools::Cursor{*assignment, *assignment, src, ++pos, verbose};
+		++cursor.pos;
+		auto assignmentParsingInformations = AST::ParsingTools::Context{*assignment, *assignment, cursor, verbose};
 		assignment->addInstruction(std::move(lhs));
 		if (verbose)
 			CppUtils::Log::Logger::logInformation(" = ", false);

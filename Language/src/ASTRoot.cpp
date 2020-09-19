@@ -42,16 +42,17 @@ namespace Language
 	void ASTRoot::parse(const std::string src, bool verbose)
 	{
 		auto pos = std::size_t{0};
-		auto cursor = AST::ParsingTools::Cursor{*this, *this, src, pos, verbose};
+		auto context = AST::ParsingTools::Context{*this, *this, CppUtils::Parser::Cursor{src, pos}, verbose};
+		auto& cursor = context.cursor;
 		const auto length = cursor.src.length();
 		
 		while (cursor.pos < length)
 		{
-			auto instruction = Parser::Declaration::parseDeclaration(cursor);
+			auto instruction = Parser::Declaration::parseDeclaration(context);
 			if (instruction != nullptr)
 			{
 				addInstruction(std::move(instruction));
-				cursor.skipSpaces();
+				context.skipSpacesAndComments();
 			}
 		}
 	}

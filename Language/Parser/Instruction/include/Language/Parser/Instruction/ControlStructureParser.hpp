@@ -1,24 +1,24 @@
 #pragma once
 
-#include <Language/AST/ParsingTools/Cursor.hpp>
+#include <Language/AST/ParsingTools/Context.hpp>
 #include <Language/AST/Instruction/ControlStructure.hpp>
 #include <Language/Parser/Value/ValueParser.hpp>
 
 namespace Language::Parser::Instruction
 {
-	inline std::unique_ptr<AST::Core::Instruction> parseControlStructure(AST::ParsingTools::Cursor& cursor)
+	inline std::unique_ptr<AST::Core::Instruction> parseControlStructure(AST::ParsingTools::Context& context)
 	{
-		auto& [container, scope, src, pos, verbose] = cursor;
+		auto& [container, scope, cursor, verbose] = context;
 
-		auto keyword = cursor.getWord();
+		auto keyword = cursor.getKeyword();
 		static const auto controlStructureWords = std::vector<std::string>{"if", "then", "while", "else", "do", "switch", "case", "repeat", "break", "for"};
 		if (std::find(controlStructureWords.begin(), controlStructureWords.end(), keyword) == controlStructureWords.end())
 			return nullptr;
-		pos += keyword.length();
-		cursor.skipSpaces();
+		cursor.pos += keyword.length();
+		context.skipSpacesAndComments();
 
 		auto controlStructure = std::make_unique<AST::Instruction::ControlStructure>(keyword, &scope);
-		auto controlStructureParsingInformations = AST::ParsingTools::Cursor{*controlStructure, *controlStructure, src, pos, verbose};
+		auto controlStructureParsingInformations = AST::ParsingTools::Context{*controlStructure, *controlStructure, cursor, verbose};
 
 		if (verbose)
 			CppUtils::Log::Logger::logInformation(controlStructure->getName().data() + " ("s, false);
@@ -26,9 +26,9 @@ namespace Language::Parser::Instruction
 		if (verbose)
 			CppUtils::Log::Logger::logInformation(") ", false);
 
-		cursor.skipSpaces();
+		context.skipSpacesAndComments();
 		if (cursor.getChar() == ':')
-			++pos;
+			++cursor.pos;
 		
 		if (parseInstruction(controlStructureParsingInformations) == nullptr)
 			throw std::runtime_error{"La condition doit etre suivie d une instruction."};

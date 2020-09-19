@@ -1,24 +1,24 @@
 #pragma once
 
 #include <Language/Parser/Value/StringParser.hpp>
-#include <Language/AST/ParsingTools/Cursor.hpp>
+#include <Language/AST/ParsingTools/Context.hpp>
 #include <Language/AST/Namespace/ImportDeclaration.hpp>
 
 namespace Language::Parser::Declaration
 {
-	inline std::unique_ptr<AST::Core::Instruction> parseImportDeclaration(AST::ParsingTools::Cursor& cursor)
+	inline std::unique_ptr<AST::Core::Instruction> parseImportDeclaration(AST::ParsingTools::Context& context)
 	{
-		auto& [container, scope, src, pos, verbose] = cursor;
+		auto& [container, scope, cursor, verbose] = context;
 
-		if (!cursor.isKeywordSkipIt(AST::Namespace::ImportDeclaration::Keyword))
+		if (!cursor.isEqualSkipIt(AST::Namespace::ImportDeclaration::Keyword))
 			return nullptr;
-		cursor.skipSpaces();
+		context.skipSpacesAndComments();
 
 		CppUtils::Log::Logger::logInformation(AST::Namespace::ImportDeclaration::Keyword.data() + " "s, false);
-		auto filename = Value::parseQuote(cursor);
+		auto filename = Value::parseQuote(context);
 		if (filename.empty())
 			throw std::runtime_error{"Une valeur textuelle est attendue. Il manque une ouverture de guillemet ou d'apostrophe."};
-		cursor.parseSemicolon();
+		context.parseSemicolon();
 		
 		auto fileScope = dynamic_cast<AST::Namespace::NamespaceScope&>(scope.findScope(AST::Namespace::NamespaceScopeType));
 		fileScope.importDll(filename);

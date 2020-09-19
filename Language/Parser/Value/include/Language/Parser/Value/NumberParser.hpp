@@ -1,31 +1,35 @@
 #pragma once
 
-#include <Language/AST/ParsingTools/Cursor.hpp>
+#include <Language/AST/ParsingTools/Context.hpp>
 #include <Language/AST/Value/Number.hpp>
 
 namespace Language::Parser::Value
 {
-	inline std::string getNumericString(AST::ParsingTools::Cursor& cursor)
+	inline std::string getNumericString(AST::ParsingTools::Context& context)
 	{
+		auto& [container, scope, cursor, verbose] = context;
+
 		auto string = ""s;
-		while (!cursor.isEndOfCode() && std::isdigit(cursor.getChar()))
+		while (!cursor.isEndOfString() && std::isdigit(cursor.getChar()))
 			string += cursor.getCharAndSkipIt();
 		return string;
 	}
 	
-	inline std::unique_ptr<AST::Core::Instruction> parseNumber(AST::ParsingTools::Cursor& cursor)
+	inline std::unique_ptr<AST::Core::Instruction> parseNumber(AST::ParsingTools::Context& context)
 	{
-		auto string = getNumericString(cursor);
-		if (!cursor.isEndOfCode() && cursor.getChar() == '.')
+		auto& [container, scope, cursor, verbose] = context;
+
+		auto string = getNumericString(context);
+		if (!cursor.isEndOfString() && cursor.getChar() == '.')
 		{
 			string += cursor.getCharAndSkipIt();
-			string += getNumericString(cursor);
+			string += getNumericString(context);
 		}
 		
 		if (string.empty() || string == ".")
 			return nullptr;
 		
-		if (cursor.verbose)
+		if (verbose)
 			CppUtils::Log::Logger::logInformation(string, false);
 		auto nb = std::stod(string);
 

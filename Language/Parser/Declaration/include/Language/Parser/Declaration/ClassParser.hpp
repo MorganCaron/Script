@@ -1,46 +1,46 @@
 #pragma once
 
-#include <Language/AST/ParsingTools/Cursor.hpp>
+#include <Language/AST/ParsingTools/Context.hpp>
 #include <Language/AST/Object/Class.hpp>
 #include <Language/Parser/Declaration/DeclarationParser.hpp>
 
 namespace Language::Parser::Declaration
 {
-	inline std::unique_ptr<AST::Core::Instruction> parseClass(AST::ParsingTools::Cursor& cursor)
+	inline std::unique_ptr<AST::Core::Instruction> parseClass(AST::ParsingTools::Context& context)
 	{
-		auto& [container, scope, src, pos, verbose] = cursor;
+		auto& [container, scope, cursor, verbose] = context;
 
-		if (!cursor.isKeywordSkipIt(AST::Object::Class::Keyword))
+		if (!cursor.isEqualSkipIt(AST::Object::Class::Keyword))
 			return nullptr;
-		cursor.skipSpaces();
+		context.skipSpacesAndComments();
 
-		auto className = cursor.getWordRequired("Le mot clef "s + AST::Object::Class::Keyword.data() + " doit etre suivi d un nom.");
+		auto className = cursor.getKeywordRequired("Le mot clef "s + AST::Object::Class::Keyword.data() + " doit etre suivi d un nom.");
 		if (verbose)
 		{
 			CppUtils::Log::Logger::logInformation(AST::Object::Class::Keyword.data() + " "s, false);
 			CppUtils::Log::Logger::logDetail(className);
 		}
-		cursor.skipSpaces();
+		context.skipSpacesAndComments();
 		
 		auto prototype = std::make_unique<AST::Object::Class>(std::move(className), &scope);
-		auto prototypeParsingInformations = AST::ParsingTools::Cursor{*prototype, *prototype, src, pos, verbose};
+		auto prototypeParsingInformations = AST::ParsingTools::Context{*prototype, *prototype, cursor, verbose};
 
 		if (cursor.getChar() != '{')
 			return nullptr;
 		if (verbose)
 			CppUtils::Log::Logger::logInformation("{");
-		++pos;
+		++cursor.pos;
 
-		while (!cursor.isEndOfCode() && cursor.getChar() != '}')
+		while (!cursor.isEndOfString() && cursor.getChar() != '}')
 		{
 			prototype->addInstruction(parseDeclaration(prototypeParsingInformations));
-			cursor.skipSpaces();
+			context.skipSpacesAndComments();
 		}
-		if (cursor.isEndOfCode())
+		if (cursor.isEndOfString())
 			throw std::runtime_error{"Une accolade n est jamais fermee."};
 		if (verbose)
 			CppUtils::Log::Logger::logInformation("}", false);
-		++pos;
+		++cursor.pos;
 
 		return prototype;
 	}

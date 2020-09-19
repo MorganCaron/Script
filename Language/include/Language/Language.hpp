@@ -24,7 +24,7 @@
 #include <Language/AST/Object/ObjectScope.hpp>
 
 #include <Language/AST/ParsingTools/ParserScope.hpp>
-#include <Language/AST/ParsingTools/Cursor.hpp>
+#include <Language/AST/ParsingTools/Context.hpp>
 
 #include <Language/AST/Value/Number.hpp>
 #include <Language/AST/Value/String.hpp>

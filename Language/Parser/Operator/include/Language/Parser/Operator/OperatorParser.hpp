@@ -1,26 +1,26 @@
 #pragma once
 
-#include <Language/AST/ParsingTools/Cursor.hpp>
+#include <Language/AST/ParsingTools/Context.hpp>
 
 namespace Language::Parser::Operator
 {
-	inline std::unique_ptr<AST::Core::Instruction> parseOperator(AST::ParsingTools::Cursor& cursor, std::unique_ptr<AST::Core::Instruction> lhs)
+	inline std::unique_ptr<AST::Core::Instruction> parseOperator(AST::ParsingTools::Context& context, std::unique_ptr<AST::Core::Instruction> lhs)
 	{
-		auto& [container, scope, src, pos, verbose] = cursor;
+		auto& [container, scope, cursor, verbose] = context;
 
-		cursor.skipSpaces();
-		if (cursor.isEndOfCode())
+		context.skipSpacesAndComments();
+		if (cursor.isEndOfString())
 			return lhs;
 		
 		const auto& parserScope = dynamic_cast<const AST::ParsingTools::ParserScope&>(scope.findScope(AST::ParsingTools::ParserScopeType));
 		const auto& operatorParsers = parserScope.getOperatorParsers();
 		for (const auto& [parserName, parserFunction] : operatorParsers)
 		{
-			auto startPos = pos;
+			auto startPos = cursor.pos;
 			try
 			{
-				auto result = parserFunction(cursor, std::move(lhs));
-				if (pos != startPos)
+				auto result = parserFunction(context, std::move(lhs));
+				if (cursor.pos != startPos)
 					return result;
 			}
 			catch (const std::exception& error)

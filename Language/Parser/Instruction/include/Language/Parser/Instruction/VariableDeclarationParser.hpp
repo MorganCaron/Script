@@ -1,24 +1,24 @@
 #pragma once
 
-#include <Language/AST/ParsingTools/Cursor.hpp>
+#include <Language/AST/ParsingTools/Context.hpp>
 #include <Language/AST/Type/Type.hpp>
 #include <Language/AST/Variable/VariableDeclaration.hpp>
 #include <Language/Parser/Value/ValueParser.hpp>
 
 namespace Language::Parser::Instruction
 {
-	inline std::unique_ptr<AST::Core::Instruction> parseVariableDeclaration(AST::ParsingTools::Cursor& cursor)
+	inline std::unique_ptr<AST::Core::Instruction> parseVariableDeclaration(AST::ParsingTools::Context& context)
 	{
-		auto& [container, scope, src, pos, verbose] = cursor;
+		auto& [container, scope, cursor, verbose] = context;
 
-		auto keyword = cursor.getWordAndSkipIt();
+		auto keyword = cursor.getKeywordAndSkipIt();
 		if (keyword != "let" && keyword != "const")
 			return nullptr;
 
 		const auto constant = (keyword == "const");
-		cursor.skipSpaces();
-		auto variableName = cursor.getWordRequired("Le mot clef " + keyword + " doit etre suivi d'un nom de variable.");
-		cursor.skipSpaces();
+		context.skipSpacesAndComments();
+		auto variableName = cursor.getKeywordRequired("Le mot clef " + keyword + " doit etre suivi d'un nom de variable.");
+		context.skipSpacesAndComments();
 		
 		if (verbose)
 			CppUtils::Log::Logger::logInformation(keyword + " " + variableName, false);
@@ -28,9 +28,9 @@ namespace Language::Parser::Instruction
 		auto typeName = std::string{};
 		if (typed)
 		{
-			++pos;
-			cursor.skipSpaces();
-			typeName = cursor.getWordRequired("Le nom d'un type est attendu.");
+			++cursor.pos;
+			context.skipSpacesAndComments();
+			typeName = cursor.getKeywordRequired("Le nom d'un type est attendu.");
 			if (verbose)
 			{
 				CppUtils::Log::Logger::logInformation(": ", false);
@@ -39,20 +39,20 @@ namespace Language::Parser::Instruction
 			type = CppUtils::Type::TypeId{typeName};
 		}
 
-		cursor.skipSpaces();
+		context.skipSpacesAndComments();
 		if (cursor.getChar() == '=')
 		{
-			++pos;
+			++cursor.pos;
 			if (verbose)
 				CppUtils::Log::Logger::logInformation(" = ", false);
-			cursor.skipSpaces();
-			auto valueInstruction = Value::parseValue(cursor);
+			context.skipSpacesAndComments();
+			auto valueInstruction = Value::parseValue(context);
 			if (valueInstruction == nullptr)
 				throw std::runtime_error{"Une valeur est attendue."};
 			const auto returnType = valueInstruction->getReturnType();
 			if (typed && type != returnType)
 				throw std::runtime_error{"La valeur ne correspond pas au type de la variable."};
-			cursor.parseSemicolon();
+			context.parseSemicolon();
 			auto variableDeclaration = std::make_unique<AST::Variable::VariableDeclaration>(&scope, AST::Variable::VariableSignature{std::move(variableName), constant, std::move(returnType)});
 			variableDeclaration->addInstruction(std::move(valueInstruction));
 			return variableDeclaration;
@@ -60,7 +60,7 @@ namespace Language::Parser::Instruction
 
 		if (!typed)
 			throw std::runtime_error{"Une variable declaree sans valeur doit etre explicitement typee."};
-		cursor.parseSemicolon();
+		context.parseSemicolon();
 		auto variableType = CppUtils::Type::TypeId{typeName};
 		variableType.saveTypename();
 		return std::make_unique<AST::Variable::VariableDeclaration>(&scope, AST::Variable::VariableSignature{std::move(variableName), constant, std::move(variableType)});

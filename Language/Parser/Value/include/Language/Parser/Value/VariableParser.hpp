@@ -1,15 +1,15 @@
 #pragma once
 
-#include <Language/AST/ParsingTools/Cursor.hpp>
+#include <Language/AST/ParsingTools/Context.hpp>
 #include <Language/AST/Variable/Variable.hpp>
 
 namespace Language::Parser::Value
 {
-	inline std::unique_ptr<AST::Core::Instruction> parseVariable(AST::ParsingTools::Cursor& cursor)
+	inline std::unique_ptr<AST::Core::Instruction> parseVariable(AST::ParsingTools::Context& context)
 	{
-		auto& [container, scope, src, pos, verbose] = cursor;
+		auto& [container, scope, cursor, verbose] = context;
 
-		auto variableName = cursor.getWordAndSkipIt();
+		auto variableName = cursor.getKeywordAndSkipIt();
 		if (variableName.empty())
 			return nullptr;
 		const auto& variableScope = dynamic_cast<const AST::Variable::VariableScope&>(scope.findScope(AST::Variable::VariableScopeType));

@@ -1,44 +1,44 @@
 #pragma once
 
-#include <Language/AST/ParsingTools/Cursor.hpp>
+#include <Language/AST/ParsingTools/Context.hpp>
 #include <Language/AST/Function/FunctionDeclaration.hpp>
 #include <Language/Parser/Instruction/InstructionParser.hpp>
 
 namespace Language::Parser::Declaration
 {
-	inline std::unique_ptr<AST::Core::Instruction> parseFunctionDeclaration(AST::ParsingTools::Cursor& cursor)
+	inline std::unique_ptr<AST::Core::Instruction> parseFunctionDeclaration(AST::ParsingTools::Context& context)
 	{
-		auto& [container, scope, src, pos, verbose] = cursor;
+		auto& [container, scope, cursor, verbose] = context;
 
-		if (!cursor.isKeywordSkipIt(AST::Function::FunctionDeclaration::Keyword))
+		if (!cursor.isEqualSkipIt(AST::Function::FunctionDeclaration::Keyword))
 			return nullptr;
-		cursor.skipSpaces();
+		context.skipSpacesAndComments();
 
-		auto functionName = cursor.getWordRequired("Le mot clef function doit etre suivi d un nom de fonction.");
+		auto functionName = cursor.getKeywordRequired("Le mot clef function doit etre suivi d un nom de fonction.");
 		if (cursor.getChar() != '(')
 			throw std::runtime_error{"La declaration d une fonction doit avoir des parentheses."};
-		++pos;
+		++cursor.pos;
 
 		auto functionDeclaration = std::make_unique<AST::Function::FunctionDeclaration>(std::move(functionName), &scope);
-		auto functionStatementParserInformations = AST::ParsingTools::Cursor{*functionDeclaration, *functionDeclaration, src, pos, verbose};
+		auto functionStatementParserInformations = AST::ParsingTools::Context{*functionDeclaration, *functionDeclaration, cursor, verbose};
 		if (verbose)
 			CppUtils::Log::Logger::logInformation(AST::Function::FunctionDeclaration::Keyword.data() + " "s + functionDeclaration->getName().data() + '(', false);
-		cursor.skipSpaces();
+		context.skipSpacesAndComments();
 		if (cursor.getChar() != ')')
 		{
 			auto loop = true;
 			do
 			{
-				auto keyword = cursor.getWordRequired("Le mot clef let ou const est attendu.");
+				auto keyword = cursor.getKeywordRequired("Le mot clef let ou const est attendu.");
 				const auto constant = (keyword == "const");
-				cursor.skipSpaces();
-				auto argumentName = cursor.getWordRequired("Le mot clef " + keyword + " doit etre suivi d'un nom de variable.");
-				cursor.skipSpaces();
+				context.skipSpacesAndComments();
+				auto argumentName = cursor.getKeywordRequired("Le mot clef " + keyword + " doit etre suivi d'un nom de variable.");
+				context.skipSpacesAndComments();
 				if (cursor.getChar() != ':')
 					throw std::runtime_error{"Le type de l argument doit etre renseigne."};
-				++pos;
-				cursor.skipSpaces();
-				auto typeName = cursor.getWordRequired("Le nom d'un type est attendu.");
+				++cursor.pos;
+				context.skipSpacesAndComments();
+				auto typeName = cursor.getKeywordRequired("Le nom d'un type est attendu.");
 				
 				if (verbose)
 				{
@@ -49,30 +49,30 @@ namespace Language::Parser::Declaration
 				argumentType.saveTypename();
 				functionDeclaration->addArgument(AST::Variable::VariableSignature{std::move(argumentName), constant, std::move(argumentType)});
 				
-				cursor.skipSpaces();
+				context.skipSpacesAndComments();
 				loop = (cursor.getChar() == ',');
 				if (loop)
 				{
 					if (verbose)
 						CppUtils::Log::Logger::logInformation(", ", false);
-					++pos;
+					++cursor.pos;
 				}
-				cursor.skipSpaces();
+				context.skipSpacesAndComments();
 			}
 			while (loop);
 			if (cursor.getChar() != ')')
 				throw std::runtime_error{"Vous avez probablement oublie de fermer les parentheses d une fonction."};
 		}
-		++pos;
+		++cursor.pos;
 		if (verbose)
 			CppUtils::Log::Logger::logInformation(")", false);
 
-		cursor.skipSpaces();
+		context.skipSpacesAndComments();
 		if (cursor.getChar() == ':')
 		{
-			++pos;
-			cursor.skipSpaces();
-			auto typeName = cursor.getWordRequired("Le nom d'un type est attendu.");
+			++cursor.pos;
+			context.skipSpacesAndComments();
+			auto typeName = cursor.getKeywordRequired("Le nom d'un type est attendu.");
 			if (verbose)
 			{
 				CppUtils::Log::Logger::logInformation(": ", false);

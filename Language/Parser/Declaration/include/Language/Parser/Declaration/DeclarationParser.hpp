@@ -1,36 +1,36 @@
 #pragma once
 
-#include <Language/AST/ParsingTools/Cursor.hpp>
+#include <Language/AST/ParsingTools/Context.hpp>
 
 namespace Language::Parser::Declaration
 {
-	inline std::unique_ptr<AST::Core::Instruction> parseDeclaration(AST::ParsingTools::Cursor& cursor)
+	inline std::unique_ptr<AST::Core::Instruction> parseDeclaration(AST::ParsingTools::Context& context)
 	{
-		auto& [container, scope, src, pos, verbose] = cursor;
+		auto& [container, scope, cursor, verbose] = context;
 
-		cursor.skipSpaces();
-		if (cursor.isEndOfCode())
+		context.skipSpacesAndComments();
+		if (cursor.isEndOfString())
 			return nullptr;
 		
 		const auto& parserScope = dynamic_cast<const AST::ParsingTools::ParserScope&>(scope.findScope(AST::ParsingTools::ParserScopeType));
 		const auto& declarationParsers = parserScope.getDeclarationParsers();
 		for (const auto& [parserName, parserFunction] : declarationParsers)
 		{
-			auto startPos = pos;
+			auto startPos = cursor.pos;
 			try
 			{
-				auto declaration = parserFunction(cursor);
+				auto declaration = parserFunction(context);
 				if (declaration)
 				{
 					if (verbose)
 						CppUtils::Log::Logger::logDebug(" -> "s + declaration->getInstructionType().name.data());
 					return declaration;
 				}
-				pos = startPos;
+				cursor.pos = startPos;
 			}
 			catch (const std::exception& error)
 			{
-				pos = startPos;
+				cursor.pos = startPos;
 				throw std::runtime_error{"In "s + parserName + ":\n" + error.what()};
 			}
 		}

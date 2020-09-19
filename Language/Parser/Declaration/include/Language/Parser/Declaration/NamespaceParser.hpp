@@ -1,43 +1,43 @@
 #pragma once
 
-#include <Language/AST/ParsingTools/Cursor.hpp>
+#include <Language/AST/ParsingTools/Context.hpp>
 #include <Language/AST/Namespace/NamespaceDeclaration.hpp>
 #include <Language/Parser/Instruction/InstructionParser.hpp>
 
 namespace Language::Parser::Declaration
 {
-	inline std::unique_ptr<AST::Core::Instruction> parseNamespace(AST::ParsingTools::Cursor& cursor)
+	inline std::unique_ptr<AST::Core::Instruction> parseNamespace(AST::ParsingTools::Context& context)
 	{
-		auto& [container, scope, src, pos, verbose] = cursor;
+		auto& [container, scope, cursor, verbose] = context;
 
-		if (!cursor.isKeywordSkipIt(AST::Namespace::NamespaceDeclaration::Keyword))
+		if (!cursor.isEqualSkipIt(AST::Namespace::NamespaceDeclaration::Keyword))
 			return nullptr;
-		cursor.skipSpaces();
+		context.skipSpacesAndComments();
 
-		auto namespaceName = cursor.getWordRequired("Le mot clef "s + AST::Namespace::NamespaceDeclaration::Keyword.data() + " doit etre suivi d un nom.");
+		auto namespaceName = cursor.getKeywordRequired("Le mot clef "s + AST::Namespace::NamespaceDeclaration::Keyword.data() + " doit etre suivi d un nom.");
 		if (verbose)
 			CppUtils::Log::Logger::logInformation(AST::Namespace::NamespaceDeclaration::Keyword.data() + " "s + namespaceName);
-		cursor.skipSpaces();
+		context.skipSpacesAndComments();
 
 		auto namespaceDeclaration = std::make_unique<AST::Namespace::NamespaceDeclaration>(std::move(namespaceName), &scope);
-		auto namespaceParsingInformations = AST::ParsingTools::Cursor{*namespaceDeclaration, *namespaceDeclaration, src, pos, verbose};
+		auto namespaceParsingInformations = AST::ParsingTools::Context{*namespaceDeclaration, *namespaceDeclaration, cursor, verbose};
 
 		if (cursor.getChar() != '{')
 			return nullptr;
 		if (verbose)
 			CppUtils::Log::Logger::logInformation("{");
-		++pos;
+		++cursor.pos;
 
-		while (!cursor.isEndOfCode() && cursor.getChar() != '}')
+		while (!cursor.isEndOfString() && cursor.getChar() != '}')
 		{
 			namespaceDeclaration->addInstruction(parseDeclaration(namespaceParsingInformations));
-			cursor.skipSpaces();
+			context.skipSpacesAndComments();
 		}
-		if (cursor.isEndOfCode())
+		if (cursor.isEndOfString())
 			throw std::runtime_error{"Une accolade n est jamais fermee."};
 		if (verbose)
 			CppUtils::Log::Logger::logInformation("}", false);
-		++pos;
+		++cursor.pos;
 
 		return namespaceDeclaration;
 	}
