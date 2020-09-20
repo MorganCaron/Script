@@ -32,9 +32,6 @@ namespace Language::Parser::Instruction
 
 		if (bracket->getNbInstructions() == 0)
 			CppUtils::Log::Logger::logWarning("Les accolades vides sont inutiles. Il semblerait que vous avez oublie quelque chose ou que votre code peut s ecrire plus proprement.");
-		if (bracket->getNbInstructions() == 1)
-			CppUtils::Log::Logger::logWarning("Les accolades sont inutiles lorsqu elles ne contiennent qu une seule instruction.");
-
 		return bracket;
 	}
 }
