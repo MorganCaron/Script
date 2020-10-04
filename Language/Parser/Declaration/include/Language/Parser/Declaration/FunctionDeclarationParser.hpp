@@ -30,6 +30,8 @@ namespace Language::Parser::Declaration
 			do
 			{
 				auto keyword = cursor.getKeywordRequired("Le mot clef let ou const est attendu.");
+				if (keyword != "let" && keyword != "const")
+					throw std::runtime_error{"Le mot clef let ou const est attendu."};
 				const auto constant = (keyword == "const");
 				context.skipSpacesAndComments();
 				auto argumentName = cursor.getKeywordRequired("Le mot clef " + keyword + " doit etre suivi d'un nom de variable.");

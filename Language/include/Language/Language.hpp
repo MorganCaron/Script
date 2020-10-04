@@ -31,6 +31,8 @@
 
 #include <Language/AST/Scope/BaseScope.hpp>
 
+#include <Language/AST/Type/Boolean.hpp>
+// #include <Language/AST/Type/Function.hpp>
 #include <Language/AST/Type/Number.hpp>
 #include <Language/AST/Type/String.hpp>
 #include <Language/AST/Type/Type.hpp>
@@ -51,8 +53,11 @@
 #include <Language/Parser/Instruction/VariableDeclarationParser.hpp>
 
 #include <Language/Parser/Operator/OperatorParser.hpp>
-#include <Language/Parser/Operator/AssignmentParser.hpp>
 #include <Language/Parser/Operator/AdditionParser.hpp>
+#include <Language/Parser/Operator/AssignmentParser.hpp>
+#include <Language/Parser/Operator/EqualityParser.hpp>
+#include <Language/Parser/Operator/NotEqualityParser.hpp>
+#include <Language/Parser/Operator/MemberParser.hpp>
 
 #include <Language/Parser/Value/FunctionCallParser.hpp>
 #include <Language/Parser/Value/InstanceParser.hpp>

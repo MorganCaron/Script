@@ -10,11 +10,10 @@ namespace Language::Parser::Operator
 	{
 		auto& [container, scope, cursor, verbose] = context;
 
-		if (cursor.getChar() != '+')
+		if (!cursor.isEqualSkipIt("+"))
 			return nullptr;
 		
 		auto addition = std::make_unique<AST::Operator::Addition>(&scope);
-		++cursor.pos;
 		auto additionParsingInformations = AST::ParsingTools::Context{*addition, *addition, cursor, verbose};
 		addition->addInstruction(std::move(lhs));
 		if (verbose)

@@ -11,9 +11,9 @@ namespace UnitTests::Class
 			static const auto src = "\
 			class Person\
 			{\
-				m_name: String;\
+				const m_name: String;\
 				\
-				function constructor(name: String)\
+				function constructor(const name: String)\
 					m_name = name;\
 				\
 				function getName(): String\
@@ -22,7 +22,7 @@ namespace UnitTests::Class
 			\
 			function main(): Number\
 			{\
-				const person = Person(\"Mout\");\
+				const person = new Person(\"Mout\");\
 				if (person.getName() == \"Mout\")\
 					return 42;\
 				return 21;\
@@ -37,7 +37,7 @@ namespace UnitTests::Class
 			static const auto src = "\
 			class Person\
 			{\
-				static name = \"Mout\";\
+				static const name = \"Mout\";\
 				\
 				function constructor()\
 					m_name = name;\
@@ -48,7 +48,7 @@ namespace UnitTests::Class
 			\
 			function main(): Number\
 			{\
-				const person = Person();\
+				const person = new Person();\
 				if (person.getName() == \"Mout\")\
 					return 42;\
 				return 21;\

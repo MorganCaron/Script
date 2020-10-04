@@ -32,7 +32,7 @@ function main(): Number
 {
 	print(Game::Test);
 	print("A");
-	const player = Game::Player("Mout");
+	const player = new Game::Player("Mout");
 	print("B");
 	print(player.getName());
 	print("C");

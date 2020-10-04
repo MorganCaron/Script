@@ -9,9 +9,8 @@ namespace Language::Parser::Value
 	inline std::unique_ptr<AST::Core::Instruction> parseInstance(AST::ParsingTools::Context& context)
 	{
 		auto& [container, scope, cursor, verbose] = context;
-
-		auto keyword = cursor.getKeywordAndSkipIt();
-		if (keyword != "new")
+		
+		if (!cursor.isEqualSkipIt("new"))
 			return nullptr;
 		context.skipSpacesAndComments();
 

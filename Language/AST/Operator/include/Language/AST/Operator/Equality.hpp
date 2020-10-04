@@ -5,27 +5,27 @@
 #include <CppUtils.hpp>
 #include <Language/AST/Core/InstructionContainer.hpp>
 #include <Language/AST/Scope/BaseScope.hpp>
-#include <Language/AST/Type/Number.hpp>
+#include <Language/AST/Type/Boolean.hpp>
 
 namespace Language::AST::Operator
 {
-	class Addition final:
+	class Equality final:
 		public Core::Instruction,
 		public Scope::NormalScope,
 		public Core::InstructionContainer
 	{
 	public:
-		static constexpr const auto Type = CppUtils::Type::TypeId{"Addition"};
+		static constexpr const auto Type = CppUtils::Type::TypeId{"Equality"};
 
-		explicit Addition(Scope::BaseScope* scope):
+		explicit Equality(Scope::BaseScope* scope):
 			Core::Instruction{Type},
 			Scope::NormalScope{scope}
 		{}
-		virtual ~Addition() = default;
+		virtual ~Equality() = default;
 
 		[[nodiscard]] std::unique_ptr<Core::Instruction> cloneInstruction() const override
 		{
-			return std::make_unique<Addition>(*this);
+			return std::make_unique<Equality>(*this);
 		}
 		
 		std::unique_ptr<Type::IValue> interpret() override final
@@ -34,14 +34,12 @@ namespace Language::AST::Operator
 			const auto& operand1 = m_instructions[1];
 			const auto value0 = operand0->interpret();
 			const auto value1 = operand1->interpret();
-			const auto number0 = Type::ensureType<Type::Number>(value0)->getValue();
-			const auto number1 = Type::ensureType<Type::Number>(value1)->getValue();
-			return std::make_unique<Type::Number>(number0 + number1);
+			return std::make_unique<Type::Boolean>(value0->isEqual(value1));
 		}
 
 		[[nodiscard]] const CppUtils::Type::TypeId& getReturnType() const override final
 		{
-			return m_instructions[0]->getReturnType();
+			return Type::Boolean::TypeId;
 		}
 	};
 }

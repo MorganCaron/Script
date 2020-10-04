@@ -56,22 +56,42 @@ namespace UnitTests::Operation
 
 		CppUtils::Test::UnitTest("Number == Number", [] {
 			static const auto src = "\
-			function main(): String\
+			function main(): Boolean\
 				return 42 == 42;"s;
 			auto script = Script::Script{Script::Settings{Script::Settings::Mode::Test}};
-			auto result = Script::ensureType<Script::Number>(script.executeCode(src))->getValue();
-			std::cout << result << std::endl;
-			ASSERT(result == 1);
+			auto result = Script::ensureType<Script::Boolean>(script.executeCode(src))->getValue();
+			std::cout << std::boolalpha << result << std::endl;
+			ASSERT(result == true);
+		}),
+
+		CppUtils::Test::UnitTest("String == String", [] {
+			static const auto src = "\
+			function main(): Boolean\
+				return \"Hello world!\" == \"Hello world!\";"s;
+			auto script = Script::Script{Script::Settings{Script::Settings::Mode::Test}};
+			auto result = Script::ensureType<Script::Boolean>(script.executeCode(src))->getValue();
+			std::cout << std::boolalpha << result << std::endl;
+			ASSERT(result == true);
 		}),
 
 		CppUtils::Test::UnitTest("Number != Number", [] {
 			static const auto src = "\
-			function main(): String\
+			function main(): Boolean\
 				return 42 != 21;"s;
 			auto script = Script::Script{Script::Settings{Script::Settings::Mode::Test}};
-			auto result = Script::ensureType<Script::Number>(script.executeCode(src))->getValue();
-			std::cout << result << std::endl;
-			ASSERT(result == 1);
+			auto result = Script::ensureType<Script::Boolean>(script.executeCode(src))->getValue();
+			std::cout << std::boolalpha << result << std::endl;
+			ASSERT(result == true);
+		}),
+
+		CppUtils::Test::UnitTest("String != String", [] {
+			static const auto src = "\
+			function main(): Boolean\
+				return \"Hello world!\" != \"Hello world!\";"s;
+			auto script = Script::Script{Script::Settings{Script::Settings::Mode::Test}};
+			auto result = Script::ensureType<Script::Boolean>(script.executeCode(src))->getValue();
+			std::cout << std::boolalpha << result << std::endl;
+			ASSERT(result == false);
 		})
 
 	};

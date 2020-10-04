@@ -58,6 +58,14 @@ namespace Language::AST::Variable
 
 		VariableScope& operator=(VariableScope&&) noexcept = default;
 
+		bool operator==(const VariableScope& rhs) const
+		{
+			for (const auto& [name, value] : rhs.m_variables)
+				if (!m_variables.at(name)->isEqual(value))
+					return false;
+			return true;
+		}
+
 		inline void merge(VariableScope& variableScope)
 		{
 			for (auto&& [name, variableSignature] : variableScope.m_variableSignatures)

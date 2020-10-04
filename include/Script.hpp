@@ -7,6 +7,7 @@ namespace Script
 {
 	using Value = Language::AST::Type::IValue;
 	using Args = Language::AST::Type::Args;
+	using Boolean = Language::AST::Type::Boolean;
 	using Number = Language::AST::Type::Number;
 	using String = Language::AST::Type::String;
 	using FunctionSignature = Language::AST::Function::FunctionSignature;

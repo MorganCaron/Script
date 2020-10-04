@@ -23,7 +23,7 @@ namespace Language::AST::Object
 			Function::FunctionScope{src}
 		{
 			if (src.m_constructor)
-				moveConstructor(src.m_constructor->cloneFunction());
+				setConstructor(src.m_constructor->cloneFunction());
 		}
 		Instance(Instance&&) noexcept = default;
 		Instance& operator=(const Instance& rhs)
@@ -31,13 +31,20 @@ namespace Language::AST::Object
 			Named::operator=(rhs);
 			FunctionScope::operator=(rhs);
 			if (rhs.m_constructor)
-				moveConstructor(rhs.m_constructor->cloneFunction());
+				setConstructor(rhs.m_constructor->cloneFunction());
 			return *this;
 		}
 		Instance& operator=(Instance&&) noexcept = default;
 		virtual ~Instance() = default;
 
-		void moveConstructor(std::unique_ptr<ConstructorType>&& constructor)
+		bool operator==(const Instance& rhs) const
+		{
+			if (getName() != rhs.getName())
+				return false;
+			return Variable::VariableScope::operator==(rhs);
+		}
+
+		void setConstructor(std::unique_ptr<ConstructorType>&& constructor)
 		{
 			m_constructor = std::move(constructor);
 		}

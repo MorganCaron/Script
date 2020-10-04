@@ -15,8 +15,9 @@ namespace Language::AST::Type
 	public:
 		virtual ~IValue() = default;
 		[[nodiscard]] virtual bool isType(const CppUtils::Type::TypeId& type) const = 0;
-		[[nodiscard]] virtual std::string_view getTypeName() const = 0;
+		[[nodiscard]] virtual const CppUtils::Type::TypeId& getType() const = 0;
 		[[nodiscard]] virtual std::unique_ptr<IValue> cloneValue() const = 0;
+		[[nodiscard]] virtual bool isEqual(const std::unique_ptr<IValue>& value) const = 0;
 	};
 
 	template <typename TargetType>
@@ -44,9 +45,9 @@ namespace Language::AST::Type
 			return (TypeId == type);
 		}
 
-		[[nodiscard]] std::string_view getTypeName() const noexcept override final
+		[[nodiscard]] const CppUtils::Type::TypeId& getType() const noexcept override final
 		{
-			return TypeId.name;
+			return TypeId;
 		}
 
 		[[nodiscard]] std::unique_ptr<IValue> cloneValue() const override final
@@ -57,6 +58,14 @@ namespace Language::AST::Type
 		[[nodiscard]] inline Storage& getValue() noexcept
 		{
 			return m_value;
+		}
+
+		[[nodiscard]] bool isEqual(const std::unique_ptr<IValue>& iValue) const override final
+		{
+			if (!iValue->isType(getType()))
+				return false;
+			const auto value = ensureType<Type<Tag, Storage>>(iValue)->getValue();
+			return (value == m_value);
 		}
 
 	protected:

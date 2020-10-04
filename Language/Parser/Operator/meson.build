@@ -13,7 +13,9 @@ sources = files([])
 headers = files([
 	'include/Language/Parser/Operator/AdditionParser.hpp',
 	'include/Language/Parser/Operator/AssignmentParser.hpp',
+	'include/Language/Parser/Operator/EqualityParser.hpp',
 	'include/Language/Parser/Operator/MemberParser.hpp',
+	'include/Language/Parser/Operator/NotEqualityParser.hpp',
 	'include/Language/Parser/Operator/OperatorParser.hpp'
 ])
 

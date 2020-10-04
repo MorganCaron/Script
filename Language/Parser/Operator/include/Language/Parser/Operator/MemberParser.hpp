@@ -10,11 +10,10 @@ namespace Language::Parser::Operator
 	{
 		auto& [container, scope, cursor, verbose] = context;
 
-		if (cursor.getChar() != '.')
+		if (!cursor.isEqualSkipIt("."))
 			return nullptr;
 		
 		auto member = std::make_unique<AST::Operator::Member>(&scope);
-		++cursor.pos;
 		auto memberParsingInformations = AST::ParsingTools::Context{*member, *member, cursor, verbose};
 		member->addInstruction(std::move(lhs));
 		if (verbose)
