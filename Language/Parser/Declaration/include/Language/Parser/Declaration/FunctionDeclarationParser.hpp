@@ -93,6 +93,7 @@ namespace Language::Parser::Declaration
 		if (!instruction)
 			throw std::runtime_error{"Une instruction est requise dans la declaration de la fonction."};
 		functionDeclaration->addInstruction(std::move(instruction));
+		
 		return functionDeclaration;
 	}
 }

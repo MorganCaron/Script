@@ -30,6 +30,14 @@ namespace Language::AST::Object
 		}
 		ObjectScope& operator=(ObjectScope&&) noexcept = default;
 
+		inline void merge(ObjectScope& objectScope)
+		{
+			Function::FunctionScope::merge(objectScope);
+			for (auto&& [name, classPrototype] : objectScope.m_classes)
+				addClass(name, std::move(classPrototype));
+			objectScope.clearClasses();
+		}
+
 		[[nodiscard]] inline bool classExists(std::string_view name) const
 		{
 			if (m_classes.find(name.data()) != m_classes.end())
@@ -41,10 +49,12 @@ namespace Language::AST::Object
 
 		inline void addClass(std::string_view name, std::unique_ptr<Class>&& classPrototype)
 		{
+			if (m_classes.find(name.data()) != m_classes.end())
+				throw std::runtime_error{"Class "s + name.data() + " already exists."};
 			m_classes[name.data()] = std::move(classPrototype);
 		}
 
-		inline void resetClasses() noexcept
+		inline void clearClasses() noexcept
 		{
 			m_classes.clear();
 		}

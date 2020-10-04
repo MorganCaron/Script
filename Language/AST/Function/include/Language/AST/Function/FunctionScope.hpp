@@ -23,14 +23,14 @@ namespace Language::AST::Function
 			type{printable}
 		{}
 
-		[[nodiscard]] bool operator==(const FunctionSignature& rhs) const
+		[[nodiscard]] inline bool operator==(const FunctionSignature& rhs) const noexcept
 		{
 			return name == rhs.name && argumentTypes == rhs.argumentTypes;
 		}
 
 		struct hash_fn
 		{
-			std::size_t operator()(const FunctionSignature &functionSignature) const
+			[[nodiscard]] inline constexpr std::size_t operator()(const FunctionSignature &functionSignature) const noexcept
 			{
 				return functionSignature.type.id;
 			}
@@ -77,6 +77,14 @@ namespace Language::AST::Function
 
 		FunctionScope& operator=(FunctionScope&&) noexcept = default;
 
+		inline void merge(FunctionScope& functionScope)
+		{
+			Variable::VariableScope::merge(functionScope);
+			for (auto&& [name, function] : functionScope.m_functions)
+				addFunction(name, std::move(function));
+			functionScope.clearFunctions();
+		}
+
 		[[nodiscard]] bool functionExists(const FunctionSignature& functionSignature) const
 		{
 			if (m_functions.find(functionSignature) != m_functions.end())
@@ -88,10 +96,12 @@ namespace Language::AST::Function
 
 		inline void addFunction(const FunctionSignature& functionSignature, std::unique_ptr<FunctionType>&& function)
 		{
+			if (m_functions.find(functionSignature) != m_functions.end())
+				throw std::runtime_error{"Function " + functionSignature.printable + " already exists."};
 			m_functions[functionSignature] = std::move(function);
 		}
 
-		inline void resetFunctions() noexcept
+		inline void clearFunctions() noexcept
 		{
 			m_functions.clear();
 		}

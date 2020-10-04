@@ -51,26 +51,13 @@ namespace Script
 				return false;
 			}
 			chronoLogger.stop();
-			return true;
-		}
-
-		void indexe()
-		{
-			if (m_settings.verbose)
-				CppUtils::Log::Logger::logImportant("Indexer:");
-			auto chronoLogger = CppUtils::Log::ChronoLogger{"Indexing", m_settings.chrono};
-			try
-			{
-				m_ast.indexe();
-			}
-			catch (const std::exception& error)
-			{
-				CppUtils::Log::Logger::logError("!Indexer error:\n"s + error.what());
-			}
-			chronoLogger.stop();
 
 			if (m_settings.verbose)
 			{
+				CppUtils::Log::Logger::logSuccess("Global namespaces: "s + std::to_string(m_ast.getNamespaces().size()));
+				for (const auto& [namespaceId, namespaceScope] : m_ast.getNamespaces())
+					CppUtils::Log::Logger::logSuccess("- "s + namespaceId.name.data() + "{}");
+				
 				CppUtils::Log::Logger::logSuccess("Global classes: "s + std::to_string(m_ast.getClasses().size()));
 				for (const auto& [prototypeName, prototype] : m_ast.getClasses())
 					CppUtils::Log::Logger::logSuccess("- "s + prototypeName + "{}");
@@ -79,6 +66,8 @@ namespace Script
 				for (const auto& [functionSignature, function] : m_ast.getFunctions())
 					CppUtils::Log::Logger::logSuccess("- "s + functionSignature.printable);
 			}
+
+			return true;
 		}
 
 		std::unique_ptr<Value> execute()
@@ -109,7 +98,6 @@ namespace Script
 		{
 			if (!parse(std::move(code)))
 				return std::make_unique<Number>(-1);
-			indexe();
 			return execute();
 		}
 		

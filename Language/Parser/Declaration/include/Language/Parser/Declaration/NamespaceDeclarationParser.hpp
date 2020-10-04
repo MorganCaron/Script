@@ -6,7 +6,7 @@
 
 namespace Language::Parser::Declaration
 {
-	inline std::unique_ptr<AST::Core::Instruction> parseNamespace(AST::ParsingTools::Context& context)
+	inline std::unique_ptr<AST::Core::Instruction> parseNamespaceDeclaration(AST::ParsingTools::Context& context)
 	{
 		auto& [container, scope, cursor, verbose] = context;
 
@@ -30,15 +30,18 @@ namespace Language::Parser::Declaration
 
 		while (!cursor.isEndOfString() && cursor.getChar() != '}')
 		{
-			namespaceDeclaration->addInstruction(parseDeclaration(namespaceParsingInformations));
+			auto declaration = parseDeclaration(namespaceParsingInformations);
+			declaration->interpret();
+			namespaceDeclaration->addInstruction(std::move(declaration));
 			context.skipSpacesAndComments();
 		}
 		if (cursor.isEndOfString())
 			throw std::runtime_error{"Une accolade n est jamais fermee."};
 		if (verbose)
-			CppUtils::Log::Logger::logInformation("}", false);
+			CppUtils::Log::Logger::logInformation("}");
 		++cursor.pos;
-
+		
+		namespaceDeclaration->indexe();
 		return namespaceDeclaration;
 	}
 }

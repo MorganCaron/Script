@@ -13,8 +13,8 @@ namespace Language::Parser::Value
 		auto name = cursor.getKeywordAndSkipIt();
 		if (!cursor.isEqualSkipIt(AST::Namespace::NamespaceCall::Separator))
 			return nullptr;
-
-		auto namespaceCall = std::make_unique<AST::Namespace::NamespaceCall>(name, &scope);
+		
+		auto namespaceCall = std::make_unique<AST::Namespace::NamespaceCall>(std::move(name), &scope);
 		auto namespaceCallParsingInformations = AST::ParsingTools::Context{*namespaceCall, *namespaceCall, cursor, verbose};
 
 		if (verbose)

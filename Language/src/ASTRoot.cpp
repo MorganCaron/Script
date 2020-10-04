@@ -3,7 +3,7 @@
 #include <Language/Parser/Declaration/ClassParser.hpp>
 #include <Language/Parser/Declaration/FunctionDeclarationParser.hpp>
 #include <Language/Parser/Declaration/ImportDeclarationParser.hpp>
-#include <Language/Parser/Declaration/NamespaceParser.hpp>
+#include <Language/Parser/Declaration/NamespaceDeclarationParser.hpp>
 
 #include <Language/Parser/Instruction/BracketParser.hpp>
 #include <Language/Parser/Instruction/ControlStructureParser.hpp>
@@ -48,19 +48,14 @@ namespace Language
 		
 		while (cursor.pos < length)
 		{
-			auto instruction = Parser::Declaration::parseDeclaration(context);
-			if (instruction != nullptr)
+			auto declaration = Parser::Declaration::parseDeclaration(context);
+			if (declaration != nullptr)
 			{
-				addInstruction(std::move(instruction));
+				declaration->interpret();
+				addInstruction(std::move(declaration));
 				context.skipSpacesAndComments();
 			}
 		}
-	}
-
-	void ASTRoot::indexe()
-	{
-		for (auto& instruction : m_instructions)
-			instruction->indexe();
 	}
 
 	void ASTRoot::addNativeRules()
@@ -69,7 +64,7 @@ namespace Language
 			{ "Class", &Parser::Declaration::parseClass },
 			{ "Function declaration", &Parser::Declaration::parseFunctionDeclaration },
 			{ "Import declaration", &Parser::Declaration::parseImportDeclaration },
-			{ "Namespace", &Parser::Declaration::parseNamespace },
+			{ "Namespace declaration", &Parser::Declaration::parseNamespaceDeclaration },
 			{ "Variable declaration", &Parser::Instruction::parseVariableDeclaration }
 		};
 		addDeclarationParsers(declarations);

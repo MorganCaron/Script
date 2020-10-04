@@ -6,13 +6,14 @@
 
 namespace Language::AST::Namespace
 {
+	using DllFunctionType = Type::IValue* (CALLBACK*)(const Type::Args&);
+
 	constexpr static const Scope::ScopeType NamespaceScopeType = 4;
 
-	class NamespaceDeclaration;
 	class NamespaceScope: public Object::ObjectScope
 	{
 	public:
-		NamespaceScope(BaseScope* scope = nullptr, Scope::ScopeType scopeType = NamespaceScopeType):
+		explicit NamespaceScope(BaseScope* scope = nullptr, Scope::ScopeType scopeType = NamespaceScopeType):
 			Object::ObjectScope{scope, scopeType}
 		{}
 		NamespaceScope(const NamespaceScope& src):
@@ -27,7 +28,7 @@ namespace Language::AST::Namespace
 		virtual ~NamespaceScope() = default;
 		NamespaceScope& operator=(const NamespaceScope& rhs)
 		{
-			ObjectScope::operator=(rhs);
+			Object::ObjectScope::operator=(rhs);
 			/*
 			for (const auto &[key, value] : rhs.m_dlls)
 				importDll(key);
@@ -36,37 +37,66 @@ namespace Language::AST::Namespace
 		}
 		NamespaceScope &operator=(NamespaceScope&&) noexcept = default;
 
-		[[nodiscard]] inline bool namespaceExists(std::string_view name) const
+		inline void merge(NamespaceScope& namespaceScope)
 		{
-			if (m_namespaces.find(name.data()) != m_namespaces.end())
+			Object::ObjectScope::merge(namespaceScope);
+			for (auto&& [namespaceId, newNamespace] : namespaceScope.m_namespaces)
+				if (m_namespaces.find(namespaceId) != m_namespaces.end())
+					m_namespaces[namespaceId]->merge(*newNamespace);
+				else
+					addNamespace(namespaceId, std::move(newNamespace));
+			namespaceScope.clearNamespaces();
+		}
+
+		[[nodiscard]] inline bool namespaceExists(const CppUtils::Type::TypeId& namespaceId) const
+		{
+			if (m_namespaces.find(namespaceId) != m_namespaces.end())
 				return true;
 			if (hasScope())
-				return dynamic_cast<const NamespaceScope&>(getScope().findScope(getType())).namespaceExists(name);
+				return dynamic_cast<const NamespaceScope&>(getScope().findScope(getType())).namespaceExists(namespaceId);
 			return false;
 		}
 
-		inline void addNamespace(std::string_view name, std::unique_ptr<NamespaceDeclaration>&& namespaceDeclaration)
+		inline void addNamespace(const CppUtils::Type::TypeId& namespaceId, std::unique_ptr<NamespaceScope>&& newNamespace)
 		{
-			m_namespaces[name.data()] = std::move(namespaceDeclaration);
+			if (m_namespaces.find(namespaceId) != m_namespaces.end())
+				m_namespaces[namespaceId]->merge(*newNamespace);
+			else
+				m_namespaces[namespaceId] = std::move(newNamespace);
 		}
 
-		inline void resetNamespaces() noexcept
+		inline void addNamespaces(std::unordered_map<CppUtils::Type::TypeId, std::unique_ptr<NamespaceScope>, CppUtils::Type::TypeId::hash_fn> namespaceScopes)
+		{
+			for (auto&& [namespaceId, namespaceScope] : namespaceScopes)
+				addNamespace(namespaceId, std::move(namespaceScope));
+		}
+
+		inline void clearNamespaces() noexcept
 		{
 			m_namespaces.clear();
 		}
 
-		[[nodiscard]] inline const std::unordered_map<std::string, std::unique_ptr<NamespaceDeclaration>>& getNamespaces() const noexcept
+		[[nodiscard]] inline const std::unordered_map<CppUtils::Type::TypeId, std::unique_ptr<NamespaceScope>, CppUtils::Type::TypeId::hash_fn>& getNamespaces() const noexcept
 		{
 			return m_namespaces;
 		}
 
-		[[nodiscard]] inline const NamespaceDeclaration& getNamespace(std::string_view name) const
+		[[nodiscard]] inline NamespaceScope& getNamespace(const CppUtils::Type::TypeId& namespaceId)
 		{
-			if (m_namespaces.find(name.data()) != m_namespaces.end())
-				return *m_namespaces.at(name.data());
+			if (m_namespaces.find(namespaceId) != m_namespaces.end())
+				return *m_namespaces.at(namespaceId);
 			if (!hasScope())
-				throw std::runtime_error{"Unknown namespace "s + name.data() + "."};
-			return dynamic_cast<const NamespaceScope&>(getScope().findScope(getType())).getNamespace(name);
+				throw std::runtime_error{"Unknown namespace "s + namespaceId.name.data() + "."};
+			return dynamic_cast<NamespaceScope&>(getScope().findScope(getType())).getNamespace(namespaceId);
+		}
+		
+		[[nodiscard]] inline const NamespaceScope& getNamespace(const CppUtils::Type::TypeId& namespaceId) const
+		{
+			if (m_namespaces.find(namespaceId) != m_namespaces.end())
+				return *m_namespaces.at(namespaceId);
+			if (!hasScope())
+				throw std::runtime_error{"Unknown namespace "s + namespaceId.name.data() + "."};
+			return dynamic_cast<const NamespaceScope&>(getScope().findScope(getType())).getNamespace(namespaceId);
 		}
 
 		void importDll([[maybe_unused]] std::string_view filename)
@@ -87,9 +117,7 @@ namespace Language::AST::Namespace
 		}
 
 	private:
-		using DllFunctionType = Type::IValue* (CALLBACK*)(const Type::Args&);
-
-		std::unordered_map<std::string, std::unique_ptr<NamespaceDeclaration>> m_namespaces;
+		std::unordered_map<CppUtils::Type::TypeId, std::unique_ptr<NamespaceScope>, CppUtils::Type::TypeId::hash_fn> m_namespaces;
 		// std::unordered_map<std::string, std::unique_ptr<CppUtils::External::DynamicLibrary>> m_dlls;
 	};
 }

@@ -18,7 +18,6 @@ namespace Language
 		virtual ~ASTRoot() = default;
 
 		void parse(const std::string src, bool verbose = false);
-		void indexe();
 
 	private:
 		void addNativeRules();

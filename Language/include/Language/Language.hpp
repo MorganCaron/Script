@@ -42,7 +42,7 @@
 #include <Language/Parser/Declaration/ClassParser.hpp>
 #include <Language/Parser/Declaration/FunctionDeclarationParser.hpp>
 #include <Language/Parser/Declaration/ImportDeclarationParser.hpp>
-#include <Language/Parser/Declaration/NamespaceParser.hpp>
+#include <Language/Parser/Declaration/NamespaceDeclarationParser.hpp>
 
 #include <Language/Parser/Instruction/BracketParser.hpp>
 #include <Language/Parser/Instruction/ControlStructureParser.hpp>

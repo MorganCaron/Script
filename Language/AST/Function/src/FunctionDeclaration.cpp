@@ -30,7 +30,7 @@ namespace Language::AST::Function
 		auto& instruction = *m_instructions[0];
 		auto& scope = dynamic_cast<Scope::NormalScope&>(instruction);
 		auto& variableScope = dynamic_cast<Variable::VariableScope&>(scope.findScope(Variable::VariableScopeType));
-		variableScope.resetVariables();
+		variableScope.clearVariables();
 		const auto nbPassedArgument = arguments.size();
 		const auto nbArguments = m_arguments.size();
 		if (nbPassedArgument > nbArguments)
@@ -53,11 +53,11 @@ namespace Language::AST::Function
 		});
 		const auto functionSignature = FunctionSignature{getName().data(), argumentTypes};
 		functionScope.addFunction(functionSignature, std::make_unique<FunctionDeclaration>(*this));
-		CppUtils::Log::Logger::logInformation("Declare "s + Keyword.data() + " " + functionSignature.printable);
 	}
 
 	std::unique_ptr<Type::IValue> FunctionDeclaration::interpret()
 	{
+		indexe();
 		return std::make_unique<Type::Number>(0);
 	}
 

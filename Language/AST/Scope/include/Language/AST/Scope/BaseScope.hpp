@@ -18,8 +18,8 @@ namespace Language::AST::Scope
 	public:
 		virtual ~ScopeFinder() = default;
 
-		[[nodiscard]] virtual BaseScope& findScope(ScopeType scopeType) = 0;
-		[[nodiscard]] virtual const BaseScope& findScope(ScopeType scopeType) const = 0;
+		[[nodiscard]] virtual BaseScope& findScope(const ScopeType scopeType) = 0;
+		[[nodiscard]] virtual const BaseScope& findScope(const ScopeType scopeType) const = 0;
 	};
 
 	class Scopable;
@@ -27,7 +27,7 @@ namespace Language::AST::Scope
 	{
 	public:
 		BaseScope() = delete;
-		explicit BaseScope(ScopeType scopeType): m_type{scopeType}
+		explicit BaseScope(const ScopeType scopeType): m_type{scopeType}
 		{}
 		virtual ~BaseScope() = default;
 
@@ -36,8 +36,8 @@ namespace Language::AST::Scope
 			return m_type;
 		}
 
-		[[nodiscard]] BaseScope& findScope(ScopeType scopeType) override;
-		[[nodiscard]] const BaseScope& findScope(ScopeType scopeType) const override;
+		[[nodiscard]] BaseScope& findScope(const ScopeType scopeType) override;
+		[[nodiscard]] const BaseScope& findScope(const ScopeType scopeType) const override;
 
 	private:
 		ScopeType m_type;
@@ -61,8 +61,8 @@ namespace Language::AST::Scope
 			return m_scope;
 		}
 
-		[[nodiscard]] BaseScope& findScope(ScopeType scopeType) override;
-		[[nodiscard]] const BaseScope& findScope(ScopeType scopeType) const override;
+		[[nodiscard]] BaseScope& findScope(const ScopeType scopeType) override;
+		[[nodiscard]] const BaseScope& findScope(const ScopeType scopeType) const override;
 
 	private:
 		BaseScope* m_scope;
@@ -71,11 +71,11 @@ namespace Language::AST::Scope
 	class NormalScope: public BaseScope, public Scopable
 	{
 	public:
-		NormalScope(BaseScope* scope = nullptr, ScopeType scopeType = NormalScopeType): BaseScope{scopeType}, Scopable{scope}
+		NormalScope(BaseScope* scope = nullptr, const ScopeType scopeType = NormalScopeType): BaseScope{scopeType}, Scopable{scope}
 		{}
 		virtual ~NormalScope() = default;
 
-		[[nodiscard]] BaseScope& findScope(ScopeType scopeType) override final;
-		[[nodiscard]] const BaseScope& findScope(ScopeType scopeType) const override final;
+		[[nodiscard]] BaseScope& findScope(const ScopeType scopeType) override;
+		[[nodiscard]] const BaseScope& findScope(const ScopeType scopeType) const override;
 	};
 }

@@ -2,14 +2,14 @@
 
 namespace Language::AST::Scope
 {
-	[[nodiscard]] BaseScope& BaseScope::findScope(ScopeType scopeType)
+	[[nodiscard]] BaseScope& BaseScope::findScope(const ScopeType scopeType)
 	{
 		if (m_type < scopeType)
 			throw std::runtime_error{"Scope introuvable."};
 		return *this;
 	}
 	
-	[[nodiscard]] const BaseScope& BaseScope::findScope(ScopeType scopeType) const
+	[[nodiscard]] const BaseScope& BaseScope::findScope(const ScopeType scopeType) const
 	{
 		if (m_type < scopeType)
 			throw std::runtime_error{"Scope introuvable."};
@@ -29,7 +29,7 @@ namespace Language::AST::Scope
 		return *m_scope;
 	}
 
-	[[nodiscard]] BaseScope& Scopable::findScope(ScopeType scopeType)
+	[[nodiscard]] BaseScope& Scopable::findScope(const ScopeType scopeType)
 	{
 		if (!m_scope)
 			throw std::runtime_error{"Scope introuvable."};
@@ -38,7 +38,7 @@ namespace Language::AST::Scope
 		return m_scope->findScope(scopeType);
 	}
 
-	[[nodiscard]] const BaseScope& Scopable::findScope(ScopeType scopeType) const
+	[[nodiscard]] const BaseScope& Scopable::findScope(const ScopeType scopeType) const
 	{
 		if (!m_scope)
 			throw std::runtime_error{"Scope introuvable."};
@@ -47,7 +47,7 @@ namespace Language::AST::Scope
 		return m_scope->findScope(scopeType);
 	}
 
-	[[nodiscard]] BaseScope& NormalScope::findScope(ScopeType scopeType)
+	[[nodiscard]] BaseScope& NormalScope::findScope(const ScopeType scopeType)
 	{
 		if (getType() >= scopeType)
 			return *this;
@@ -56,7 +56,7 @@ namespace Language::AST::Scope
 		return getScope().findScope(scopeType);
 	}
 
-	[[nodiscard]] const BaseScope& NormalScope::findScope(ScopeType scopeType) const
+	[[nodiscard]] const BaseScope& NormalScope::findScope(const ScopeType scopeType) const
 	{
 		if (getType() >= scopeType)
 			return *this;

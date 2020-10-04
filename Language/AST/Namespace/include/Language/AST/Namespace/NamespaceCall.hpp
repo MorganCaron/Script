@@ -18,8 +18,23 @@ namespace Language::AST::Namespace
 		explicit NamespaceCall(std::string name, Scope::BaseScope* scope = nullptr):
 			CppUtils::Type::Named{std::move(name)},
 			Core::Instruction{Type},
-			Scope::NormalScope{scope}
+			Scope::NormalScope{scope},
+			m_namespaceId{getName()}
 		{}
+
+		[[nodiscard]] Scope::BaseScope& findScope(const Scope::ScopeType scopeType) override
+		{
+			auto& namespaceScope = dynamic_cast<NamespaceScope&>(getScope().findScope(NamespaceScopeType));
+			auto& targetedNamespace = namespaceScope.getNamespace(m_namespaceId);
+			return targetedNamespace.findScope(scopeType);
+		}
+
+		[[nodiscard]] const Scope::BaseScope& findScope(const Scope::ScopeType scopeType) const override
+		{
+			const auto& namespaceScope = dynamic_cast<const NamespaceScope&>(getScope().findScope(NamespaceScopeType));
+			const auto& targetedNamespace = namespaceScope.getNamespace(m_namespaceId);
+			return targetedNamespace.findScope(scopeType);
+		}
 
 		[[nodiscard]] std::unique_ptr<Core::Instruction> cloneInstruction() const override final
 		{
@@ -30,10 +45,13 @@ namespace Language::AST::Namespace
 		{
 			return m_instructions[0]->interpret();
 		}
-
+ 
 		[[nodiscard]] const CppUtils::Type::TypeId& getReturnType() const override final
 		{
 			return m_instructions[0]->getReturnType();
 		}
+
+	private:
+		CppUtils::Type::TypeId m_namespaceId;
 	};
 }

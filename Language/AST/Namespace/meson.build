@@ -8,9 +8,7 @@ private_dependencies = []
 
 includeDir = include_directories(['include/', '.'])
 
-sources = files([
-	'src/NamespaceDeclaration.cpp'
-])
+sources = files([])
 
 headers = files([
 	'include/Language/AST/Namespace/ImportDeclaration.hpp',

@@ -34,7 +34,7 @@ namespace Language::Parser::Declaration
 				throw std::runtime_error{"In "s + parserName + ":\n" + error.what()};
 			}
 		}
-		throw std::runtime_error{"Erreur de syntaxe. La chaine suivante ne correspond a aucune declaration connue:\n" + cursor.getNextNChar(20) + "..."};
+		throw std::runtime_error{"Erreur de syntaxe. La chaine suivante ne correspond a aucune declaration connue:\n" + std::string{CppUtils::String::trimString(cursor.getNextNChar(20))} + "..."};
 		return nullptr;
 	}
 }

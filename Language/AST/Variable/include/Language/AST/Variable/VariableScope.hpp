@@ -58,6 +58,15 @@ namespace Language::AST::Variable
 
 		VariableScope& operator=(VariableScope&&) noexcept = default;
 
+		inline void merge(VariableScope& variableScope)
+		{
+			for (auto&& [name, variableSignature] : variableScope.m_variableSignatures)
+				addVariableSignature(std::move(variableSignature));
+			for (auto&& [name, value] : variableScope.m_variables)
+				setVariable(name, std::move(value));
+			variableScope.clearVariableSignatures();
+		}
+
 		[[nodiscard]] bool variableSignatureExists(std::string_view name) const
 		{
 			if (m_variableSignatures.find(name.data()) != m_variableSignatures.end())
@@ -94,7 +103,7 @@ namespace Language::AST::Variable
 				const auto& signature = m_variableSignatures.at(name.data());
 
 				if (signature.constant && m_variables.find(name.data()) != m_variables.end())
-					throw std::runtime_error{"La variable "s + name.data() + " est constante. Sa valeur ne peut pas etre modifiee"};
+					throw std::runtime_error{"The variable "s + name.data() + " is constant. Its value cannot be modified."};
 				/*
 				if (value->getInstructionType() != signature.type)
 					throw std::runtime_error{"La variable est de type "s + signature.type + ". Vous ne pouvez pas lui affecter une valeur de type " + value->getType().data()};
@@ -107,15 +116,16 @@ namespace Language::AST::Variable
 				parentVariableScope.setVariable(name, std::move(value));
 			}
 			else
-				throw std::runtime_error{"La variable "s + name.data() + " n existe pas. Elle doit etre declaree avant d y affecter une valeur."};
+				throw std::runtime_error{"The variable "s + name.data() + " does not exist. It must be declared before assigning it a value."};
 		}
 
-		inline void resetVariableSignatures()
+		inline void clearVariableSignatures()
 		{
 			m_variableSignatures.clear();
+			clearVariables();
 		}
 
-		inline void resetVariables()
+		inline void clearVariables()
 		{
 			m_variables.clear();
 		}
@@ -125,7 +135,7 @@ namespace Language::AST::Variable
 			if (m_variableSignatures.find(name.data()) != m_variableSignatures.end())
 				return m_variableSignatures.at(name.data());
 			if (!hasScope())
-				throw std::runtime_error{"La signature de la variable "s + name.data() + " n existe pas."};
+				throw std::runtime_error{"The signature of variable "s + name.data() + " does not exist."};
 			const auto& parentVariableScope = dynamic_cast<const VariableScope&>(getScope().findScope(getType()));
 			return parentVariableScope.getVariableSignature(name);
 		}
@@ -135,7 +145,7 @@ namespace Language::AST::Variable
 			if (m_variables.find(name.data()) != m_variables.end())
 				return m_variables.at(name.data());
 			if (!hasScope())
-				throw std::runtime_error{"La variable "s + name.data() + " n existe pas."};
+				throw std::runtime_error{"The variable "s + name.data() + " does not exist."};
 			const auto& parentVariableScope = dynamic_cast<const VariableScope&>(getScope().findScope(getType()));
 			return parentVariableScope.getVariable(name);
 		}

@@ -35,7 +35,7 @@ namespace Language::Parser::Instruction
 			}
 		}
 
-		throw std::runtime_error{"Erreur de syntaxe. La chaine suivante ne correspond a aucune instruction connue:\n" + cursor.getNextNChar(20) + "..."};
+		throw std::runtime_error{"Erreur de syntaxe. La chaine suivante ne correspond a aucune instruction connue:\n" + std::string{CppUtils::String::trimString(cursor.getNextNChar(20))} + "..."};
 		return nullptr;
 	}
 }

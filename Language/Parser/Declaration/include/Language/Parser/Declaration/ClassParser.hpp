@@ -41,7 +41,7 @@ namespace Language::Parser::Declaration
 		if (verbose)
 			CppUtils::Log::Logger::logInformation("}", false);
 		++cursor.pos;
-
+		
 		return prototype;
 	}
 }

@@ -9,16 +9,16 @@ namespace Language::AST::Namespace
 		public CppUtils::Type::Named,
 		public Core::Instruction,
 		public Core::InstructionContainer,
-		public NamespaceScope
+		public Scope::NormalScope
 	{
 	public:
 		static constexpr const auto Type = CppUtils::Type::TypeId{"Namespace Declaration"};
 		static constexpr const auto Keyword = "namespace"sv;
 
-		explicit NamespaceDeclaration(std::string name, BaseScope* scope = nullptr):
+		explicit NamespaceDeclaration(std::string name, Scope::BaseScope* scope):
 			CppUtils::Type::Named{std::move(name)},
 			Core::Instruction{Type},
-			NamespaceScope{scope}
+			Scope::NormalScope{scope}
 		{}
 
 		[[nodiscard]] std::unique_ptr<Core::Instruction> cloneInstruction() const override final
@@ -26,7 +26,12 @@ namespace Language::AST::Namespace
 			return std::make_unique<NamespaceDeclaration>(*this);
 		}
 		
-		void indexe() override final;
+		void indexe() override final
+		{
+			auto& namespaceScope = dynamic_cast<class NamespaceScope&>(getScope().findScope(NamespaceScopeType));
+			namespaceScope.addNamespace(CppUtils::Type::TypeId{getName()}, std::make_unique<NamespaceScope>(&getScope()));
+			m_instructions[0]->indexe();
+		}
 
 		std::unique_ptr<AST::Type::IValue> interpret() override final
 		{
