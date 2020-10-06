@@ -14,15 +14,13 @@ includeDir = include_directories(['include/', '.'])
 sources = files([
 	'src/Bracket.cpp',
 	'src/ControlStructure.cpp',
-	'src/FunctionCall.cpp',
-	'src/Operator.cpp'
+	'src/FunctionCall.cpp'
 ])
 
 headers = files([
 	'include/Language/AST/Instruction/Bracket.hpp',
 	'include/Language/AST/Instruction/ControlStructure.hpp',
 	'include/Language/AST/Instruction/FunctionCall.hpp',
-	'include/Language/AST/Instruction/Operator.hpp',
 	'include/Language/AST/Instruction/Return.hpp'
 ])
 

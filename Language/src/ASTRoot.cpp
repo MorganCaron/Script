@@ -22,11 +22,13 @@
 #include <Language/Parser/Value/VariableParser.hpp>
 
 #include <Language/Parser/Operator/OperatorParser.hpp>
-#include <Language/Parser/Operator/EqualityParser.hpp>
-#include <Language/Parser/Operator/NotEqualityParser.hpp>
-#include <Language/Parser/Operator/AssignmentParser.hpp>
 #include <Language/Parser/Operator/AdditionParser.hpp>
+#include <Language/Parser/Operator/AssignmentParser.hpp>
+#include <Language/Parser/Operator/EqualityParser.hpp>
 #include <Language/Parser/Operator/MemberParser.hpp>
+#include <Language/Parser/Operator/MultiplicationParser.hpp>
+#include <Language/Parser/Operator/NotEqualityParser.hpp>
+
 
 namespace Language
 {
@@ -53,7 +55,7 @@ namespace Language
 			auto declaration = Parser::Declaration::parseDeclaration(context);
 			if (declaration != nullptr)
 			{
-				declaration->interpret();
+				declaration->indexe();
 				addInstruction(std::move(declaration));
 				context.skipSpacesAndComments();
 			}
@@ -92,11 +94,12 @@ namespace Language
 		addValueParsers(values);
 
 		static const auto operators = std::unordered_map<std::string, AST::ParsingTools::OperatorParser>{
-			{ "Equality", &Parser::Operator::parseEquality },
-			{ "NotEquality", &Parser::Operator::parseNotEquality },
-			{ "Assignment", &Parser::Operator::parseAssignment },
 			{ "Addition", &Parser::Operator::parseAddition },
-			{ "Member", &Parser::Operator::parseMember }
+			{ "Assignment", &Parser::Operator::parseAssignment },
+			{ "Equality", &Parser::Operator::parseEquality },
+			{ "Member", &Parser::Operator::parseMember },
+			{ "Multiplication", &Parser::Operator::parseMultiplication },
+			{ "NotEquality", &Parser::Operator::parseNotEquality },
 		};
 		addOperatorParsers(operators);
 	}

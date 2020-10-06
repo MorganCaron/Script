@@ -16,10 +16,7 @@ namespace Language::Parser::Declaration
 
 		auto className = cursor.getKeywordRequired("Le mot clef "s + AST::Object::Class::Keyword.data() + " doit etre suivi d un nom.");
 		if (verbose)
-		{
-			CppUtils::Log::Logger::logInformation(AST::Object::Class::Keyword.data() + " "s, false);
-			CppUtils::Log::Logger::logDetail(className);
-		}
+			CppUtils::Log::Logger::logInformation(AST::Object::Class::Keyword.data() + " "s + className);
 		context.skipSpacesAndComments();
 		
 		auto prototype = std::make_unique<AST::Object::Class>(std::move(className), &scope);

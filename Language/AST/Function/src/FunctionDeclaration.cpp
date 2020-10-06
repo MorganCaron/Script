@@ -46,6 +46,7 @@ namespace Language::AST::Function
 
 	void FunctionDeclaration::indexe()
 	{
+		CppUtils::Log::Logger::logDetail("Declare "s + Keyword.data() + " " + getName().data());
 		auto& functionScope = dynamic_cast<FunctionScope&>(getScope().findScope(FunctionScopeType));
 		auto argumentTypes = std::vector<CppUtils::Type::TypeId>{};
 		std::transform(m_arguments.begin(), m_arguments.end(), std::back_inserter(argumentTypes), [](const auto& variableSignature) {

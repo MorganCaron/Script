@@ -28,6 +28,12 @@ namespace Language::AST::Variable
 		const auto& variableScope = dynamic_cast<const Variable::VariableScope&>(getScope().findScope(Variable::VariableScopeType));
 		return variableScope.getVariable(getName());
 	}
+
+	void VariableDeclaration::indexe()
+	{
+		CppUtils::Log::Logger::logDetail("Declare variable "s + getName().data());
+		interpret();
+	}
 	
 	std::unique_ptr<Type::IValue> VariableDeclaration::interpret()
 	{

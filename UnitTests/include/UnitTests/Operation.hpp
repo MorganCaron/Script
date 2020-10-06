@@ -92,6 +92,26 @@ namespace UnitTests::Operation
 			auto result = Script::ensureType<Script::Boolean>(script.executeCode(src))->getValue();
 			std::cout << std::boolalpha << result << std::endl;
 			ASSERT(result == false);
+		}),
+
+		CppUtils::Test::UnitTest("Operator priorities (A * B + C)", [] {
+			static const auto src = "\
+			function main(): Number\
+				return 2 * 3 + 10;"s;
+			auto script = Script::Script{Script::Settings{Script::Settings::Mode::Test}};
+			auto result = Script::ensureType<Script::Number>(script.executeCode(src))->getValue();
+			std::cout << result << std::endl;
+			ASSERT(result == 16);
+		}),
+
+		CppUtils::Test::UnitTest("Operator priorities (A + B * C)", [] {
+			static const auto src = "\
+			function main(): Number\
+				return 10 + 2 * 3;"s;
+			auto script = Script::Script{Script::Settings{Script::Settings::Mode::Test}};
+			auto result = Script::ensureType<Script::Number>(script.executeCode(src))->getValue();
+			std::cout << result << std::endl;
+			ASSERT(result == 16);
 		})
 
 	};

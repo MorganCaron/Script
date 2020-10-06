@@ -1,7 +1,6 @@
 #include <Language/AST/Instruction/ControlStructure.hpp>
 
-#include <Language/AST/Instruction/Operator.hpp>
-#include <Language/AST/Type/Number.hpp>
+#include <Language/AST/Type/Boolean.hpp>
 
 namespace Language::AST::Instruction
 {
@@ -23,9 +22,9 @@ namespace Language::AST::Instruction
 		while (loop)
 		{
 			const auto value = m_instructions[0]->interpret();
-			if (!value->isType(Type::Number::TypeId))
+			if (!value->isType(Type::Boolean::TypeId))
 				throw std::runtime_error{"La structure de controle attend une valeur numerique."};
-			condition = (dynamic_cast<Type::Number*>(value.get())->getValue() == 0);
+			condition = (dynamic_cast<Type::Boolean*>(value.get())->getValue() == false);
 			if (condition)
 				m_instructions[1]->interpret();
 			if (m_sort == eControlStructureSort::WHILE)

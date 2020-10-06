@@ -2,7 +2,7 @@
 
 #include <Language/AST/Core/InstructionContainer.hpp>
 #include <Language/AST/Object/Type.hpp>
-#include <Language/AST/Type/Number.hpp>
+#include <Language/AST/Type/Boolean.hpp>
 
 namespace Language::AST::Object
 {
@@ -36,7 +36,8 @@ namespace Language::AST::Object
 
 		std::unique_ptr<AST::Type::IValue> interpret() override final
 		{
-			return std::make_unique<AST::Type::Number>(0);
+			indexe();
+			return std::make_unique<AST::Type::Boolean>(false);
 		}
 
 		[[nodiscard]] const CppUtils::Type::TypeId& getReturnType() const override final

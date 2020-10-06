@@ -6,7 +6,7 @@
 
 namespace Language::AST::Namespace
 {
-	using DllFunctionType = Type::IValue* (CALLBACK*)(const Type::Args&);
+	// using DllFunctionType = Type::IValue* (CALLBACK*)(const Type::Args&);
 
 	constexpr static const Scope::ScopeType NamespaceScopeType = 4;
 

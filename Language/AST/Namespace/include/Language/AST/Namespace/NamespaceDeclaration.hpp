@@ -28,14 +28,14 @@ namespace Language::AST::Namespace
 		
 		void indexe() override final
 		{
+			CppUtils::Log::Logger::logDetail("Declare "s + Keyword.data() + " " + getName().data());
 			auto& namespaceScope = dynamic_cast<class NamespaceScope&>(getScope().findScope(NamespaceScopeType));
 			namespaceScope.addNamespace(CppUtils::Type::TypeId{getName()}, std::make_unique<NamespaceScope>(&getScope()));
-			m_instructions[0]->indexe();
 		}
 
 		std::unique_ptr<AST::Type::IValue> interpret() override final
 		{
-			return std::make_unique<AST::Type::Number>(0);
+			return std::make_unique<AST::Type::Boolean>(false);
 		}
 		
 		[[nodiscard]] const CppUtils::Type::TypeId& getReturnType() const override final

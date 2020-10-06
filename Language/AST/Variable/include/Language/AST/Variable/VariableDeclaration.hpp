@@ -43,6 +43,7 @@ namespace Language::AST::Variable
 			return std::make_unique<VariableDeclaration>(*this);
 		}
 		
+		void indexe() override final;
 		std::unique_ptr<Type::IValue> interpret() override final;
 		[[nodiscard]] const CppUtils::Type::TypeId& getReturnType() const override final;
 	};

@@ -57,15 +57,15 @@ namespace Script
 			{
 				CppUtils::Log::Logger::logSuccess("Global namespaces: "s + std::to_string(m_ast.getNamespaces().size()));
 				for (const auto& [namespaceId, namespaceScope] : m_ast.getNamespaces())
-					CppUtils::Log::Logger::logSuccess("- "s + namespaceId.name.data() + "{}");
+					CppUtils::Log::Logger::logInformation("- "s + namespaceId.name.data() + "{}");
 				
 				CppUtils::Log::Logger::logSuccess("Global classes: "s + std::to_string(m_ast.getClasses().size()));
 				for (const auto& [prototypeName, prototype] : m_ast.getClasses())
-					CppUtils::Log::Logger::logSuccess("- "s + prototypeName + "{}");
+					CppUtils::Log::Logger::logInformation("- "s + prototypeName + "{}");
 				
 				CppUtils::Log::Logger::logSuccess("Global functions: "s + std::to_string(m_ast.getFunctions().size()));
 				for (const auto& [functionSignature, function] : m_ast.getFunctions())
-					CppUtils::Log::Logger::logSuccess("- "s + functionSignature.printable);
+					CppUtils::Log::Logger::logInformation("- "s + functionSignature.printable);
 			}
 
 			return true;

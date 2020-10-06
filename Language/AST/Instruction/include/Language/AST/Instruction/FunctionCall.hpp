@@ -37,7 +37,7 @@ namespace Language::AST::Instruction
 		std::unique_ptr<Type::IValue> interpret() override final;
 		[[nodiscard]] const CppUtils::Type::TypeId& getReturnType() const override final;
 
-		std::unique_ptr<Type::IValue> execute(Object::Instance* object) const;
+		std::unique_ptr<Type::IValue> execute(Object::Instance& object) const;
 	
 	private:
 		std::vector<CppUtils::Type::TypeId> m_argumentTypes;

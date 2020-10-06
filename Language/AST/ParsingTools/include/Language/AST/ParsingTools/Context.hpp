@@ -5,7 +5,6 @@
 #include <CppUtils.hpp>
 #include <Language/AST/Core/InstructionContainer.hpp>
 #include <Language/AST/Scope/BaseScope.hpp>
-#include <Language/AST/Instruction/Operator.hpp>
 
 using namespace std::literals;
 

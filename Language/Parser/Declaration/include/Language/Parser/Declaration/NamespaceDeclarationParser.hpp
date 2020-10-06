@@ -31,7 +31,7 @@ namespace Language::Parser::Declaration
 		while (!cursor.isEndOfString() && cursor.getChar() != '}')
 		{
 			auto declaration = parseDeclaration(namespaceParsingInformations);
-			declaration->interpret();
+			declaration->indexe();
 			namespaceDeclaration->addInstruction(std::move(declaration));
 			context.skipSpacesAndComments();
 		}
@@ -41,7 +41,6 @@ namespace Language::Parser::Declaration
 			CppUtils::Log::Logger::logInformation("}");
 		++cursor.pos;
 		
-		namespaceDeclaration->indexe();
 		return namespaceDeclaration;
 	}
 }

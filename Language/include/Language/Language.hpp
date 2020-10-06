@@ -16,7 +16,6 @@
 #include <Language/AST/Instruction/Bracket.hpp>
 #include <Language/AST/Instruction/ControlStructure.hpp>
 #include <Language/AST/Instruction/FunctionCall.hpp>
-#include <Language/AST/Instruction/Operator.hpp>
 #include <Language/AST/Instruction/Return.hpp>
 
 #include <Language/AST/Object/Class.hpp>
@@ -56,8 +55,9 @@
 #include <Language/Parser/Operator/AdditionParser.hpp>
 #include <Language/Parser/Operator/AssignmentParser.hpp>
 #include <Language/Parser/Operator/EqualityParser.hpp>
-#include <Language/Parser/Operator/NotEqualityParser.hpp>
 #include <Language/Parser/Operator/MemberParser.hpp>
+#include <Language/Parser/Operator/MultiplicationParser.hpp>
+#include <Language/Parser/Operator/NotEqualityParser.hpp>
 
 #include <Language/Parser/Value/FunctionCallParser.hpp>
 #include <Language/Parser/Value/InstanceParser.hpp>

@@ -16,6 +16,7 @@ headers = files([
 	'include/Language/AST/Operator/Assignment.hpp',
 	'include/Language/AST/Operator/Equality.hpp',
 	'include/Language/AST/Operator/Member.hpp',
+	'include/Language/AST/Operator/Multiplication.hpp',
 	'include/Language/AST/Operator/NotEquality.hpp'
 ])
 

@@ -32,10 +32,7 @@ namespace Language::Parser::Instruction
 			context.skipSpacesAndComments();
 			typeName = cursor.getKeywordRequired("Le nom d'un type est attendu.");
 			if (verbose)
-			{
-				CppUtils::Log::Logger::logInformation(": ", false);
-				CppUtils::Log::Logger::logDetail(typeName, false);
-			}
+				CppUtils::Log::Logger::logInformation(": " + typeName, false);
 			type = CppUtils::Type::TypeId{typeName};
 		}
 
