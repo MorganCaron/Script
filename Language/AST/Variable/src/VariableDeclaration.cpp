@@ -7,25 +7,25 @@ namespace Language::AST::Variable
 {
 	[[nodiscard]] bool VariableDeclaration::exists() const
 	{
-		const auto& variableScope = dynamic_cast<const Variable::VariableScope&>(getScope().findScope(Variable::VariableScopeType));
+		const auto& variableScope = dynamic_cast<const Variable::VariableScope&>(getParentScope().findScope(Variable::VariableScopeType));
 		return variableScope.variableExists(getName());
 	}
 
 	void VariableDeclaration::declare(VariableSignature variableSignature)
 	{
-		auto& variableScope = dynamic_cast<Variable::VariableScope&>(getScope().findScope(Variable::VariableScopeType));
+		auto& variableScope = dynamic_cast<Variable::VariableScope&>(getParentScope().findScope(Variable::VariableScopeType));
 		variableScope.addVariableSignature(std::move(variableSignature));
 	}
 
 	void VariableDeclaration::setValue(std::unique_ptr<Type::IValue>&& value)
 	{
-		auto& variableScope = dynamic_cast<Variable::VariableScope&>(getScope().findScope(Variable::VariableScopeType));
+		auto& variableScope = dynamic_cast<Variable::VariableScope&>(getParentScope().findScope(Variable::VariableScopeType));
 		variableScope.setVariable(getName(), std::move(value));
 	}
 
 	[[nodiscard]] const std::unique_ptr<Type::IValue>& VariableDeclaration::getValue() const
 	{
-		const auto& variableScope = dynamic_cast<const Variable::VariableScope&>(getScope().findScope(Variable::VariableScopeType));
+		const auto& variableScope = dynamic_cast<const Variable::VariableScope&>(getParentScope().findScope(Variable::VariableScopeType));
 		return variableScope.getVariable(getName());
 	}
 
@@ -37,7 +37,7 @@ namespace Language::AST::Variable
 	
 	std::unique_ptr<Type::IValue> VariableDeclaration::interpret()
 	{
-		auto &variableScope = dynamic_cast<Variable::VariableScope&>(getScope().findScope(Variable::VariableScopeType));
+		auto &variableScope = dynamic_cast<Variable::VariableScope&>(getParentScope().findScope(Variable::VariableScopeType));
 
 		if (m_instructions.empty())
 			return std::make_unique<Type::Number>(0);
@@ -50,7 +50,7 @@ namespace Language::AST::Variable
 
 	[[nodiscard]] const CppUtils::Type::TypeId& VariableDeclaration::getReturnType() const
 	{
-		const auto &variableScope = dynamic_cast<const Variable::VariableScope&>(getScope().findScope(Variable::VariableScopeType));
+		const auto &variableScope = dynamic_cast<const Variable::VariableScope&>(getParentScope().findScope(Variable::VariableScopeType));
 		return variableScope.getVariableSignature(getName()).type;
 	}
 

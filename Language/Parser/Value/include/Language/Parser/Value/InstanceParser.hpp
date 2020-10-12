@@ -1,12 +1,11 @@
 #pragma once
 
 #include <Language/AST/ParsingTools/Context.hpp>
-#include <Language/AST/Object/Value.hpp>
 #include <Language/AST/Object/Instantiation.hpp>
 
 namespace Language::Parser::Value
 {
-	inline std::unique_ptr<AST::Core::Instruction> parseInstance(AST::ParsingTools::Context& context)
+	[[nodiscard]] inline std::unique_ptr<AST::Core::Instruction> parseInstance(AST::ParsingTools::Context& context)
 	{
 		auto& [container, scope, cursor, verbose] = context;
 		
@@ -28,7 +27,7 @@ namespace Language::Parser::Value
 		context.skipSpacesAndComments();
 		while (cursor.getChar() != ',' && cursor.getChar() != ')')
 		{
-			auto value = parseValue(instantiationParsingInformations);
+			auto value = parseOperation(instantiationParsingInformations);
 			if (value == nullptr)
 				throw std::runtime_error{"L argument de l instantiation doit etre une valeur ou doit retourner une valeur."};
 			instantiation->addInstruction(std::move(value));

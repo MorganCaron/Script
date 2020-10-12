@@ -1,21 +1,16 @@
 #include <Language/AST/Function/FunctionDeclaration.hpp>
 
-#include <Language/AST/Type/Number.hpp>
 #include <Language/AST/Function/FunctionScope.hpp>
+#include <Language/AST/Type/Void.hpp>
 
 namespace Language::AST::Function
 {
-	FunctionDeclaration::FunctionDeclaration(std::string name, Scope::BaseScope* scope):
+	FunctionDeclaration::FunctionDeclaration(std::string name, Scope::NormalScope* scope):
 		CppUtils::Type::Named{std::move(name)},
-		Core::Instruction{Type},
+		Core::InstructionContainer{Type},
 		Variable::VariableScope{scope},
-		m_returnType{Type::VoidType}
+		m_returnType{Type::Void::TypeId}
 	{}
-
-	std::unique_ptr<ITFunction<std::unique_ptr<Type::IValue>(const Type::Args&)>> FunctionDeclaration::cloneFunction() const
-	{
-		return std::make_unique<FunctionDeclaration>(*this);
-	}
 
 	void FunctionDeclaration::addArgument(Variable::VariableSignature variableSignature)
 	{
@@ -23,7 +18,7 @@ namespace Language::AST::Function
 		m_arguments.emplace_back(std::move(variableSignature));
 	}
 
-	std::unique_ptr<Type::IValue> FunctionDeclaration::operator()(const Type::Args& arguments)
+	std::unique_ptr<Type::IValue> FunctionDeclaration::executeFunction(const Type::Args& arguments)
 	{
 		if (m_instructions.empty())
 			throw std::runtime_error{"La fonction ne contient aucune instruction."};
@@ -47,19 +42,20 @@ namespace Language::AST::Function
 	void FunctionDeclaration::indexe()
 	{
 		CppUtils::Log::Logger::logDetail("Declare "s + Keyword.data() + " " + getName().data());
-		auto& functionScope = dynamic_cast<FunctionScope&>(getScope().findScope(FunctionScopeType));
+		auto& functionScope = dynamic_cast<FunctionScope&>(getParentScope().findScope(FunctionScopeType));
 		auto argumentTypes = std::vector<CppUtils::Type::TypeId>{};
 		std::transform(m_arguments.begin(), m_arguments.end(), std::back_inserter(argumentTypes), [](const auto& variableSignature) {
 			return variableSignature.type;
 		});
 		const auto functionSignature = FunctionSignature{getName().data(), argumentTypes};
-		functionScope.addFunction(functionSignature, std::make_unique<FunctionDeclaration>(*this));
+		auto function = Function{std::bind(&FunctionDeclaration::executeFunction, this, std::placeholders::_1), m_returnType};
+		functionScope.addFunction(functionSignature, std::move(function));
 	}
 
 	std::unique_ptr<Type::IValue> FunctionDeclaration::interpret()
 	{
 		indexe();
-		return std::make_unique<Type::Number>(0);
+		return std::make_unique<Type::Void>(nullptr);
 	}
 
 	std::ostream& operator<<(std::ostream& os, const FunctionDeclaration& functionDeclaration)

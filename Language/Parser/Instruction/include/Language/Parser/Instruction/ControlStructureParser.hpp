@@ -2,7 +2,7 @@
 
 #include <Language/AST/ParsingTools/Context.hpp>
 #include <Language/AST/Instruction/ControlStructure.hpp>
-#include <Language/Parser/Value/ValueParser.hpp>
+#include <Language/Parser/Value/OperationParser.hpp>
 
 namespace Language::Parser::Instruction
 {
@@ -22,7 +22,7 @@ namespace Language::Parser::Instruction
 
 		if (verbose)
 			CppUtils::Log::Logger::logInformation(controlStructure->getName().data() + " ("s, false);
-		controlStructure->addInstruction(Value::parseValue(controlStructureParsingInformations));
+		controlStructure->addInstruction(Value::parseOperation(controlStructureParsingInformations));
 		if (verbose)
 			CppUtils::Log::Logger::logInformation(") ", false);
 

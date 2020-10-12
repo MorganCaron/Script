@@ -4,9 +4,6 @@
 
 namespace Language::AST::Type
 {
-	struct FunctionTag { 
-		static constexpr const auto Name = "Function"sv; 
-	};
-
-	using Function = Type<FunctionTag, std::function>;
+	constexpr const char FunctionTypename[] = "Function";
+	using Function = Type<FunctionTypename, std::function>;
 }

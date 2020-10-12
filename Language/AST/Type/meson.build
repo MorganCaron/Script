@@ -14,7 +14,8 @@ headers = files([
 #	'include/Language/AST/Type/Function.hpp',
 	'include/Language/AST/Type/Number.hpp',
 	'include/Language/AST/Type/String.hpp',
-	'include/Language/AST/Type/Type.hpp'
+	'include/Language/AST/Type/Type.hpp',
+	'include/Language/AST/Type/Void.hpp'
 ])
 
 type_lib = library(

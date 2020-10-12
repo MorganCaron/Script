@@ -13,10 +13,5 @@ namespace Language::AST::Value
 		explicit String(std::unique_ptr<Type::String>&& string):
 			Value<Type::String>{std::move(string), Type}
 		{}
-
-		[[nodiscard]] std::unique_ptr<Core::Instruction> cloneInstruction() const override
-		{
-			return std::make_unique<String>(*this);
-		}
 	};
 }

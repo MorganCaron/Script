@@ -3,30 +3,21 @@
 #include <unordered_map>
 
 #include <CppUtils.hpp>
-#include <Language/AST/Core/InstructionContainer.hpp>
-#include <Language/AST/Scope/BaseScope.hpp>
+#include <Language/AST/Operator/Operator.hpp>
 #include <Language/AST/Type/Boolean.hpp>
 
 namespace Language::AST::Operator
 {
 	class NotEquality final:
-		public Core::Instruction,
-		public Scope::NormalScope,
-		public Core::InstructionContainer
+		public Operator
 	{
 	public:
 		static constexpr const auto Type = CppUtils::Type::TypeId{"Not Equality"};
 
-		explicit NotEquality(Scope::BaseScope* scope):
-			Core::Instruction{Type},
-			Scope::NormalScope{scope}
+		explicit NotEquality(Scope::NormalScope* scope):
+			Operator{Type, scope, eOperatorPriority::COMPARISON}
 		{}
 		virtual ~NotEquality() = default;
-
-		[[nodiscard]] std::unique_ptr<Core::Instruction> cloneInstruction() const override
-		{
-			return std::make_unique<NotEquality>(*this);
-		}
 		
 		std::unique_ptr<Type::IValue> interpret() override final
 		{

@@ -15,6 +15,7 @@ headers = files([
 	'include/Language/Parser/Value/InstanceParser.hpp',
 	'include/Language/Parser/Value/NamespaceCallParser.hpp',
 	'include/Language/Parser/Value/NumberParser.hpp',
+	'include/Language/Parser/Value/OperationParser.hpp',
 	'include/Language/Parser/Value/ParenthesisParser.hpp',
 	'include/Language/Parser/Value/StringParser.hpp',
 	'include/Language/Parser/Value/ValueParser.hpp',

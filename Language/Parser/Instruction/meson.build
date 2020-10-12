@@ -14,8 +14,8 @@ headers = files([
 	'include/Language/Parser/Instruction/BracketParser.hpp',
 	'include/Language/Parser/Instruction/ControlStructureParser.hpp',
 	'include/Language/Parser/Instruction/InstructionParser.hpp',
+	'include/Language/Parser/Instruction/OperationParser.hpp',
 	'include/Language/Parser/Instruction/ReturnParser.hpp',
-	'include/Language/Parser/Instruction/ValueParser.hpp',
 	'include/Language/Parser/Instruction/VariableDeclarationParser.hpp'
 ])
 

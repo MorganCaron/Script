@@ -15,7 +15,8 @@ sources = files([
 headers = files([
 	'include/Language/AST/Function/Function.hpp',
 	'include/Language/AST/Function/FunctionScope.hpp',
-	'include/Language/AST/Function/FunctionDeclaration.hpp'
+	'include/Language/AST/Function/FunctionDeclaration.hpp',
+	'include/Language/AST/Function/FunctionSignature.hpp'
 ])
 
 function_lib = library(

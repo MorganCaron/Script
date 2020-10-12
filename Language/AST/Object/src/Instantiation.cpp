@@ -10,7 +10,7 @@ namespace Language::AST::Object
 
 		for (const auto& argument : m_instructions)
 			arguments.emplace_back(dynamic_cast<Core::Instruction&>(*argument).interpret());
-		const auto& objectScope = dynamic_cast<const ObjectScope&>(getScope().findScope(ObjectScopeType));
+		const auto& objectScope = dynamic_cast<const ObjectScope&>(getParentScope().findScope(ObjectScopeType));
 		return objectScope.instantiate(getName(), arguments);
 	}
 }

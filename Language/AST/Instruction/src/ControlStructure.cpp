@@ -4,9 +4,9 @@
 
 namespace Language::AST::Instruction
 {
-	ControlStructure::ControlStructure(std::string name, Scope::BaseScope* scope):
+	ControlStructure::ControlStructure(std::string name, Scope::NormalScope* scope):
 		CppUtils::Type::Named{std::move(name)},
-		Core::Instruction{Type},
+		Core::InstructionContainer{Type},
 		Scope::NormalScope{scope}
 	{
 		if (getName() == "if")
@@ -32,6 +32,6 @@ namespace Language::AST::Instruction
 			else if (m_sort == eControlStructureSort::IF)
 				loop = false;
 		}
-		return 0;
+		return std::make_unique<Type::Void>(nullptr);
 	}
 }

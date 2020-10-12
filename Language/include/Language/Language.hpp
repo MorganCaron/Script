@@ -2,7 +2,6 @@
 
 #include <Language/AST/Core/Instruction.hpp>
 #include <Language/AST/Core/InstructionContainer.hpp>
-#include <Language/AST/Core/Interpreter.hpp>
 
 #include <Language/AST/Function/Function.hpp>
 #include <Language/AST/Function/FunctionDeclaration.hpp>
@@ -22,19 +21,20 @@
 #include <Language/AST/Object/Instance.hpp>
 #include <Language/AST/Object/ObjectScope.hpp>
 
-#include <Language/AST/ParsingTools/ParserScope.hpp>
 #include <Language/AST/ParsingTools/Context.hpp>
 
 #include <Language/AST/Value/Number.hpp>
 #include <Language/AST/Value/String.hpp>
 
-#include <Language/AST/Scope/BaseScope.hpp>
+#include <Language/AST/Scope/NormalScope.hpp>
 
 #include <Language/AST/Type/Boolean.hpp>
+// Pour la gestion de lambdas (prochainement):
 // #include <Language/AST/Type/Function.hpp>
 #include <Language/AST/Type/Number.hpp>
 #include <Language/AST/Type/String.hpp>
 #include <Language/AST/Type/Type.hpp>
+#include <Language/AST/Type/Void.hpp>
 
 #include <Language/AST/Variable/Variable.hpp>
 #include <Language/AST/Variable/VariableDeclaration.hpp>
@@ -63,6 +63,7 @@
 #include <Language/Parser/Value/InstanceParser.hpp>
 #include <Language/Parser/Value/NamespaceCallParser.hpp>
 #include <Language/Parser/Value/NumberParser.hpp>
+#include <Language/Parser/Value/OperationParser.hpp>
 #include <Language/Parser/Value/ParenthesisParser.hpp>
 #include <Language/Parser/Value/StringParser.hpp>
 #include <Language/Parser/Value/ValueParser.hpp>

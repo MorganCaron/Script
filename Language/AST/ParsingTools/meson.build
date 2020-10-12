@@ -14,8 +14,7 @@ includeDir = include_directories(['include/', '.'])
 sources = files([])
 
 headers = files([
-	'include/Language/AST/ParsingTools/Context.hpp',
-	'include/Language/AST/ParsingTools/ParserScope.hpp'
+	'include/Language/AST/ParsingTools/Context.hpp'
 ])
 
 parsingTools_lib = library(

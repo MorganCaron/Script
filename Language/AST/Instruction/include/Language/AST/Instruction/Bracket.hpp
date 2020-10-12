@@ -4,28 +4,23 @@
 
 #include <Language/AST/Core/InstructionContainer.hpp>
 #include <Language/AST/Variable/VariableScope.hpp>
+#include <Language/AST/Type/Void.hpp>
 
 namespace Language::AST::Instruction
 {
 	class Bracket final:
-		public Core::Instruction,
-		public Variable::VariableScope,
-		public Core::InstructionContainer
+		public Core::InstructionContainer,
+		public Variable::VariableScope
 	{
 	public:
 		static constexpr const auto Type = CppUtils::Type::TypeId{"Bracket"};
 
-		explicit Bracket(Scope::BaseScope* scope = nullptr):
-			Core::Instruction{Type},
+		explicit Bracket(Scope::NormalScope* scope = nullptr):
+			Core::InstructionContainer{Type},
 			VariableScope{scope},
-			m_returnType{Type::VoidType}
+			m_returnType{Type::Void::TypeId}
 		{}
 		virtual ~Bracket() = default;
-
-		[[nodiscard]] std::unique_ptr<Core::Instruction> cloneInstruction() const override
-		{
-			return std::make_unique<Bracket>(*this);
-		}
 
 		void indexe() override final
 		{

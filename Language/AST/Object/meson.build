@@ -17,7 +17,6 @@ headers = files([
 	'include/Language/AST/Object/Class.hpp',
 	'include/Language/AST/Object/Instance.hpp',
 	'include/Language/AST/Object/Type.hpp',
-	'include/Language/AST/Object/Value.hpp',
 	'include/Language/AST/Object/ObjectScope.hpp',
 	'include/Language/AST/Object/Instantiation.hpp'
 ])

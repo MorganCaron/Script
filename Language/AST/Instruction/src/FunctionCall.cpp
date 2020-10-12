@@ -10,18 +10,18 @@ namespace Language::AST::Instruction
 		std::transform(m_instructions.begin(), m_instructions.end(), std::back_inserter(arguments), [](const auto& argument) {
 			return argument->interpret();
 		});
-		const auto& functionScope = dynamic_cast<const Function::FunctionScope&>(getScope().findScope(Function::FunctionScopeType));
+		const auto& functionScope = dynamic_cast<const Function::FunctionScope&>(getParentScope().findScope(Function::FunctionScopeType));
 		const auto functionSignature = Function::FunctionSignature{getName().data(), m_argumentTypes};
-		auto& function = functionScope.getFunction(functionSignature);
+		auto& function = functionScope.getFunction(functionSignature).function;
 		return function(arguments);
 	}
 
 	[[nodiscard]] const CppUtils::Type::TypeId& FunctionCall::getReturnType() const
 	{
-		const auto& functionScope = dynamic_cast<const Function::FunctionScope&>(getScope().findScope(Function::FunctionScopeType));
+		const auto& functionScope = dynamic_cast<const Function::FunctionScope&>(getParentScope().findScope(Function::FunctionScopeType));
 		const auto functionSignature = Function::FunctionSignature{getName().data(), m_argumentTypes};
 		auto& function = functionScope.getFunction(functionSignature);
-		return function.getReturnType();
+		return function.returnType;
 	}
 
 	std::unique_ptr<Type::IValue> FunctionCall::execute(Object::Instance& object) const
@@ -31,7 +31,7 @@ namespace Language::AST::Instruction
 			return argument->interpret();
 		});
 		const auto functionSignature = Function::FunctionSignature{getName().data(), m_argumentTypes};
-		auto& function = object.getFunction(functionSignature);
+		auto& function = object.getFunction(functionSignature).function;
 		return function(arguments);
 	}
 }

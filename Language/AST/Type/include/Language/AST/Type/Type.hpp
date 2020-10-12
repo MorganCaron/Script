@@ -8,8 +8,6 @@
 
 namespace Language::AST::Type
 {
-	constexpr const auto VoidType = CppUtils::Type::TypeId{""};
-	
 	class DLL_PUBLIC IValue
 	{
 	public:
@@ -24,17 +22,16 @@ namespace Language::AST::Type
 	[[nodiscard]] std::unique_ptr<TargetType> ensureType(const std::unique_ptr<IValue>& value)
 	{
 		if (!value->isType(TargetType::TypeId))
-			throw std::runtime_error{"Type incorrect. Type attendu: "s + TargetType::TagType::Name.data()};
+			throw std::runtime_error{"Type incorrect. Type attendu: "s + TargetType::TypeId.name.data()};
 		return std::make_unique<TargetType>(*static_cast<TargetType*>(value.get()));
 	}
 
-	template<typename Tag, typename Storage>
+	template<const char* Typename, typename Storage>
 	class DLL_PUBLIC Type final: public IValue
 	{
 	public:
-		using TagType = Tag;
+		static constexpr const auto TypeId = CppUtils::Type::TypeId{Typename};
 		using StorageType = Storage;
-		static constexpr const auto TypeId = CppUtils::Type::TypeId{Tag::Name};
 
 		explicit Type(Storage value):
 			m_value{std::move(value)}
@@ -52,7 +49,7 @@ namespace Language::AST::Type
 
 		[[nodiscard]] std::unique_ptr<IValue> cloneValue() const override final
 		{
-			return std::make_unique<Type<Tag, Storage>>(*this);
+			return std::make_unique<Type<Typename, Storage>>(*this);
 		}
 
 		[[nodiscard]] inline Storage& getValue() noexcept
@@ -64,7 +61,7 @@ namespace Language::AST::Type
 		{
 			if (!iValue->isType(getType()))
 				return false;
-			const auto value = ensureType<Type<Tag, Storage>>(iValue)->getValue();
+			const auto value = ensureType<Type<Typename, Storage>>(iValue)->getValue();
 			return (value == m_value);
 		}
 

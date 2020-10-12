@@ -20,8 +20,8 @@ namespace Language::Parser::Declaration
 			throw std::runtime_error{"Une valeur textuelle est attendue. Il manque une ouverture de guillemet ou d'apostrophe."};
 		context.parseSemicolon();
 		
-		auto fileScope = dynamic_cast<AST::Namespace::NamespaceScope&>(scope.findScope(AST::Namespace::NamespaceScopeType));
-		fileScope.importDll(filename);
+		auto& namespaceScope = scope.findScope<AST::Namespace::NamespaceScope>();
+		namespaceScope.importDll(filename);
 		return std::make_unique<AST::Namespace::ImportDeclaration>(&scope);
 	}
 }

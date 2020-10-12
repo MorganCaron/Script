@@ -6,23 +6,14 @@
 
 namespace Language::AST::Core
 {
-	class InstructionContainer
+	class InstructionContainer:
+		public Instruction
 	{
 	public:
 		InstructionContainer() = default;
-		InstructionContainer(const InstructionContainer& src)
-		{
-			for (const auto& instruction : src.m_instructions)
-				addInstruction(instruction->cloneInstruction());
-		}
-		InstructionContainer(InstructionContainer&&) = default;
-		InstructionContainer& operator=(const InstructionContainer& rhs)
-		{
-			for (const auto& instruction : rhs.m_instructions)
-				addInstruction(instruction->cloneInstruction());
-			return *this;
-		}
-		InstructionContainer& operator=(InstructionContainer&&) = default;
+		explicit InstructionContainer(CppUtils::Type::TypeId instructionType):
+			Instruction{std::move(instructionType)}
+		{}
 
 		inline void addInstruction(std::unique_ptr<Instruction>&& instruction)
 		{

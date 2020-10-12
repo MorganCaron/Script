@@ -27,7 +27,7 @@ namespace Language::Parser::Value
 		context.skipSpacesAndComments();
 		while (cursor.getChar() != ',' && cursor.getChar() != ')')
 		{
-			auto value = parseValue(functionCallParsingInformations);
+			auto value = parseOperation(functionCallParsingInformations);
 			if (value == nullptr)
 				throw std::runtime_error{"L argument de la fonction doit etre une valeur ou doit retourner une valeur."};
 			functionCall->addArgument(std::move(value));

@@ -15,6 +15,7 @@ namespace Script
 			Prod
 		};
 
+		Settings() = default;
 		explicit Settings(const Mode& mode)
 		{
 			if (mode == Mode::Test)

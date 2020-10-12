@@ -5,9 +5,9 @@
 
 namespace Language::Parser::Instruction
 {
-	inline std::unique_ptr<AST::Core::Instruction> parseValue(AST::ParsingTools::Context& context)
+	[[nodiscard]] inline std::unique_ptr<AST::Core::Instruction> parseOperation(AST::ParsingTools::Context& context)
 	{
-		auto value = Value::parseValue(context);
+		auto value = Value::parseOperation(context);
 		if (value != nullptr)
 			context.parseSemicolon();
 		return value;

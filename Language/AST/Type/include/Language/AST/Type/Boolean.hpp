@@ -4,9 +4,6 @@
 
 namespace Language::AST::Type
 {
-	struct BooleanTag { 
-		static constexpr const auto Name = "Boolean"sv; 
-	};
-
-	using Boolean = Type<BooleanTag, bool>;
+	constexpr const char BooleanTypename[] = "Boolean";
+	using Boolean = Type<BooleanTypename, bool>;
 }

@@ -12,7 +12,7 @@ namespace Language::Parser::Value
 		if (cursor.getChar() != '(')
 			return nullptr;
 		++cursor.pos;
-		auto instruction = parseValue(context);
+		auto instruction = parseOperation(context);
 		if (cursor.getChar() != ')')
 			throw std::runtime_error{"Une parenthese n est pas fermee."};
 		++cursor.pos;

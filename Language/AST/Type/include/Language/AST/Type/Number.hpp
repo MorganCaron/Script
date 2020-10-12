@@ -4,9 +4,6 @@
 
 namespace Language::AST::Type
 {
-	struct NumberTag { 
-		static constexpr const auto Name = "Number"sv; 
-	};
-
-	using Number = Type<NumberTag, double>;
+	constexpr const char NumberTypename[] = "Number";
+	using Number = Type<NumberTypename, double>;
 }

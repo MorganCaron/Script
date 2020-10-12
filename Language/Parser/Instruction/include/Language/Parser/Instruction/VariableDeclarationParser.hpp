@@ -43,7 +43,7 @@ namespace Language::Parser::Instruction
 			if (verbose)
 				CppUtils::Log::Logger::logInformation(" = ", false);
 			context.skipSpacesAndComments();
-			auto valueInstruction = Value::parseValue(context);
+			auto valueInstruction = Value::parseOperation(context);
 			if (valueInstruction == nullptr)
 				throw std::runtime_error{"Une valeur est attendue."};
 			const auto returnType = valueInstruction->getReturnType();

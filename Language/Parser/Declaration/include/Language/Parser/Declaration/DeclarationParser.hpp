@@ -7,33 +7,41 @@ namespace Language::Parser::Declaration
 	inline std::unique_ptr<AST::Core::Instruction> parseDeclaration(AST::ParsingTools::Context& context)
 	{
 		auto& [container, scope, cursor, verbose] = context;
+		auto namespaceScopeWrapper = std::reference_wrapper<const AST::Namespace::NamespaceScope>{scope.findScope<AST::Namespace::NamespaceScope>()};
+		auto hasParentScope = bool{};
 
 		context.skipSpacesAndComments();
 		if (cursor.isEndOfString())
 			return nullptr;
 		
-		const auto& parserScope = dynamic_cast<const AST::ParsingTools::ParserScope&>(scope.findScope(AST::ParsingTools::ParserScopeType));
-		const auto& declarationParsers = parserScope.getDeclarationParsers();
-		for (const auto& [parserName, parserFunction] : declarationParsers)
+		do
 		{
-			auto startPos = cursor.pos;
-			try
+			const auto& namespaceScope = namespaceScopeWrapper.get();
+			for (const auto& namedParser : namespaceScope.declarationParsers)
 			{
-				auto declaration = parserFunction(context);
-				if (declaration)
+				auto startPos = cursor.pos;
+				try
 				{
-					if (verbose)
-						CppUtils::Log::Logger::logDebug(" -> "s + declaration->getInstructionType().name.data());
-					return declaration;
+					auto declaration = namedParser.function(context);
+					if (declaration)
+					{
+						if (verbose)
+							CppUtils::Log::Logger::logDebug(" -> "s + declaration->getType().name.data());
+						return declaration;
+					}
+					cursor.pos = startPos;
 				}
-				cursor.pos = startPos;
+				catch (const std::exception& error)
+				{
+					cursor.pos = startPos;
+					throw std::runtime_error{"In "s + namedParser.name + ":\n" + error.what()};
+				}
 			}
-			catch (const std::exception& error)
-			{
-				cursor.pos = startPos;
-				throw std::runtime_error{"In "s + parserName + ":\n" + error.what()};
-			}
+			hasParentScope = namespaceScope.hasParentScope();
+			if (hasParentScope)
+				namespaceScopeWrapper = namespaceScope.getParentScope().findScope<AST::Namespace::NamespaceScope>();
 		}
+		while (hasParentScope);
 		throw std::runtime_error{"Erreur de syntaxe. La chaine suivante ne correspond a aucune declaration connue:\n" + std::string{CppUtils::String::trimString(cursor.getNextNChar(20))} + "..."};
 		return nullptr;
 	}

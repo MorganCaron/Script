@@ -2,18 +2,19 @@
 
 #include <CppUtils.hpp>
 
+#include <Language/AST/ParsingTools/Context.hpp>
 #include <Language/AST/Object/ObjectScope.hpp>
 
 namespace Language::AST::Namespace
 {
 	// using DllFunctionType = Type::IValue* (CALLBACK*)(const Type::Args&);
 
-	constexpr static const Scope::ScopeType NamespaceScopeType = 4;
-
 	class NamespaceScope: public Object::ObjectScope
 	{
 	public:
-		explicit NamespaceScope(BaseScope* scope = nullptr, Scope::ScopeType scopeType = NamespaceScopeType):
+		constexpr static const Scope::ScopeType Type = 4;
+
+		explicit NamespaceScope(NormalScope* scope = nullptr, Scope::ScopeType scopeType = Type):
 			Object::ObjectScope{scope, scopeType}
 		{}
 		NamespaceScope(const NamespaceScope& src):
@@ -52,8 +53,8 @@ namespace Language::AST::Namespace
 		{
 			if (m_namespaces.find(namespaceId) != m_namespaces.end())
 				return true;
-			if (hasScope())
-				return dynamic_cast<const NamespaceScope&>(getScope().findScope(getType())).namespaceExists(namespaceId);
+			if (hasParentScope())
+				return dynamic_cast<const NamespaceScope&>(getParentScope().findScope(getType())).namespaceExists(namespaceId);
 			return false;
 		}
 
@@ -85,18 +86,18 @@ namespace Language::AST::Namespace
 		{
 			if (m_namespaces.find(namespaceId) != m_namespaces.end())
 				return *m_namespaces.at(namespaceId);
-			if (!hasScope())
+			if (!hasParentScope())
 				throw std::runtime_error{"Unknown namespace "s + namespaceId.name.data() + "."};
-			return dynamic_cast<NamespaceScope&>(getScope().findScope(getType())).getNamespace(namespaceId);
+			return dynamic_cast<NamespaceScope&>(getParentScope().findScope(getType())).getNamespace(namespaceId);
 		}
 		
 		[[nodiscard]] inline const NamespaceScope& getNamespace(const CppUtils::Type::TypeId& namespaceId) const
 		{
 			if (m_namespaces.find(namespaceId) != m_namespaces.end())
 				return *m_namespaces.at(namespaceId);
-			if (!hasScope())
+			if (!hasParentScope())
 				throw std::runtime_error{"Unknown namespace "s + namespaceId.name.data() + "."};
-			return dynamic_cast<const NamespaceScope&>(getScope().findScope(getType())).getNamespace(namespaceId);
+			return dynamic_cast<const NamespaceScope&>(getParentScope().findScope(getType())).getNamespace(namespaceId);
 		}
 
 		void importDll([[maybe_unused]] std::string_view filename)
@@ -115,6 +116,11 @@ namespace Language::AST::Namespace
 			addFunction(filename, std::make_unique<Function>(function));
 			*/
 		}
+
+		std::vector<ParsingTools::NamedParser<ParsingTools::DeclarationParser>> declarationParsers;
+		std::vector<ParsingTools::NamedParser<ParsingTools::InstructionParser>> instructionParsers;
+		std::vector<ParsingTools::NamedParser<ParsingTools::ValueParser>> valueParsers;
+		std::vector<ParsingTools::NamedParser<ParsingTools::OperatorParser>> operatorParsers;
 
 	private:
 		std::unordered_map<CppUtils::Type::TypeId, std::unique_ptr<NamespaceScope>, CppUtils::Type::TypeId::hash_fn> m_namespaces;

@@ -17,7 +17,8 @@ sources = files([
 headers = files([
 	'include/Language/AST/Variable/VariableScope.hpp',
 	'include/Language/AST/Variable/Variable.hpp',
-	'include/Language/AST/Variable/VariableDeclaration.hpp'
+	'include/Language/AST/Variable/VariableDeclaration.hpp',
+	'include/Language/AST/Variable/VariableSignature.hpp'
 ])
 
 variable_lib = library(

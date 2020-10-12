@@ -4,9 +4,6 @@
 
 namespace Language::AST::Type
 {
-	struct StringTag { 
-		static constexpr const auto Name = "String"sv; 
-	};
-
-	using String = Type<StringTag, std::string>;
+	constexpr const char StringTypename[] = "String";
+	using String = Type<StringTypename, std::string>;
 }

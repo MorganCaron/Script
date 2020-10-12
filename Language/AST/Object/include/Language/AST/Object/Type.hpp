@@ -5,9 +5,6 @@
 
 namespace Language::AST::Object::Type
 {
-	struct InstanceTag { 
-		static constexpr const auto Name = "Instance"sv; 
-	};
-
-	using Instance = AST::Type::Type<InstanceTag, Instance>;
+	constexpr const char InstanceTypename[] = "Instance";
+	using Instance = AST::Type::Type<InstanceTypename, Instance>;
 }

@@ -9,28 +9,18 @@ namespace Language::AST::Function
 {
 	class FunctionDeclaration final:
 		public CppUtils::Type::Named,
-		public Core::Instruction,
-		public Variable::VariableScope,
 		public Core::InstructionContainer,
-		public ITFunction<std::unique_ptr<Type::IValue>(const Type::Args&)>
+		public Variable::VariableScope
 	{
 	public:
 		static constexpr const auto Type = CppUtils::Type::TypeId{"Function declaration"};
 		static constexpr const auto Keyword = "function"sv;
 		
-		explicit FunctionDeclaration(std::string name, Scope::BaseScope* scope);
-		virtual ~FunctionDeclaration() = default;
-		
-		[[nodiscard]] std::unique_ptr<ITFunction<std::unique_ptr<Type::IValue>(const Type::Args&)>> cloneFunction() const override;
-
-		[[nodiscard]] std::unique_ptr<Core::Instruction> cloneInstruction() const override
-		{
-			return std::make_unique<FunctionDeclaration>(*this);
-		}
+		explicit FunctionDeclaration(std::string name, Scope::NormalScope* scope);
 
 		void addArgument(Variable::VariableSignature signature);
 
-		std::unique_ptr<Type::IValue> operator()(const Type::Args& arguments) override final;
+		std::unique_ptr<Type::IValue> executeFunction(const Type::Args& arguments);
 		
 		void indexe() override final;
 		std::unique_ptr<Type::IValue> interpret() override final;

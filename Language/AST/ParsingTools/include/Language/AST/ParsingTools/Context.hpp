@@ -4,7 +4,8 @@
 
 #include <CppUtils.hpp>
 #include <Language/AST/Core/InstructionContainer.hpp>
-#include <Language/AST/Scope/BaseScope.hpp>
+#include <Language/AST/Scope/NormalScope.hpp>
+#include <Language/AST/Operator/Operator.hpp>
 
 using namespace std::literals;
 
@@ -12,7 +13,7 @@ namespace Language::AST::ParsingTools
 {
 	struct Context
 	{
-		explicit Context(Core::InstructionContainer& c_container, Scope::BaseScope& c_scope, CppUtils::Parser::Cursor c_cursor, bool c_verbose):
+		explicit Context(Core::InstructionContainer& c_container, Scope::NormalScope& c_scope, CppUtils::Parser::Cursor c_cursor, bool c_verbose):
 			container{c_container}, scope{c_scope}, cursor{c_cursor}, verbose{c_verbose}
 		{}
 
@@ -68,7 +69,7 @@ namespace Language::AST::ParsingTools
 		}
 
 		Core::InstructionContainer& container;
-		Scope::BaseScope& scope;
+		Scope::NormalScope& scope;
 		CppUtils::Parser::Cursor cursor;
 		bool verbose;
 	};
@@ -76,5 +77,12 @@ namespace Language::AST::ParsingTools
 	using DeclarationParser = std::function<std::unique_ptr<Core::Instruction>(Context&)>;
 	using InstructionParser = std::function<std::unique_ptr<Core::Instruction>(Context&)>;
 	using ValueParser = std::function<std::unique_ptr<Core::Instruction>(Context&)>;
-	using OperatorParser = std::function<std::unique_ptr<Core::Instruction>(Context&, std::unique_ptr<Core::Instruction>&&)>;
+	using OperatorParser = std::function<std::unique_ptr<AST::Operator::Operator>(Context&, const std::unique_ptr<Core::Instruction>&)>;
+
+	template<typename ParsingFunction>
+	struct NamedParser
+	{
+		std::string name;
+		ParsingFunction function;
+	};
 }

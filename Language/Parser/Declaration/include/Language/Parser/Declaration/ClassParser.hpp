@@ -6,7 +6,7 @@
 
 namespace Language::Parser::Declaration
 {
-	inline std::unique_ptr<AST::Core::Instruction> parseClass(AST::ParsingTools::Context& context)
+	[[nodiscard]] inline std::unique_ptr<AST::Core::Instruction> parseClass(AST::ParsingTools::Context& context)
 	{
 		auto& [container, scope, cursor, verbose] = context;
 

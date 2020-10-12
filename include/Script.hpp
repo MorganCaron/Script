@@ -7,12 +7,13 @@ namespace Script
 {
 	using Value = Language::AST::Type::IValue;
 	using Args = Language::AST::Type::Args;
+	using Void = Language::AST::Type::Void;
 	using Boolean = Language::AST::Type::Boolean;
 	using Number = Language::AST::Type::Number;
 	using String = Language::AST::Type::String;
 	using FunctionSignature = Language::AST::Function::FunctionSignature;
-	using Function = Language::AST::Function::FunctionType;
-	using ExternalFunction = Language::AST::Function::Function<std::unique_ptr<Value>(const Args&)>;
+	using Function = Language::AST::Function::Function;
+	using FunctionType = Language::AST::Function::FunctionType;
 	
 	template<typename TargetType>
 	constexpr const auto ensureType = Language::AST::Type::ensureType<TargetType>;
@@ -20,6 +21,7 @@ namespace Script
 	class Script final
 	{
 	public:
+		Script() = default;
 		explicit Script(Settings settings):
 			m_settings{std::move(settings)}
 		{
@@ -30,7 +32,7 @@ namespace Script
 				CppUtils::Log::Logger::logImportant("_"s + EXECUTABLE_NAME + "_v" + EXECUTABLE_VERSION + "_/");
 		}
 
-		inline void addFunction(const FunctionSignature& functionSignature, std::unique_ptr<Function>&& function)
+		inline void addFunction(const FunctionSignature& functionSignature, Function function)
 		{
 			m_ast.addFunction(functionSignature, std::move(function));
 		}
@@ -78,11 +80,7 @@ namespace Script
 			auto chronoLogger = CppUtils::Log::ChronoLogger{"Execution", m_settings.chrono};
 			try
 			{
-				const auto mainFunctionSignature = FunctionSignature{"main"};
-				if (!m_ast.functionExists(mainFunctionSignature))
-					throw std::runtime_error{"No entry point found: The main function is missing."};
-				auto& mainFunction = m_ast.getFunction(mainFunctionSignature);
-				auto result = mainFunction({});
+				auto result = m_ast.interpret();
 				chronoLogger.stop();
 				return result;
 			}

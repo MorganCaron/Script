@@ -82,7 +82,7 @@ namespace Language::Parser::Declaration
 		{
 			if (verbose)
 				CppUtils::Log::Logger::logInformation("");
-			functionDeclaration->setReturnType(AST::Type::VoidType);
+			functionDeclaration->setReturnType(AST::Type::Void::TypeId);
 		}
 		
 		auto instruction = Instruction::parseInstruction(functionStatementParserInformations);

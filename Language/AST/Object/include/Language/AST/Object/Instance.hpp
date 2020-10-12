@@ -6,36 +6,23 @@
 
 namespace Language::AST::Object
 {
-	using ConstructorType = Function::ITFunction<void(const Type::Args&)>;
-
 	class Instance:
 		public CppUtils::Type::Named,
 		public Function::FunctionScope
 	{
 	public:
-		explicit Instance(std::string name, BaseScope* scope = nullptr):
+		Instance() = default;
+		Instance(const Instance&) = default;
+		Instance(Instance&&) noexcept = default;
+		virtual ~Instance() = default;
+		Instance& operator=(const Instance&) = default;
+		Instance& operator=(Instance&&) noexcept = default;
+		
+		Instance(std::string name, const Function::FunctionScope& functionScope):
 			CppUtils::Type::Named{std::move(name)},
-			Function::FunctionScope{scope},
+			Function::FunctionScope{functionScope},
 			m_constructor{nullptr}
 		{}
-		Instance(const Instance& src):
-			CppUtils::Type::Named{src},
-			Function::FunctionScope{src}
-		{
-			if (src.m_constructor)
-				setConstructor(src.m_constructor->cloneFunction());
-		}
-		Instance(Instance&&) noexcept = default;
-		Instance& operator=(const Instance& rhs)
-		{
-			Named::operator=(rhs);
-			FunctionScope::operator=(rhs);
-			if (rhs.m_constructor)
-				setConstructor(rhs.m_constructor->cloneFunction());
-			return *this;
-		}
-		Instance& operator=(Instance&&) noexcept = default;
-		virtual ~Instance() = default;
 
 		bool operator==(const Instance& rhs) const
 		{
@@ -44,18 +31,17 @@ namespace Language::AST::Object
 			return Variable::VariableScope::operator==(rhs);
 		}
 
-		void setConstructor(std::unique_ptr<ConstructorType>&& constructor)
+		void setConstructor(Function::FunctionType constructor)
 		{
 			m_constructor = std::move(constructor);
 		}
 
 		void callConstructor(const Type::Args& arguments)
 		{
-			if (m_constructor)
-				(*m_constructor)(arguments);
+			m_constructor(arguments);
 		}
 
 	private:
-		std::unique_ptr<ConstructorType> m_constructor;
+		Function::FunctionType m_constructor;
 	};
 }

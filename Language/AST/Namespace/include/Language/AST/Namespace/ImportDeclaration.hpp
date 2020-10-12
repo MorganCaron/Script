@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Language/AST/Type/Number.hpp>
+#include <Language/AST/Type/Void.hpp>
 #include <Language/AST/Namespace/NamespaceScope.hpp>
 
 namespace Language::AST::Namespace
@@ -13,24 +13,19 @@ namespace Language::AST::Namespace
 		static constexpr const auto Type = CppUtils::Type::TypeId{"Import declaration"};
 		static constexpr const auto Keyword = "import"sv;
 		
-		explicit ImportDeclaration(Scope::BaseScope* scope):
+		explicit ImportDeclaration(Scope::NormalScope* scope):
 			Core::Instruction{Type},
 			Scope::NormalScope{scope}
 		{}
 		
-		[[nodiscard]] std::unique_ptr<Core::Instruction> cloneInstruction() const override
-		{
-			return std::make_unique<ImportDeclaration>(*this);
-		}
-		
 		std::unique_ptr<Type::IValue> interpret() override final
 		{
-			return std::make_unique<Type::Number>(0);
+			return std::make_unique<Type::Void>(nullptr);
 		}
 
 		[[nodiscard]] const CppUtils::Type::TypeId& getReturnType() const override final
 		{
-			return Type::VoidType;
+			return Type::Void::TypeId;
 		}
 	};
 }

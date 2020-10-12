@@ -11,7 +11,6 @@ includeDir = include_directories(['include/', '.'])
 sources = files([])
 
 headers = files([
-	'include/Language/AST/Core/Interpreter.hpp',
 	'include/Language/AST/Core/Instruction.hpp',
 	'include/Language/AST/Core/InstructionContainer.hpp'
 ])

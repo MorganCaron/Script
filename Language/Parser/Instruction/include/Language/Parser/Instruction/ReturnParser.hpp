@@ -19,7 +19,7 @@ namespace Language::Parser::Instruction
 
 		context.skipSpacesAndComments();
 		auto returnStatement = std::make_unique<AST::Instruction::Return>(&scope);
-		auto value = Value::parseValue(context);
+		auto value = Value::parseOperation(context);
 		if (value == nullptr)
 			throw std::runtime_error{"Le mot clef return doit etre suivi d une valeur."};
 		context.parseSemicolon();

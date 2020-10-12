@@ -9,7 +9,7 @@ namespace Language::AST::Instruction
 		for (auto& instruction : m_instructions)
 		{
 			auto result = instruction->interpret();
-			if (instruction->getInstructionType() == Return::Type)
+			if (instruction->getType() == Return::Type)
 				return result;
 		}
 		return nullptr;

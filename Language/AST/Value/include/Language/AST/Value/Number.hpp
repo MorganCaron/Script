@@ -13,10 +13,5 @@ namespace Language::AST::Value
 		explicit Number(std::unique_ptr<Type::Number>&& number):
 			Value<Type::Number>{std::move(number), Type}
 		{}
-
-		[[nodiscard]] std::unique_ptr<Core::Instruction> cloneInstruction() const override
-		{
-			return std::make_unique<Number>(*this);
-		}
 	};
 }

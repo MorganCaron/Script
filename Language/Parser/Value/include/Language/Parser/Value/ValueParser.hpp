@@ -5,32 +5,40 @@
 
 namespace Language::Parser::Value
 {
-	inline std::unique_ptr<AST::Core::Instruction> parseValue(AST::ParsingTools::Context& context)
+	[[nodiscard]] inline std::unique_ptr<AST::Core::Instruction> parseValue(AST::ParsingTools::Context& context)
 	{
 		auto& [container, scope, cursor, verbose] = context;
+		auto namespaceScopeWrapper = std::reference_wrapper<const AST::Namespace::NamespaceScope>{scope.findScope<AST::Namespace::NamespaceScope>()};
+		auto hasParentScope = bool{};
 
 		context.skipSpacesAndComments();
 		if (cursor.isEndOfString())
 			return nullptr;
 		
-		const auto& parserScope = dynamic_cast<const AST::ParsingTools::ParserScope&>(scope.findScope(AST::ParsingTools::ParserScopeType));
-		const auto& valueParsers = parserScope.getValueParsers();
-		for (const auto& [parserName, parserFunction] : valueParsers)
+		do
 		{
-			auto startPos = cursor.pos;
-			try
+			const auto& namespaceScope = namespaceScopeWrapper.get();
+			for (const auto& namedParser : namespaceScope.valueParsers)
 			{
-				auto instruction = parserFunction(context);
-				if (instruction)
-					return Operator::parseOperator(context, std::move(instruction));
-				cursor.pos = startPos;
+				auto startPos = cursor.pos;
+				try
+				{
+					auto instruction = namedParser.function(context);
+					if (instruction)
+						return instruction;
+					cursor.pos = startPos;
+				}
+				catch (const std::exception& error)
+				{
+					cursor.pos = startPos;
+					throw std::runtime_error{"In "s + namedParser.name + ":\n" + error.what()};
+				}
 			}
-			catch (const std::exception& error)
-			{
-				cursor.pos = startPos;
-				throw std::runtime_error{"In "s + parserName + ":\n" + error.what()};
-			}
+			hasParentScope = namespaceScope.hasParentScope();
+			if (hasParentScope)
+				namespaceScopeWrapper = namespaceScope.getParentScope().findScope<AST::Namespace::NamespaceScope>();
 		}
+		while (hasParentScope);
 		return nullptr;
 	}
 }

@@ -9,11 +9,11 @@ private_dependencies = []
 includeDir = include_directories(['include/', '.'])
 
 sources = files([
-	'src/BaseScope.cpp'
+	'src/NormalScope.cpp'
 ])
 
 headers = files([
-	'include/Language/AST/Scope/BaseScope.hpp'
+	'include/Language/AST/Scope/NormalScope.hpp'
 ])
 
 scope_lib = library(

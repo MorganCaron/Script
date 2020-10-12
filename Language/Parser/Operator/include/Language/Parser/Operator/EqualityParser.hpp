@@ -6,7 +6,7 @@
 
 namespace Language::Parser::Operator
 {
-	inline std::unique_ptr<AST::Core::Instruction> parseEquality(AST::ParsingTools::Context& context, std::unique_ptr<AST::Core::Instruction>&& lhs)
+	inline std::unique_ptr<AST::Operator::Operator> parseEquality(AST::ParsingTools::Context& context, [[maybe_unused]] const std::unique_ptr<AST::Core::Instruction>& lhs)
 	{
 		auto& [container, scope, cursor, verbose] = context;
 
@@ -15,13 +15,8 @@ namespace Language::Parser::Operator
 		
 		auto equality = std::make_unique<AST::Operator::Equality>(&scope);
 		auto equalityParsingInformations = AST::ParsingTools::Context{*equality, *equality, cursor, verbose};
-		equality->addInstruction(std::move(lhs));
 		if (verbose)
 			CppUtils::Log::Logger::logInformation(" == ", false);
-		auto value = Value::parseValue(equalityParsingInformations);
-		if (value == nullptr)
-			throw std::runtime_error{"L operateur == doit etre suivi d une valeur."};
-		equality->addInstruction(std::move(value));
 		return equality;
 	}
 }

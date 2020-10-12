@@ -2,37 +2,18 @@
 
 #include <string>
 
-#include <Language/AST/Scope/BaseScope.hpp>
+#include <Language/AST/Scope/NormalScope.hpp>
 #include <Language/AST/Type/Type.hpp>
+#include <Language/AST/Variable/VariableSignature.hpp>
 
 namespace Language::AST::Variable
 {
-	struct VariableSignature
-	{
-		std::string name;
-		bool constant;
-		CppUtils::Type::TypeId type;
-
-		VariableSignature() = default;
-		
-		VariableSignature(std::string c_name, bool c_constant, CppUtils::Type::TypeId c_type):
-			name{std::move(c_name)},
-			constant{c_constant},
-			type{std::move(c_type)}
-		{}
-
-		[[nodiscard]] bool operator==(const VariableSignature& rhs) const
-		{
-			return name == rhs.name;
-		}
-	};
-	
 	constexpr static const Scope::ScopeType VariableScopeType = 1;
 
 	class VariableScope: public Scope::NormalScope
 	{
 	public:
-		VariableScope(BaseScope* scope = nullptr, Scope::ScopeType scopeType = VariableScopeType):
+		explicit VariableScope(NormalScope* scope = nullptr, Scope::ScopeType scopeType = VariableScopeType):
 			NormalScope{scope, scopeType}
 		{}
 		
@@ -79,9 +60,9 @@ namespace Language::AST::Variable
 		{
 			if (m_variableSignatures.find(name.data()) != m_variableSignatures.end())
 				return true;
-			if (hasScope())
+			if (hasParentScope())
 			{
-				const auto& parentVariableScope = dynamic_cast<const VariableScope&>(getScope().findScope(getType()));
+				const auto& parentVariableScope = dynamic_cast<const VariableScope&>(getParentScope().findScope(getType()));
 				return parentVariableScope.variableSignatureExists(name);
 			}
 			return false;
@@ -91,9 +72,9 @@ namespace Language::AST::Variable
 		{
 			if (m_variables.find(name.data()) != m_variables.end())
 				return true;
-			if (hasScope())
+			if (hasParentScope())
 			{
-				const auto& parentVariableScope = dynamic_cast<const VariableScope&>(getScope().findScope(getType()));
+				const auto& parentVariableScope = dynamic_cast<const VariableScope&>(getParentScope().findScope(getType()));
 				return parentVariableScope.variableExists(name);
 			}
 			return false;
@@ -113,14 +94,14 @@ namespace Language::AST::Variable
 				if (signature.constant && m_variables.find(name.data()) != m_variables.end())
 					throw std::runtime_error{"The variable "s + name.data() + " is constant. Its value cannot be modified."};
 				/*
-				if (value->getInstructionType() != signature.type)
+				if (value->getType() != signature.type)
 					throw std::runtime_error{"La variable est de type "s + signature.type + ". Vous ne pouvez pas lui affecter une valeur de type " + value->getType().data()};
 				*/
 				m_variables[name.data()] = std::move(value);
 			}
-			else if (hasScope())
+			else if (hasParentScope())
 			{
-				auto& parentVariableScope = dynamic_cast<VariableScope&>(getScope().findScope(getType()));
+				auto& parentVariableScope = dynamic_cast<VariableScope&>(getParentScope().findScope(getType()));
 				parentVariableScope.setVariable(name, std::move(value));
 			}
 			else
@@ -142,9 +123,9 @@ namespace Language::AST::Variable
 		{
 			if (m_variableSignatures.find(name.data()) != m_variableSignatures.end())
 				return m_variableSignatures.at(name.data());
-			if (!hasScope())
+			if (!hasParentScope())
 				throw std::runtime_error{"The signature of variable "s + name.data() + " does not exist."};
-			const auto& parentVariableScope = dynamic_cast<const VariableScope&>(getScope().findScope(getType()));
+			const auto& parentVariableScope = dynamic_cast<const VariableScope&>(getParentScope().findScope(getType()));
 			return parentVariableScope.getVariableSignature(name);
 		}
 
@@ -152,9 +133,9 @@ namespace Language::AST::Variable
 		{
 			if (m_variables.find(name.data()) != m_variables.end())
 				return m_variables.at(name.data());
-			if (!hasScope())
+			if (!hasParentScope())
 				throw std::runtime_error{"The variable "s + name.data() + " does not exist."};
-			const auto& parentVariableScope = dynamic_cast<const VariableScope&>(getScope().findScope(getType()));
+			const auto& parentVariableScope = dynamic_cast<const VariableScope&>(getParentScope().findScope(getType()));
 			return parentVariableScope.getVariable(name);
 		}
 
