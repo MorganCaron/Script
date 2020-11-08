@@ -30,7 +30,7 @@ namespace Language::AST::Type
 	class DLL_PUBLIC Type final: public IValue
 	{
 	public:
-		static constexpr const auto TypeId = CppUtils::Type::TypeId{Typename};
+		static constexpr auto TypeId = CppUtils::Type::TypeId{Typename};
 		using StorageType = Storage;
 
 		explicit Type(Storage value):
@@ -53,6 +53,11 @@ namespace Language::AST::Type
 		}
 
 		[[nodiscard]] inline Storage& getValue() noexcept
+		{
+			return m_value;
+		}
+
+		[[nodiscard]] inline const Storage& getValue() const noexcept
 		{
 			return m_value;
 		}

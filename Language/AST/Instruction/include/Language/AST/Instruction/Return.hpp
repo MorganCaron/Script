@@ -12,8 +12,8 @@ namespace Language::AST::Instruction
 		public Scope::NormalScope
 	{
 	public:
-		static constexpr const auto Type = CppUtils::Type::TypeId{"Return"};
-		static constexpr const auto Keyword = "return"sv;
+		static constexpr auto Type = CppUtils::Type::TypeId{"Return"};
+		static constexpr auto Keyword = "return"sv;
 
 		explicit Return(Scope::NormalScope* scope):
 			Core::InstructionContainer{Type},
@@ -22,12 +22,12 @@ namespace Language::AST::Instruction
 		
 		std::unique_ptr<Type::IValue> interpret() override final
 		{
-			return m_instructions.at(0)->interpret();
+			return m_instructions[0]->interpret();
 		}
 
 		[[nodiscard]] const CppUtils::Type::TypeId& getReturnType() const override final
 		{
-			return m_instructions.at(0)->getReturnType();
+			return m_instructions[0]->getReturnType();
 		}
 	};
 }

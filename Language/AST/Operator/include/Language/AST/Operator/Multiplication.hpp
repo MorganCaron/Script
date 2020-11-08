@@ -12,7 +12,7 @@ namespace Language::AST::Operator
 		public Operator
 	{
 	public:
-		static constexpr const auto Type = CppUtils::Type::TypeId{"Multiplication"};
+		static constexpr auto Type = CppUtils::Type::TypeId{"Multiplication"};
 
 		explicit Multiplication(Scope::NormalScope* scope):
 			Operator{Type, scope, eOperatorPriority::ARITHMETIC_MEDIUM}

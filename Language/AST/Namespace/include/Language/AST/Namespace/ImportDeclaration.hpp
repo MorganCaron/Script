@@ -10,8 +10,8 @@ namespace Language::AST::Namespace
 		public Scope::NormalScope
 	{
 	public:
-		static constexpr const auto Type = CppUtils::Type::TypeId{"Import declaration"};
-		static constexpr const auto Keyword = "import"sv;
+		static constexpr auto Type = CppUtils::Type::TypeId{"Import declaration"};
+		static constexpr auto Keyword = "import"sv;
 		
 		explicit ImportDeclaration(Scope::NormalScope* scope):
 			Core::Instruction{Type},

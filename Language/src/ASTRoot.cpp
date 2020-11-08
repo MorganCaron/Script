@@ -44,10 +44,10 @@ namespace Language
 		parse(std::move(src));
 	}
 
-	void ASTRoot::parse(const std::string src, bool verbose)
+	void ASTRoot::parse(std::string_view src, bool verbose)
 	{
 		auto pos = std::size_t{0};
-		auto context = AST::ParsingTools::Context{*this, *this, CppUtils::Parser::Cursor{src, pos}, verbose};
+		auto context = AST::ParsingTools::Context{*this, *this, CppUtils::Language::Parser::Cursor{src.data(), pos}, verbose};
 		auto& cursor = context.cursor;
 		const auto length = cursor.src.length();
 		

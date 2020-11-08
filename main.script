@@ -36,6 +36,7 @@ function main(): Number
 	print("B");
 	print(player.getName());
 	print("C");
+	
 	{
 		const a = 1;
 		const b = 1;

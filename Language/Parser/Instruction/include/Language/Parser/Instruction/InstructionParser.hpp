@@ -19,7 +19,7 @@ namespace Language::Parser::Instruction
 			const auto& namespaceScope = namespaceScopeWrapper.get();
 			for (const auto& namedParser : namespaceScope.instructionParsers)
 			{
-				auto startPos = cursor.pos;
+				const auto startPos = cursor.pos;
 				try
 				{
 					auto instruction = namedParser.function(context);

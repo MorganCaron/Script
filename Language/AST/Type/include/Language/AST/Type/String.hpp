@@ -4,6 +4,6 @@
 
 namespace Language::AST::Type
 {
-	constexpr const char StringTypename[] = "String";
+	constexpr char StringTypename[] = "String";
 	using String = Type<StringTypename, std::string>;
 }

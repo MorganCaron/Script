@@ -16,7 +16,7 @@ namespace Language
 		ASTRoot();
 		explicit ASTRoot(std::string src);
 
-		void parse(const std::string src, bool verbose = false);
+		void parse(std::string_view src, bool verbose = false);
 		std::unique_ptr<AST::Type::IValue> interpret() override final;
 
 		[[nodiscard]] const CppUtils::Type::TypeId& getReturnType() const override final;

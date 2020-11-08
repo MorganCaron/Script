@@ -13,7 +13,7 @@ namespace Language::AST::Instruction
 		public Variable::VariableScope
 	{
 	public:
-		static constexpr const auto Type = CppUtils::Type::TypeId{"Bracket"};
+		static constexpr auto Type = CppUtils::Type::TypeId{"Bracket"};
 
 		explicit Bracket(Scope::NormalScope* scope = nullptr):
 			Core::InstructionContainer{Type},

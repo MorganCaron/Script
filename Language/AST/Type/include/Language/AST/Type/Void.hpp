@@ -6,6 +6,6 @@
 
 namespace Language::AST::Type
 {
-	constexpr const char VoidTypename[] = "Void";
+	constexpr char VoidTypename[] = "Void";
 	using Void = Type<VoidTypename, std::nullptr_t>;
 }

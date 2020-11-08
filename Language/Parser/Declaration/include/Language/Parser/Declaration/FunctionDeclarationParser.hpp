@@ -43,7 +43,10 @@ namespace Language::Parser::Declaration
 				auto typeName = cursor.getKeywordRequired("Le nom d'un type est attendu.");
 				
 				if (verbose)
-					CppUtils::Log::Logger::logInformation(keyword + " " + argumentName + ": " + typeName, false);
+				{
+					CppUtils::Log::Logger::logInformation(keyword + " " + argumentName + ": ", false);
+					CppUtils::Log::Logger::logDetail(typeName, false);
+				}
 				auto argumentType = CppUtils::Type::TypeId{typeName};
 				argumentType.saveTypename();
 				functionDeclaration->addArgument(AST::Variable::VariableSignature{std::move(argumentName), constant, std::move(argumentType)});
@@ -73,7 +76,10 @@ namespace Language::Parser::Declaration
 			context.skipSpacesAndComments();
 			auto typeName = cursor.getKeywordRequired("Le nom d'un type est attendu.");
 			if (verbose)
-				CppUtils::Log::Logger::logInformation(": " + typeName);
+			{
+				CppUtils::Log::Logger::logInformation(": ", false);
+				CppUtils::Log::Logger::logDetail(typeName);
+			}
 			auto returnType = CppUtils::Type::TypeId{typeName};
 			returnType.saveTypename();
 			functionDeclaration->setReturnType(std::move(returnType));

@@ -1,6 +1,6 @@
 #include <Language/AST/Variable/VariableDeclaration.hpp>
 
-#include <Language/AST/Type/Number.hpp>
+#include <Language/AST/Type/Void.hpp>
 #include <Language/AST/Variable/VariableScope.hpp>
 
 namespace Language::AST::Variable
@@ -31,7 +31,6 @@ namespace Language::AST::Variable
 
 	void VariableDeclaration::indexe()
 	{
-		CppUtils::Log::Logger::logDetail("Declare variable "s + getName().data());
 		interpret();
 	}
 	
@@ -40,12 +39,11 @@ namespace Language::AST::Variable
 		auto &variableScope = dynamic_cast<Variable::VariableScope&>(getParentScope().findScope(Variable::VariableScopeType));
 
 		if (m_instructions.empty())
-			return std::make_unique<Type::Number>(0);
+			return std::make_unique<Type::Void>(nullptr);
 		
 		auto& valueInstruction = *m_instructions[0];
-		auto value = valueInstruction.interpret();
-		variableScope.setVariable(getName(), value->cloneValue());
-		return value;
+		variableScope.setVariable(getName(), valueInstruction.interpret());
+		return std::make_unique<Type::Void>(nullptr);
 	}
 
 	[[nodiscard]] const CppUtils::Type::TypeId& VariableDeclaration::getReturnType() const

@@ -12,7 +12,7 @@ namespace Language::AST::Operator
 		public Operator
 	{
 	public:
-		static constexpr const auto Type = CppUtils::Type::TypeId{"Equality"};
+		static constexpr auto Type = CppUtils::Type::TypeId{"Equality"};
 
 		explicit Equality(Scope::NormalScope* scope):
 			Operator{Type, scope, eOperatorPriority::COMPARISON}
@@ -23,8 +23,10 @@ namespace Language::AST::Operator
 		{
 			const auto& operand0 = m_instructions[0];
 			const auto& operand1 = m_instructions[1];
+
 			const auto value0 = operand0->interpret();
 			const auto value1 = operand1->interpret();
+
 			return std::make_unique<Type::Boolean>(value0->isEqual(value1));
 		}
 

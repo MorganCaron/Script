@@ -12,7 +12,7 @@ namespace Language::AST::Variable
 		public Scope::NormalScope
 	{
 	public:
-		static constexpr const auto Type = CppUtils::Type::TypeId{"Variable"};
+		static constexpr auto Type = CppUtils::Type::TypeId{"Variable"};
 
 		explicit Variable(std::string name, Scope::NormalScope* scope):
 			CppUtils::Type::Named{std::move(name)},

@@ -4,6 +4,6 @@
 
 namespace Language::AST::Type
 {
-	constexpr const char BooleanTypename[] = "Boolean";
+	constexpr char BooleanTypename[] = "Boolean";
 	using Boolean = Type<BooleanTypename, bool>;
 }

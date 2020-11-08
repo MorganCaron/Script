@@ -30,9 +30,11 @@ namespace Language::Parser::Instruction
 		if (cursor.getChar() == ':')
 			++cursor.pos;
 		
-		if (parseInstruction(controlStructureParsingInformations) == nullptr)
+		auto firstBlock = parseInstruction(controlStructureParsingInformations);
+		if (!firstBlock)
 			throw std::runtime_error{"La condition doit etre suivie d une instruction."};
-		
+		controlStructure->addInstruction(std::move(firstBlock));
+
 		return controlStructure;
 	}
 }

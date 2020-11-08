@@ -13,7 +13,7 @@ namespace Language::AST::Instruction
 		public Scope::NormalScope
 	{
 	public:
-		static constexpr const auto Type = CppUtils::Type::TypeId{"Function call"};
+		static constexpr auto Type = CppUtils::Type::TypeId{"Function call"};
 
 		explicit FunctionCall(std::string name, Scope::NormalScope* scope):
 			CppUtils::Type::Named{std::move(name)},
@@ -30,7 +30,7 @@ namespace Language::AST::Instruction
 		std::unique_ptr<Type::IValue> interpret() override final;
 		[[nodiscard]] const CppUtils::Type::TypeId& getReturnType() const override final;
 
-		std::unique_ptr<Type::IValue> execute(Object::Instance& object) const;
+		std::unique_ptr<Type::IValue> execute(Object::Instance& instance) const;
 	
 	private:
 		std::vector<CppUtils::Type::TypeId> m_argumentTypes;

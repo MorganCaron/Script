@@ -17,14 +17,14 @@ namespace Language::AST::Instruction
 
 	std::unique_ptr<Type::IValue> ControlStructure::interpret()
 	{
-		bool condition, loop = true;
+		auto loop = bool{true};
 
 		while (loop)
 		{
 			const auto value = m_instructions[0]->interpret();
 			if (!value->isType(Type::Boolean::TypeId))
 				throw std::runtime_error{"La structure de controle attend une valeur numerique."};
-			condition = (dynamic_cast<Type::Boolean*>(value.get())->getValue() == false);
+			const auto condition = Type::ensureType<Type::Boolean>(value)->getValue();
 			if (condition)
 				m_instructions[1]->interpret();
 			if (m_sort == eControlStructureSort::WHILE)

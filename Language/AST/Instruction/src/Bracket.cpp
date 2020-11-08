@@ -12,6 +12,6 @@ namespace Language::AST::Instruction
 			if (instruction->getType() == Return::Type)
 				return result;
 		}
-		return nullptr;
+		return std::make_unique<Type::Void>(nullptr);
 	}
 }

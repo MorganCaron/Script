@@ -15,8 +15,8 @@ namespace Language::AST::Object
 		public Function::FunctionScope
 	{
 	public:
-		static constexpr const auto Type = CppUtils::Type::TypeId{"Class"};
-		static constexpr const auto Keyword = "class"sv;
+		static constexpr auto Type = CppUtils::Type::TypeId{"Class"};
+		static constexpr auto Keyword = "class"sv;
 
 		explicit Class(std::string name, Scope::NormalScope* scope = nullptr):
 			Named{std::move(name)},
@@ -28,7 +28,6 @@ namespace Language::AST::Object
 
 		std::unique_ptr<AST::Type::IValue> interpret() override final
 		{
-			indexe();
 			return std::make_unique<AST::Type::Void>(nullptr);
 		}
 

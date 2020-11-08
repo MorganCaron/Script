@@ -20,7 +20,7 @@ namespace Language::Parser::Value
 			const auto& namespaceScope = namespaceScopeWrapper.get();
 			for (const auto& namedParser : namespaceScope.valueParsers)
 			{
-				auto startPos = cursor.pos;
+				const auto startPos = cursor.pos;
 				try
 				{
 					auto instruction = namedParser.function(context);

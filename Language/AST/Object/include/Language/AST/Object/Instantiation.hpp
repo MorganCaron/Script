@@ -13,7 +13,7 @@ namespace Language::AST::Object
 		public Scope::NormalScope
 	{
 	public:
-		static constexpr const auto Type = CppUtils::Type::TypeId{"Instantiation"};
+		static constexpr auto Type = CppUtils::Type::TypeId{"Instantiation"};
 
 		explicit Instantiation(std::string name, Scope::NormalScope* scope):
 			CppUtils::Type::Named{std::move(name)},

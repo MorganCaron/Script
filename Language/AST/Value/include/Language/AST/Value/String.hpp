@@ -8,7 +8,7 @@ namespace Language::AST::Value
 	class String final: public Value<Type::String>
 	{
 	public:
-		static constexpr const auto Type = CppUtils::Type::TypeId{"String"};
+		static constexpr auto Type = CppUtils::Type::TypeId{"String"};
 
 		explicit String(std::unique_ptr<Type::String>&& string):
 			Value<Type::String>{std::move(string), Type}

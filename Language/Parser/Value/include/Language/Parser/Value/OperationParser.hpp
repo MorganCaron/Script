@@ -9,7 +9,7 @@ namespace Language::Parser::Value
 	[[nodiscard]] inline std::unique_ptr<AST::Core::Instruction> parseOperation(AST::ParsingTools::Context& context, std::unique_ptr<AST::Core::Instruction>&& lhs = nullptr, std::unique_ptr<AST::Operator::Operator>&& nextOperator = nullptr)
 	{
 		auto& [container, scope, cursor, verbose] = context;
-		auto rhs = std::unique_ptr<AST::Core::Instruction>{nullptr};
+		std::unique_ptr<AST::Core::Instruction> rhs;
 
 		if (lhs == nullptr)
 			if ((lhs = Value::parseValue(context)) == nullptr)

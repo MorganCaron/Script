@@ -11,8 +11,8 @@ namespace Language::AST::Namespace
 		public Scope::NormalScope
 	{
 	public:
-		static constexpr const auto Type = CppUtils::Type::TypeId{"Namespace Call"};
-		static constexpr const auto Separator = "::"sv;
+		static constexpr auto Type = CppUtils::Type::TypeId{"Namespace Call"};
+		static constexpr auto Separator = "::"sv;
 
 		explicit NamespaceCall(std::string name, Scope::NormalScope* scope = nullptr):
 			CppUtils::Type::Named{std::move(name)},

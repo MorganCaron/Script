@@ -4,6 +4,6 @@
 
 namespace Language::AST::Type
 {
-	constexpr const char NumberTypename[] = "Number";
+	constexpr char NumberTypename[] = "Number";
 	using Number = Type<NumberTypename, double>;
 }

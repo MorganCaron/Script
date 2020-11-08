@@ -4,6 +4,6 @@
 
 namespace Language::AST::Type
 {
-	constexpr const char FunctionTypename[] = "Function";
+	constexpr char FunctionTypename[] = "Function";
 	using Function = Type<FunctionTypename, std::function>;
 }

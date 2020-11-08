@@ -22,8 +22,12 @@ namespace Language::Parser::Value
 		auto instantiation = std::make_unique<AST::Object::Instantiation>(std::move(className), &scope);
 		auto instantiationParsingInformations = AST::ParsingTools::Context{*instantiation, *instantiation, cursor, verbose};
 		if (verbose)
-			CppUtils::Log::Logger::logInformation("new "s + instantiation->getName().data() + "(", false);
-
+		{
+			CppUtils::Log::Logger::logInformation("new ", false);
+			CppUtils::Log::Logger::logDetail(instantiation->getName(), false);
+			CppUtils::Log::Logger::logInformation("(", false);
+		}
+		
 		context.skipSpacesAndComments();
 		while (cursor.getChar() != ',' && cursor.getChar() != ')')
 		{

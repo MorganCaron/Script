@@ -13,8 +13,8 @@ namespace Language::AST::Function
 		public Variable::VariableScope
 	{
 	public:
-		static constexpr const auto Type = CppUtils::Type::TypeId{"Function declaration"};
-		static constexpr const auto Keyword = "function"sv;
+		static constexpr auto Type = CppUtils::Type::TypeId{"Function declaration"};
+		static constexpr auto Keyword = "function"sv;
 		
 		explicit FunctionDeclaration(std::string name, Scope::NormalScope* scope);
 

@@ -20,7 +20,7 @@ namespace Language::AST::Instruction
 		public Scope::NormalScope
 	{
 	public:
-		static constexpr const auto Type = CppUtils::Type::TypeId{"Control structure"};
+		static constexpr auto Type = CppUtils::Type::TypeId{"Control structure"};
 
 		explicit ControlStructure(std::string name, Scope::NormalScope* scope);
 		virtual ~ControlStructure() = default;

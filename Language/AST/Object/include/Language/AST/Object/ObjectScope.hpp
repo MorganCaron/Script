@@ -76,7 +76,7 @@ namespace Language::AST::Object
 		[[nodiscard]] inline std::unique_ptr<Type::Instance> instantiate(std::string_view name, const AST::Type::Args& arguments) const
 		{
 			auto instance = std::make_unique<Type::Instance>(getClass(name));
-			instance->getValue().callConstructor(arguments);
+			instance->getValue()->callConstructor(arguments);
 			return instance;
 		}
 

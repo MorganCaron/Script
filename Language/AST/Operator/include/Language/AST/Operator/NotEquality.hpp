@@ -12,7 +12,7 @@ namespace Language::AST::Operator
 		public Operator
 	{
 	public:
-		static constexpr const auto Type = CppUtils::Type::TypeId{"Not Equality"};
+		static constexpr auto Type = CppUtils::Type::TypeId{"Not Equality"};
 
 		explicit NotEquality(Scope::NormalScope* scope):
 			Operator{Type, scope, eOperatorPriority::COMPARISON}

@@ -19,7 +19,7 @@ namespace Language::Parser::Operator
 			const auto& namespaceScope = namespaceScopeWrapper.get();
 			for (const auto& namedParser : namespaceScope.operatorParsers)
 			{
-				auto startPos = cursor.pos;
+				const auto startPos = cursor.pos;
 				try
 				{
 					auto result = namedParser.function(context, lhs);

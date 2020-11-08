@@ -11,7 +11,7 @@ namespace Language::AST::Operator
 		public Operator
 	{
 	public:
-		static constexpr const auto Type = CppUtils::Type::TypeId{"Member"};
+		static constexpr auto Type = CppUtils::Type::TypeId{"Member"};
 
 		explicit Member(Scope::NormalScope* scope):
 			Operator{Type, scope, eOperatorPriority::MEMBER_ACCESS}
@@ -23,14 +23,11 @@ namespace Language::AST::Operator
 			const auto& operand0 = m_instructions[0];
 			const auto& operand1 = m_instructions[1];
 
-			// CppUtils::Log::Logger::logDebug(operand0->getType().name);
-			// CppUtils::Log::Logger::logDebug(operand1->getType().name);
-
 			const auto value0 = operand0->interpret();
 
-			auto& instance = Type::ensureType<Object::Type::Instance>(value0)->getValue();
+			auto instance = Type::ensureType<Object::Type::Instance>(value0)->getValue();
 			const auto method = Core::ensureInstruction<::Language::AST::Instruction::FunctionCall>(operand1);			
-			return method->execute(instance);
+			return method->execute(*instance);
 		}
 
 		[[nodiscard]] const CppUtils::Type::TypeId& getReturnType() const override final

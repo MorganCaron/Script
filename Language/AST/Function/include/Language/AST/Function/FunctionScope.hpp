@@ -18,32 +18,17 @@ namespace Language::AST::Function
 		explicit FunctionScope(NormalScope* scope = nullptr, Scope::ScopeType scopeType = FunctionScopeType):
 			Variable::VariableScope{scope, scopeType}
 		{}
-
-		FunctionScope(const FunctionScope& src):
-			Variable::VariableScope{src}
-		{
-			for (const auto& [key, function] : src.getFunctions())
-				addFunction(key, function);
-		}
-
+		FunctionScope(const FunctionScope&) = default;
 		FunctionScope(FunctionScope&&) noexcept = default;
 		virtual ~FunctionScope() = default;
-
-		FunctionScope& operator=(const FunctionScope& rhs)
-		{
-			Variable::VariableScope::operator=(rhs);
-			for (const auto& [key, function] : rhs.getFunctions())
-				addFunction(key, function);
-			return *this;
-		}
-
+		FunctionScope& operator=(const FunctionScope&) = default;
 		FunctionScope& operator=(FunctionScope&&) noexcept = default;
 
 		inline void merge(FunctionScope& functionScope)
 		{
 			Variable::VariableScope::merge(functionScope);
-			for (auto&& [name, function] : functionScope.m_functions)
-				addFunction(name, std::move(function));
+			for (auto&& [signature, function] : functionScope.m_functions)
+				addFunction(signature, std::move(function));
 			functionScope.clearFunctions();
 		}
 

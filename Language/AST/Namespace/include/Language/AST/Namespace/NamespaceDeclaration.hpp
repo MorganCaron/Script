@@ -12,8 +12,8 @@ namespace Language::AST::Namespace
 		public Scope::NormalScope
 	{
 	public:
-		static constexpr const auto Type = CppUtils::Type::TypeId{"Namespace Declaration"};
-		static constexpr const auto Keyword = "namespace"sv;
+		static constexpr auto Type = CppUtils::Type::TypeId{"Namespace Declaration"};
+		static constexpr auto Keyword = "namespace"sv;
 
 		explicit NamespaceDeclaration(std::string name, Scope::NormalScope* scope):
 			CppUtils::Type::Named{std::move(name)},
@@ -23,7 +23,6 @@ namespace Language::AST::Namespace
 		
 		void indexe() override final
 		{
-			CppUtils::Log::Logger::logDetail("Declare "s + Keyword.data() + " " + getName().data());
 			auto& namespaceScope = getParentScope().findScope<class NamespaceScope>();
 			namespaceScope.addNamespace(CppUtils::Type::TypeId{getName()}, std::make_unique<NamespaceScope>(&getParentScope()));
 		}

@@ -16,7 +16,7 @@ namespace Script
 	using FunctionType = Language::AST::Function::FunctionType;
 	
 	template<typename TargetType>
-	constexpr const auto ensureType = Language::AST::Type::ensureType<TargetType>;
+	constexpr auto ensureType = Language::AST::Type::ensureType<TargetType>;
 
 	class Script final
 	{

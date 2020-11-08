@@ -13,7 +13,7 @@ namespace Language::AST::ParsingTools
 {
 	struct Context
 	{
-		explicit Context(Core::InstructionContainer& c_container, Scope::NormalScope& c_scope, CppUtils::Parser::Cursor c_cursor, bool c_verbose):
+		explicit Context(Core::InstructionContainer& c_container, Scope::NormalScope& c_scope, CppUtils::Language::Parser::Cursor c_cursor, bool c_verbose):
 			container{c_container}, scope{c_scope}, cursor{c_cursor}, verbose{c_verbose}
 		{}
 
@@ -70,7 +70,7 @@ namespace Language::AST::ParsingTools
 
 		Core::InstructionContainer& container;
 		Scope::NormalScope& scope;
-		CppUtils::Parser::Cursor cursor;
+		CppUtils::Language::Parser::Cursor cursor;
 		bool verbose;
 	};
 

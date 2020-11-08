@@ -14,7 +14,7 @@ namespace Language::AST::Variable
 		public Scope::NormalScope
 	{
 	public:
-		static constexpr const auto Type = CppUtils::Type::TypeId{"Variable declaration"};
+		static constexpr auto Type = CppUtils::Type::TypeId{"Variable declaration"};
 
 		explicit VariableDeclaration(Scope::NormalScope* scope, VariableSignature variableSignature):
 			CppUtils::Type::Named{variableSignature.name},

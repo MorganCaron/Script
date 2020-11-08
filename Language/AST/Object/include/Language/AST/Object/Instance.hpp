@@ -20,8 +20,7 @@ namespace Language::AST::Object
 		
 		Instance(std::string name, const Function::FunctionScope& functionScope):
 			CppUtils::Type::Named{std::move(name)},
-			Function::FunctionScope{functionScope},
-			m_constructor{nullptr}
+			Function::FunctionScope{functionScope}
 		{}
 
 		bool operator==(const Instance& rhs) const
@@ -31,17 +30,18 @@ namespace Language::AST::Object
 			return Variable::VariableScope::operator==(rhs);
 		}
 
-		void setConstructor(Function::FunctionType constructor)
-		{
-			m_constructor = std::move(constructor);
-		}
-
 		void callConstructor(const Type::Args& arguments)
 		{
-			m_constructor(arguments);
+			auto argumentTypes = std::vector<CppUtils::Type::TypeId>{};
+			std::transform(arguments.begin(), arguments.end(), std::back_inserter(argumentTypes), [](const auto& argument) {
+				return argument->getType();
+			});
+			const auto constructorSignature = Function::FunctionSignature{"constructor", std::move(argumentTypes)};
+			if (functionExists(constructorSignature))
+			{
+				const auto& constructor = getFunction(constructorSignature);
+				constructor.function(arguments);
+			}
 		}
-
-	private:
-		Function::FunctionType m_constructor;
 	};
 }

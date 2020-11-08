@@ -11,7 +11,7 @@ namespace Language::AST::Operator
 		public Operator
 	{
 	public:
-		static constexpr const auto Type = CppUtils::Type::TypeId{"Assignment"};
+		static constexpr auto Type = CppUtils::Type::TypeId{"Assignment"};
 
 		explicit Assignment(Scope::NormalScope* scope):
 			Operator{Type, scope, eOperatorPriority::ASSIGNMENT}

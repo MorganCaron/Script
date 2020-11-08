@@ -5,6 +5,6 @@
 
 namespace Language::AST::Object::Type
 {
-	constexpr const char InstanceTypename[] = "Instance";
-	using Instance = AST::Type::Type<InstanceTypename, Instance>;
+	constexpr char InstanceTypename[] = "Instance";
+	using Instance = AST::Type::Type<InstanceTypename, std::shared_ptr<Instance>>;
 }

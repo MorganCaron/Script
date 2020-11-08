@@ -19,7 +19,7 @@ namespace Language::Parser::Declaration
 			const auto& namespaceScope = namespaceScopeWrapper.get();
 			for (const auto& namedParser : namespaceScope.declarationParsers)
 			{
-				auto startPos = cursor.pos;
+				const auto startPos = cursor.pos;
 				try
 				{
 					auto declaration = namedParser.function(context);
