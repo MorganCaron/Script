@@ -1,33 +1,9 @@
-#include <Script.hpp>
+import CppUtils;
+import Script;
 
-std::unique_ptr<Script::Value> printNumber(const Script::Args& args)
+// Todo: std::span<const std::string_view> args
+int main([[maybe_unused]] const int argc, [[maybe_unused]] const char* argv[])
 {
-	std::cout << Script::ensureType<Script::Number>(args[0])->getValue() << std::endl;
-	return std::make_unique<Script::Void>(nullptr);
-}
-
-std::unique_ptr<Script::Value> printString(const Script::Args& args)
-{
-	std::cout << Script::ensureType<Script::String>(args[0])->getValue() << std::endl;
-	return std::make_unique<Script::Void>(nullptr);
-}
-
-int main(const int argc, const char *argv[])
-{
-	try
-	{
-		const auto settings = Script::executeCommands(argc, argv);
-		if (settings.abort)
-			return 0;
-		
-		auto script = Script::Script{settings};
-		script.addFunction(Script::FunctionSignature{"print", {Script::Number::TypeId}}, Script::Function{printNumber, Script::Void::TypeId});
-		script.addFunction(Script::FunctionSignature{"print", {Script::String::TypeId}}, Script::Function{printString, Script::Void::TypeId});
-		return Script::ensureType<Script::Number>(script.executeFile(settings.filename))->getValue();
-	}
-	catch (const std::exception& exception)
-	{
-		CppUtils::Log::Logger::logError("An exception occurred: "s + exception.what());
-		return 1;
-	}
+	CppUtils::Terminal::setConsoleOutputUTF8();
+	return 0;
 }

@@ -1,32 +1,35 @@
 # Script
-<p align="center"><img src="res/logo.ico" alt="Logo Script"/></p>
+<p align="center"><img src="resources/logo.ico" alt="Logo Script" width="200" height="200"/></p>
 
-## *Script is an object-oriented interpreted programming language.*
+## *Script is a multi-paradigm compiled programming language*
 
 ![Github Stars](https://img.shields.io/github/stars/MorganCaron/Script?style=for-the-badge)
 ![Github Forks](https://img.shields.io/github/forks/MorganCaron/Script?style=for-the-badge)
 [![Discord](https://img.shields.io/discord/268838260153909249?label=Chat&logo=Discord&style=for-the-badge)](https://discord.gg/mxZvun4)
 
 ### Project Health
-[![Codacy](https://img.shields.io/codacy/grade/92c8d9643d234818ae50601f88b131f8?logo=Codacy&style=for-the-badge)](https://www.codacy.com/manual/MorganCaron/Script)
-[![Github Actions](https://img.shields.io/github/workflow/status/MorganCaron/Script/C++%20Test?logo=Github&style=for-the-badge)](https://github.com/MorganCaron/Script/actions?query=workflow%3A%22C%2B%2B+Test%22)
+[![CI Windows](https://img.shields.io/github/workflow/status/MorganCaron/Script/CI%20C++:%20Windows?label=Windows&logo=windows&logoColor=white&style=for-the-badge)](https://github.com/MorganCaron/Script/actions/workflows/ci-cpp-windows.yml)
+[![CI Windows MSYS2](https://img.shields.io/github/workflow/status/MorganCaron/Script/CI%20C++:%20Windows%20MSYS2?label=Windows%20MSYS2&logo=windows&logoColor=white&style=for-the-badge)](https://github.com/MorganCaron/Script/actions/workflows/ci-cpp-windows-msys2.yml)
+[![CI Linux](https://img.shields.io/github/workflow/status/MorganCaron/Script/CI%20C++:%20Linux?label=Linux&logo=linux&logoColor=white&style=for-the-badge)](https://github.com/MorganCaron/Script/actions/workflows/ci-cpp-linux.yml)
+[![CI MacOS](https://img.shields.io/github/workflow/status/MorganCaron/Script/CI%20C++:%20MacOS?label=MacOS&logo=macos&logoColor=white&style=for-the-badge)](https://github.com/MorganCaron/Script/actions/workflows/ci-cpp-macos.yml)
 
 ---
 
 ## Getting Started
+
 [![Downloads](https://img.shields.io/github/downloads/MorganCaron/Script/total?style=for-the-badge)](https://github.com/MorganCaron/Script/releases)
 [![Install](https://img.shields.io/badge/-Install-blue?style=for-the-badge)](INSTALL.md)
 [![Contribute](https://img.shields.io/badge/-Contribute-blue?style=for-the-badge)](CONTRIBUTING.md)
 
 ### Build command
 ```console
-meson build -Ddefault_library=static
-ninja -C build
+xmake f --toolchain=llvm --runtimes="c++_shared" [--local_CppUtils=y] [--enable_tests=y] --yes
+xmake [b|build] [-vD]
 ```
 
-### Test command
+### Run tests
 ```console
-ninja -C build test
+xmake [r|run]
 ```
 
 ---
