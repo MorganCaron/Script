@@ -43,6 +43,7 @@ package("CppUtils", function()
 	end)
 end)
 
+add_repositories("xmake-repo git@github.com:MorganCaron/xmake-repo.git")
 add_requires("CppUtils")
 
 target("Script", function()
@@ -61,6 +62,14 @@ target("Script", function()
 	set_policy("build.merge_archive", true)
 	set_policy("build.c++.modules", true)
 	add_files("modules/**.mpp", { public = true })
+end)
+
+target("Script-Executable", function()
+	set_kind("binary")
+	add_deps("Script")
+	set_policy("build.merge_archive", true)
+	set_policy("build.c++.modules", true)
+	add_files("src/main.cpp")
 end)
 
 if has_config("enable_tests") then

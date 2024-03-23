@@ -1,9 +1,10 @@
 import CppUtils;
+import CppUtils.Main;
 import Script;
 
-// Todo: std::span<const std::string_view> args
-int main([[maybe_unused]] const int argc, [[maybe_unused]] const char* argv[])
+auto start([[maybe_unused]] std::span<const std::string_view> args) -> int
 {
 	CppUtils::Terminal::setConsoleOutputUTF8();
+	std::cout << "Hello World!" << std::endl;
 	return 0;
 }
