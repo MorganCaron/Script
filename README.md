@@ -23,7 +23,7 @@
 
 ### Build command
 ```console
-xmake f --toolchain=llvm --runtimes="c++_shared" [--local_CppUtils=y] [--enable_tests=y] --yes
+xmake f --toolchain=llvm --runtimes="c++_shared" [--enable_tests=y] --yes
 xmake [b|build] [-vD]
 ```
 

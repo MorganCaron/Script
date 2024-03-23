@@ -1,3 +1,4 @@
+import std;
 import CppUtils;
 import CppUtils.Main;
 import Script;

@@ -35,23 +35,6 @@ add_rules(
 	"mode.lsan",
 	"mode.ubsan")
 
-option("enable_tests")
-option("local_CppUtils")
-
-package("CppUtils", function()
-	set_kind("library")
-
-	if get_config("local_CppUtils") then
-		set_sourcedir("../CppUtils")
-		else
-		add_urls("https://github.com/MorganCaron/CppUtils.git")
-	end
-
-	on_install("*", function(package)
-		import("package.tools.xmake").install(package)
-	end)
-end)
-
 add_repositories("xmake-repo git@github.com:MorganCaron/xmake-repo.git")
 add_requires("CppUtils")
 
@@ -72,6 +55,8 @@ target("Script-Executable", function()
 	set_policy("build.c++.modules", true)
 	add_files("src/main.cpp")
 end)
+
+option("enable_tests")
 
 if has_config("enable_tests") then
 	includes("tests")
