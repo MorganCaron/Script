@@ -42,9 +42,6 @@ target("Script", function()
 	set_kind("moduleonly")
 
 	add_packages("CppUtils", {public = true})
-	set_policy("build.c++.modules", true)
-	add_defines("DLL_EXPORT")
-	add_defines(is_kind("static") and "STATIC_LIB" or "SHARED_LIB")
 
 	add_files("modules/**.mpp", { public = true })
 end)
@@ -52,7 +49,6 @@ end)
 target("Script-Executable", function()
 	set_kind("binary")
 	add_deps("Script")
-	set_policy("build.c++.modules", true)
 	add_files("src/main.cpp")
 end)
 

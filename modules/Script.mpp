@@ -4,7 +4,7 @@ import std;
 
 export namespace Script
 {
-	auto test() -> void
+	inline auto test() -> void
 	{
 		std::cout << "Hello World!" << std::endl;
 	}

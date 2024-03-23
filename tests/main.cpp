@@ -1,10 +1,10 @@
 import std;
 import CppUtils;
-import CppUtils.Main;
 import Script.UnitTests;
 
 auto start([[maybe_unused]] std::span<const std::string_view> args) -> int
 {
+	std::cout << "Tests" << std::endl;
 	try
 	{
 		/*
@@ -18,7 +18,7 @@ auto start([[maybe_unused]] std::span<const std::string_view> args) -> int
 	catch (const std::exception& exception)
 	{
 		CppUtils::logException(exception);
-		return exitFailure;
+		return CppUtils::exitFailure;
 	}
-	return exitSuccess;
+	return CppUtils::exitSuccess;
 }
